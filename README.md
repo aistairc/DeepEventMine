@@ -26,7 +26,7 @@ A model to predict nested events from biomedical texts using our pretrained mode
 - Put data into, e.g: 'data/CG13/test/'
 
 3. Pretrained models:
-- Download our pretrained models [link](https://drive.google.com/drive/folders/1Lz09cZPiIXPXa2AR-Fu2elV0qrla1Ea6?usp=sharing)
+- Download our pretrained models
 - Put data into, e.g: 'data/models/cg/cg.param' and 'data/models/cg/model/***.pt'
 
 4. Set correct path in the config file, e.g: 'configs/cg-predict.yaml'
@@ -39,14 +39,6 @@ python predict.py --yaml configs/cg-predict.yaml
 
 ## Evaluate
 
-### Evaluate using the shared task scripts, e.g: CG
-- Evaluation script [link](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/tools/evaluation-CG.py)
-
-```bash
-python evaluation-CG.py -r data/CG13/dev/ -d results/cg-predict-dev/ev-ann/ -sp
-```
-
-### Evaluate online
 Submit the zipped file to the shared task evaluation sites:
 
 - CG: [Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/)
