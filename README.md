@@ -1,6 +1,8 @@
 # DeepEventMine
 DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts
 
+A model to predict nested events from biomedical texts using our pretrained models.
+
 ## Requirements
 - Python 3.7.0
 - PyTorch
@@ -17,13 +19,17 @@ DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts
 ## Prepare data
 
 1. BERT: download BERT model into 'data/bert/
+
 2. Test sets:
 - Download the original test sets from BioNLP 2011 and BioNLP 2013 shared tasks
 - Tokenize texts
 - Put data into, e.g: 'data/CG13/test/'
+
 3. Pretrained models:
 - Download our pretrained models
 - Put data into, e.g: 'data/models/cg/cg.param' and 'data/models/cg/model/***.pt'
+
+4. Set correct path in the config file, e.g: 'configs/cg-predict.yaml'
 
 ## Predict
 
