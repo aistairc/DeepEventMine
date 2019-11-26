@@ -1,0 +1,20 @@
+# Configuration file to predict.
+
+
+# ----------data path----------
+# input & output dir
+test_data: data/GE11/dev/
+output_dir: ge11-predict-dev
+
+# model path
+model_path: data/models/ge11/model/
+saved_params: data/models/ge11/ge11.param
+bert_model: data/bert/scibert_scivocab_cased
+
+# eval
+ev_eval_entities: [Entity]
+
+# ----------setting----------
+gpu: 1
+batchsize: 16
+seed: 42

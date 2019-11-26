@@ -1,0 +1,13 @@
+Impaired CK1 delta activity attenuates SV40 - induced cellular transformation in vitro and mouse mammary carcinogenesis in vivo .
+Simian virus 40 ( SV40 ) is a powerful tool to study cellular transformation in vitro , as well as tumor development and progression in vivo .
+Various cellular kinases , among them members of the CK1 family , play an important role in modulating the transforming activity of SV40 , including the transforming activity of T - Ag , the major transforming protein of SV40 , itself .
+Here we characterized the effects of mutant CK1delta variants with impaired kinase activity on SV40 - induced cell transformation in vitro , and on SV40 - induced mammary carcinogenesis in vivo in a transgenic / bi - transgenic mouse model .
+CK1delta mutants exhibited a reduced kinase activity compared to wtCK1delta in in vitro kinase assays .
+Molecular modeling studies suggested that mutation N172D , located within the substrate binding region , is mainly responsible for impaired mutCK1delta activity .
+When stably over - expressed in maximal transformed SV - 52 cells , CK1delta mutants induced reversion to a minimal transformed phenotype by dominant - negative interference with endogenous wtCK1delta .
+To characterize the effects of CK1delta on SV40 - induced mammary carcinogenesis , we generated transgenic mice expressing mutant CK1delta under the control of the whey acidic protein ( WAP ) gene promoter , and crossed them with SV40 transgenic WAP - T - antigen ( WAP - T ) mice .
+Both WAP - T mice as well as WAP - mutCK1delta / WAP - T bi - transgenic mice developed breast cancer .
+However , tumor incidence was lower and life span was significantly longer in WAP - mutCK1delta / WAP - T bi - transgenic animals .
+The reduced CK1delta activity did not affect early lesion formation during tumorigenesis , suggesting that impaired CK1delta activity reduces the probability for outgrowth of in situ carcinomas to invasive carcinomas .
+The different tumorigenic potential of SV40 in WAP - T and WAP - mutCK1delta / WAP - T tumors was also reflected by a significantly different express i on of various genes known to be involved in tumor progression , specifically of those involved in wnt - signaling and DNA repair .
+Our data show that inactivating mutations in CK1delta impair SV40 - induced cellular transformation in vitro and mouse mammary carcinogenesis in vivo .

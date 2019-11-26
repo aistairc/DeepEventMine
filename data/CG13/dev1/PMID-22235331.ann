@@ -1,0 +1,222 @@
+*	Equiv T32 T33
+*	Equiv T6 T7
+T1	Gene_or_gene_product 9 18	CK1 delta
+T2	Organism 39 43	SV40
+T3	Cell 54 62	cellular
+T4	Organism 91 96	mouse
+T5	Organ 97 104	mammary
+T6	Organism 130 145	Simian virus 40
+T7	Organism 148 152	SV40
+T8	Cell 183 191	cellular
+T9	Cancer 229 234	tumor
+T10	Cell 281 289	cellular
+T11	Gene_or_gene_product 326 329	CK1
+T12	Organism 405 409	SV40
+T13	Gene_or_gene_product 451 457	T - Ag
+T14	Organism 494 498	SV40
+T15	Gene_or_gene_product 554 562	CK1delta
+T16	Organism 605 609	SV40
+T17	Cell 620 624	cell
+T18	Organism 658 662	SV40
+T19	Organ 673 680	mammary
+T20	Organism 709 743	transgenic / bi - transgenic mouse
+T21	Gene_or_gene_product 752 760	CK1delta
+T22	Gene_or_gene_product 817 827	wtCK1delta
+T23	Gene_or_gene_product 996 1007	mutCK1delta
+T24	Cell 1071 1084	SV - 52 cells
+T25	Gene_or_gene_product 1087 1095	CK1delta
+T26	Gene_or_gene_product 1209 1219	wtCK1delta
+T27	Gene_or_gene_product 1253 1261	CK1delta
+T28	Organism 1265 1269	SV40
+T29	Organ 1280 1287	mammary
+T30	Organism 1318 1333	transgenic mice
+T31	Gene_or_gene_product 1352 1360	CK1delta
+T32	Gene_or_gene_product 1386 1405	whey acidic protein
+T33	Gene_or_gene_product 1408 1411	WAP
+T34	Organism 1452 1456	SV40
+T35	Organism 1457 1502	transgenic WAP - T - antigen ( WAP - T ) mice
+T36	Gene_or_gene_product 1468 1485	WAP - T - antigen
+T37	Gene_or_gene_product 1488 1495	WAP - T
+T38	Gene_or_gene_product 1510 1517	WAP - T
+T39	Organism 1518 1522	mice
+T40	Gene_or_gene_product 1534 1537	WAP
+T41	Organism 1534 1582	WAP - mutCK1delta / WAP - T bi - transgenic mice
+T42	Gene_or_gene_product 1540 1551	mutCK1delta
+T43	Gene_or_gene_product 1554 1561	WAP - T
+T44	Cancer 1593 1606	breast cancer
+T45	Cancer 1619 1624	tumor
+T46	Gene_or_gene_product 1687 1690	WAP
+T47	Organism 1687 1738	WAP - mutCK1delta / WAP - T bi - transgenic animals
+T48	Gene_or_gene_product 1693 1704	mutCK1delta
+T49	Gene_or_gene_product 1707 1710	WAP
+T50	Gene_or_gene_product 1753 1761	CK1delta
+T51	Pathological_formation 1792 1798	lesion
+T52	Gene_or_gene_product 1857 1865	CK1delta
+T53	Cancer 1916 1934	in situ carcinomas
+T54	Cancer 1938 1957	invasive carcinomas
+T55	Organism 1999 2003	SV40
+T56	Gene_or_gene_product 2007 2014	WAP - T
+T57	Gene_or_gene_product 2019 2022	WAP
+T58	Gene_or_gene_product 2025 2036	mutCK1delta
+T59	Gene_or_gene_product 2039 2046	WAP - T
+T60	Cancer 2047 2053	tumors
+T61	Cancer 2156 2161	tumor
+T62	Gene_or_gene_product 2210 2213	wnt
+T63	Cellular_component 2230 2233	DNA
+T64	Gene_or_gene_product 2288 2296	CK1delta
+T65	Organism 2304 2308	SV40
+T66	Cell 2319 2327	cellular
+T67	Organism 2356 2361	mouse
+T68	Organ 2362 2369	mammary
+TR69	Negative_regulation 0 8	Impaired
+TR70	Negative_regulation 28 38	attenuates
+TR71	Positive_regulation 46 53	induced
+TR72	Cell_transformation 63 77	transformation
+TR73	Carcinogenesis 105 119	carcinogenesis
+TR74	Cell_transformation 192 206	transformation
+TR75	Development 235 246	development
+TR76	Development 251 262	progression
+TR77	Regulation 365 375	modulating
+TR78	Cell_transformation 380 392	transforming
+TR79	Cell_transformation 426 438	transforming
+TR80	Cell_transformation 470 482	transforming
+TR81	Positive_regulation 612 619	induced
+TR82	Cell_transformation 625 639	transformation
+TR83	Positive_regulation 665 672	induced
+TR84	Carcinogenesis 681 695	carcinogenesis
+TR85	Mutation 898 912	mutation N172D
+TR86	Positive_regulation 971 982	responsible
+TR87	Negative_regulation 987 995	impaired
+TR88	Cell_transformation 1059 1070	transformed
+TR89	Cell_transformation 1135 1146	transformed
+TR90	Negative_regulation 1180 1192	interference
+TR91	Regulation 1242 1249	effects
+TR92	Positive_regulation 1272 1279	induced
+TR93	Carcinogenesis 1288 1302	carcinogenesis
+TR94	Planned_process 1434 1441	crossed
+TR95	Development 1583 1592	developed
+TR96	Negative_regulation 1745 1752	reduced
+TR97	Regulation 1779 1785	affect
+TR98	Development 1799 1808	formation
+TR99	Carcinogenesis 1816 1829	tumorigenesis
+TR100	Negative_regulation 1848 1856	impaired
+TR101	Negative_regulation 1875 1882	reduces
+TR102	Development 1903 1912	outgrowth
+TR103	Carcinogenesis 1974 1985	tumorigenic
+TR104	Development 2162 2173	progression
+TR105	Regulation 2198 2206	involved
+TR106	Pathway 2216 2225	signaling
+TR107	Remodeling 2234 2240	repair
+TR108	Negative_regulation 2262 2274	inactivating
+TR109	Mutation 2275 2284	mutations
+TR110	Negative_regulation 2297 2303	impair
+TR111	Positive_regulation 2311 2318	induced
+TR112	Cell_transformation 2328 2342	transformation
+TR113	Carcinogenesis 2370 2384	carcinogenesis
+R1	AtLoc Arg1:TR113 Arg2:T68
+R2	Theme Arg1:TR95 Arg2:T44
+R3	Theme Arg1:TR70 Arg2:TR73
+R4	Theme Arg1:TR74 Arg2:T8
+R5	Theme Arg1:TR70 Arg2:TR72
+R6	Instrument Arg1:TR94 Arg2:T34
+R7	Theme Arg1:TR82 Arg2:T17
+R8	Theme Arg1:TR110 Arg2:TR112
+R9	Cause Arg1:TR91 Arg2:T27
+R10	Theme Arg1:TR71 Arg2:TR72
+R11	Theme Arg1:TR75 Arg2:T9
+R12	Cause Arg1:TR111 Arg2:T65
+R13	Theme Arg1:TR111 Arg2:TR112
+R14	Cause Arg1:TR101 Arg2:TR100
+R15	Cause Arg1:TR81 Arg2:T16
+R16	Theme Arg1:TR77 Arg2:T12
+R17	Theme Arg1:TR86 Arg2:TR87
+R18	Theme Arg1:TR101 Arg2:TR102
+R19	Theme Arg1:TR104 Arg2:T61
+R20	Theme Arg1:TR76 Arg2:T9
+R21	AtLoc Arg1:TR93 Arg2:T29
+R22	Theme Arg1:TR90 Arg2:T26
+R23	AtLoc Arg1:TR84 Arg2:T19
+R24	Theme Arg1:TR105 Arg2:TR106
+R25	Theme Arg1:TR72 Arg2:T3
+R26	Theme Arg1:TR87 Arg2:T23
+R27	Theme Arg1:TR96 Arg2:T50
+R28	Theme Arg1:TR97 Arg2:TR98
+R29	Theme Arg1:TR88 Arg2:T24
+R30	Theme Arg1:TR112 Arg2:T66
+R31	Cause Arg1:TR110 Arg2:TR109
+R32	Cause Arg1:TR70 Arg2:TR69
+R33	Cause Arg1:TR97 Arg2:TR96
+R34	Theme Arg1:TR98 Arg2:T51
+R35	Cause Arg1:TR108 Arg2:TR109
+R36	Theme Arg1:TR92 Arg2:TR93
+R37	Theme Arg1:TR77 Arg2:T13
+R38	Cause Arg1:TR83 Arg2:T18
+R39	Theme Arg1:TR107 Arg2:T63
+R40	Theme Arg1:TR108 Arg2:T64
+R41	Theme Arg1:TR105 Arg2:TR107
+R42	Cause Arg1:TR71 Arg2:T2
+R43	Theme Arg1:TR94 Arg2:T35
+R44	Cause Arg1:TR86 Arg2:TR85
+R45	Theme Arg1:TR100 Arg2:T52
+R46	Instrument Arg1:TR94 Arg2:T31
+R47	AtLoc Arg1:TR73 Arg2:T5
+R48	Theme Arg1:TR91 Arg2:TR93
+R49	Cause Arg1:TR92 Arg2:T28
+R50	Theme Arg1:TR110 Arg2:TR113
+R51	Theme Arg1:TR81 Arg2:TR82
+R52	Theme Arg1:TR102 Arg2:T54
+R53	Participant Arg1:TR106 Arg2:T62
+R54	Theme Arg1:TR83 Arg2:TR84
+R55	Cause Arg1:TR77 Arg2:T11
+R56	Theme Arg1:TR69 Arg2:T1
+E1	Negative_regulation:TR69 Theme:T1
+E2	Negative_regulation:TR70 Cause:E1 Theme:E5
+E3	Negative_regulation:TR70 Cause:E1 Theme:E6
+E4	Positive_regulation:TR71 Cause:T2 Theme:E5
+E5	Cell_transformation:TR72 Theme:T3
+E6	Carcinogenesis:TR73 AtLoc:T5
+E7	Cell_transformation:TR74 Theme:T8
+E8	Development:TR75 Theme:T9
+E9	Development:TR76 Theme:T9
+E10	Regulation:TR77 Cause:T11 Theme:T13
+E11	Regulation:TR77 Cause:T11 Theme:T12
+E12	Cell_transformation:TR78
+E13	Cell_transformation:TR79
+E14	Cell_transformation:TR80
+E15	Positive_regulation:TR81 Cause:T16 Theme:E16
+E16	Cell_transformation:TR82 Theme:T17
+E17	Positive_regulation:TR83 Cause:T18 Theme:E18
+E18	Carcinogenesis:TR84 AtLoc:T19
+E19	Mutation:TR85
+E20	Positive_regulation:TR86 Cause:E19 Theme:E21
+E21	Negative_regulation:TR87 Theme:T23
+E22	Cell_transformation:TR88 Theme:T24
+E23	Cell_transformation:TR89
+E24	Negative_regulation:TR90 Theme:T26
+E25	Regulation:TR91 Cause:T27 Theme:E27
+E26	Positive_regulation:TR92 Cause:T28 Theme:E27
+E27	Carcinogenesis:TR93 AtLoc:T29
+E28	Planned_process:TR94 Instrument:T31 Instrument2:T34 Theme:T35
+E29	Development:TR95 Theme:T44
+E30	Negative_regulation:TR96 Theme:T50
+E31	Regulation:TR97 Cause:E30 Theme:E32
+E32	Development:TR98 Theme:T51
+E33	Carcinogenesis:TR99
+E34	Negative_regulation:TR100 Theme:T52
+E35	Negative_regulation:TR101 Cause:E34 Theme:E36
+E36	Development:TR102 Theme:T54
+E37	Carcinogenesis:TR103
+E38	Development:TR104 Theme:T61
+E39	Regulation:TR105 Theme:E41
+E40	Regulation:TR105 Theme:E42
+E41	Pathway:TR106 Participant:T62
+E42	Remodeling:TR107 Theme:T63
+E43	Negative_regulation:TR108 Cause:E44 Theme:T64
+E44	Mutation:TR109
+E45	Negative_regulation:TR110 Cause:E44 Theme:E48
+E46	Negative_regulation:TR110 Cause:E44 Theme:E49
+E47	Positive_regulation:TR111 Theme:E48 Cause:T65
+E48	Cell_transformation:TR112 Theme:T66
+E49	Carcinogenesis:TR113 AtLoc:T68
+M1	Speculation E25
+M2	Negation E31
