@@ -5,14 +5,25 @@ DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts
 - Python 3.7.0
 - PyTorch
 
-## Prepare data
+## Data Links
 
-1. **BERT: [PyTorch AllenNLP Models](https://s3-us-west-2.amazonaws.com/ai2-s2-research/scibert/pytorch_models/scibert_scivocab_cased.tar)
-2. **Test data sets:
+### BERT: [PyTorch AllenNLP Models](https://s3-us-west-2.amazonaws.com/ai2-s2-research/scibert/pytorch_models/scibert_scivocab_cased.tar)
+### Test data sets:
 - CG: [Cancer Genetics task](http://2013.bionlp-st.org/tasks/cancer-genetics)
 - GE11: [GENIA Event Extraction](http://2011.bionlp-st.org/home/genia-event-extraction-genia)
 - GE13: [Genia event extraction task](http://bionlp.dbcls.jp/projects/bionlp-st-ge-2013/wiki)
 - ID11: [Infectious Diseases Task](http://2011.bionlp-st.org/home/infectious-diseases)
+
+## Prepare data
+
+1. BERT: download BERT model into 'data/bert/
+2. Test sets:
+- Download the original test sets from BioNLP 2011 and BioNLP 2013 shared tasks
+- Tokenize texts
+- Put data into, e.g: 'data/CG13/test/'
+3. Pretrained models:
+- Download our pretrained models
+- Put data into, e.g: 'data/models/cg/cg.param' and 'data/models/cg/model/***.pt'
 
 ## Predict
 
