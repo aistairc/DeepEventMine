@@ -4,7 +4,7 @@
 # ----------data path----------
 # input & output dir
 test_data: data/GE11/dev/
-output_dir: ge11-predict-dev
+output_dir: ge11-predict-dev/ev-ann
 
 # model path
 model_path: data/models/ge11/model/
