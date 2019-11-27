@@ -1,0 +1,20 @@
+# Configuration file to predict.
+
+
+# ----------data path----------
+# input & output dir
+test_data: data/corpora/CG13/dev/
+output_dir: cg-predict-dev/ev-ann
+
+# model path
+model_path: data/models/cg/model/
+saved_params: data/models/cg/cg.param
+bert_model: data/bert/scibert_scivocab_cased
+
+# eval
+ev_eval_entities: [DNA_domain_or_region,Protein_domain_or_region]
+
+# ----------setting----------
+gpu: 0
+batchsize: 16
+seed: 42

@@ -3,7 +3,7 @@
 
 # ----------data path----------
 # input & output dir
-test_data: data/ID11/dev/
+test_data: data/corpora/ID11/dev/
 output_dir: id11-predict-dev/ev-ann
 
 # model path

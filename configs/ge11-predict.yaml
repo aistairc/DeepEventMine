@@ -3,7 +3,7 @@
 
 # ----------data path----------
 # input & output dir
-test_data: data/GE11/dev/
+test_data: data/corpora/GE11/dev/
 output_dir: ge11-predict-dev/ev-ann
 
 # model path

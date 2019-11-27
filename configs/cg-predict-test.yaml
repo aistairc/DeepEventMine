@@ -3,8 +3,8 @@
 
 # ----------data path----------
 # input & output dir
-test_data: data/CG13/dev/
-output_dir: cg-predict-dev/ev-ann
+test_data: data/corpora/CG13/test/
+output_dir: cg-predict-test/ev-ann
 
 # model path
 model_path: data/models/cg/model/
