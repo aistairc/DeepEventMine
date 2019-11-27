@@ -1,6 +1,6 @@
 #!/bin/bash
 
-corpusdir=data/CG13/corpora/test/
+corpusdir=data/corpora/CG13/test/
 preddir=results/cg-predict-test/ev-ann/
 outdir=results/cg-predict-test/
 
