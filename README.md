@@ -46,12 +46,15 @@ python predict.py --yaml configs/cg-predict-test.yaml
 1. Postprocess
 - Retrieve the original offsets
 - Create a zipped file as the required format
+```bash
+sh postprocess.sh
+```
 
 2. Evaluate online
 
 Submit the zipped file to the shared task evaluation sites:
 
-- CG: [Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/) (Our score[link](https://drive.google.com/file/d/1Tjwd8e887ZjDMpdj-Z_JsuF6AK_Mv5dy/view?usp=sharing))
+- CG: [Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/) ([our score](https://drive.google.com/file/d/1Tjwd8e887ZjDMpdj-Z_JsuF6AK_Mv5dy/view?usp=sharing))
 - GE11: [Test](http://bionlp-st.dbcls.jp/GE/2011/eval-test/), [Development](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
 - GE13: [Test](http://bionlp-st.dbcls.jp/GE/2013/eval-test/), [Development](http://bionlp-st.dbcls.jp/GE/2013/eval-development/)
 - ID11: [Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/test-eval.html), [Development](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/devel-eval.htm)
