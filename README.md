@@ -30,8 +30,6 @@ sh preprocess.sh
 sh download_model.sh
 ```
 
-4. Config
-- Correct the data path in the config files 'config/cg-predict.yaml'
 
 ### Predict
 
