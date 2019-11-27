@@ -6,7 +6,7 @@ A model to predict nested events from biomedical texts using our pretrained mode
 ## Requirements
 - Python 3.7.0
 - PyTorch
-- For preprocessing data: regex, bs4, cchardet
+- For preprocessing data: regex, bs4, cchardet, gdown
 
 ## How to run
 
