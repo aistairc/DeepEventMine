@@ -74,19 +74,40 @@ for cur_fn in glob(os.path.join(input_dir, "**/*.a2"), recursive=True):
     valid_eid_list = []
     saved_eid_list = []
     saved_edata_list = []
-    dup_eid_list = []
+    invalid_eid_list = []
+
     for line in read_lines(cur_fn):
         if line.startswith("E"):
             line_sp = line.split("\t")
             eid = line_sp[0]
             e_data = line_sp[1].split(" ")
-            e_data = collections.Counter(e_data)
+            e_data2 = collections.Counter(e_data)
+
+            valid = True
            
-            if e_data not in saved_edata_list:
-                saved_edata_list.append(e_data)
+            if e_data2 not in saved_edata_list:
+                for arg in e_data:
+                    argeid = arg.split(':')[1]
+
+                    # argument is in the duplicated event list
+                    if argeid in invalid_eid_list:
+                        valid = False
+                        break
+
+            # event is duplicated
+            else:
+                valid = False
+
+            # for ge13: no Cause but CSite
+            if 'CSite' in line:
+                if not 'Cause' in line:
+                    valid = False
+
+            if valid:
+                saved_edata_list.append(e_data2)
                 valid_eid_list.append(eid)
             else:
-                dup_eid_list.append(eid)
+                invalid_eid_list.append(eid)
 
     for line in read_lines(cur_fn):
         if line.startswith("T"):
@@ -104,18 +125,11 @@ for cur_fn in glob(os.path.join(input_dir, "**/*.a2"), recursive=True):
         elif line.startswith("E"):
             line_sp = line.split("\t")
             eid = line_sp[0]
-            e_data = line[len(eid):].strip()
 
             if eid in valid_eid_list:
-                is_valid = True
-                for eid2 in dup_eid_list:
-                    if eid2 in e_data:
-                        is_valid = False
-                        break
+                saved_eid_list.append(eid)
+                processed_lines.append(line)
 
-                if is_valid:
-                    saved_eid_list.append(eid)
-                    processed_lines.append(line)
         elif line.startswith("M"):
             line_sp = line.split("\t")
             mid = line_sp[0]
