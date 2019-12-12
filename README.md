@@ -64,3 +64,7 @@ Submit the zipped file to the shared task evaluation sites:
 sh evaluate_event.sh
 ```
 - [Our CG13-dev score](https://drive.google.com/file/d/1u1zKcGavDVEAnAwZq6cI_cxQcqERvoAZ/view?usp=sharing)
+
+## Acknowledgements
+This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
+This work is also supported by PRISM (Public/Private R&D Investment Strategic Expansion PrograM).
