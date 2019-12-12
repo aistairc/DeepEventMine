@@ -25,7 +25,7 @@ sh preprocess.sh
 
 3. Download models
 - Download SciBERT model from PyTorch AllenNLP
-- Donwload our trained models to predict
+- Download our trained models to predict
 ```bash
 sh download_model.sh
 ```
