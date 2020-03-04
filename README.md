@@ -65,7 +65,7 @@ sh evaluate_event.sh
 
 4. Scores
 
-- [CG-test-single](https://drive.google.com/file/d/1zxudXsLAwYY1XnSE0SdCs30TthBWF6WR/view?usp=sharing), [CG-test-ensemble](https://drive.google.com/file/d/1NWf3WpAnPGDLnp01t7xpDf7QphqSdH5u/view?usp=sharing), [CG-dev](https://drive.google.com/file/d/1u1zKcGavDVEAnAwZq6cI_cxQcqERvoAZ/view?usp=sharing)
+- [CG-test-single](https://googledrive.com/host/1zxudXsLAwYY1XnSE0SdCs30TthBWF6WR), [CG-test-ensemble](https://drive.google.com/file/d/1NWf3WpAnPGDLnp01t7xpDf7QphqSdH5u/view?usp=sharing), [CG-dev](https://drive.google.com/file/d/1u1zKcGavDVEAnAwZq6cI_cxQcqERvoAZ/view?usp=sharing)
 - [GE11-test-single](https://drive.google.com/file/d/16P27hCOo3cjiclMJ-uTW5KMGHfxZ2MLO/view?usp=sharing), [GE11-test-ensemble](https://drive.google.com/file/d/1kDXukxggUuLD6XV8qdd7pevHMJXFRQhK/view?usp=sharing)
 
 ## Acknowledgements
