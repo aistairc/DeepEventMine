@@ -52,11 +52,10 @@ sh postprocess.sh
 
 Submit the zipped file to the shared task evaluation sites:
 
-- CG: [Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/) ([Our CG13-test-single score](https://drive.google.com/file/d/1RaSyfNgpfOVHb7iDnK2PT9K8SEydQDQe/view?usp=sharing),
-[Our CG13-test-ensemble score](https://drive.google.com/file/d/1p7GqdvckZ33xFRDomkYoHSVZ3Mpzyp4d/view?usp=sharing))
-- GE11: [Test](http://bionlp-st.dbcls.jp/GE/2011/eval-test/), [Development](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
-- GE13: [Test](http://bionlp-st.dbcls.jp/GE/2013/eval-test/), [Development](http://bionlp-st.dbcls.jp/GE/2013/eval-development/)
-- ID11: [Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/test-eval.html), [Development](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/devel-eval.htm)
+- CG: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/)
+- GE11: [Test set evaluation](http://bionlp-st.dbcls.jp/GE/2011/eval-test/), [Development set evaluation](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
+- GE13: [Test set evaluation](http://bionlp-st.dbcls.jp/GE/2013/eval-test/), [Development set evaluation](http://bionlp-st.dbcls.jp/GE/2013/eval-development/)
+- ID11: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/test-eval.html), [Development set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/devel-eval.htm)
 
 3. Evaluate using the shared task script
 
@@ -66,7 +65,7 @@ sh evaluate_event.sh
 
 4. Scores
 
-- [CG13-dev](https://drive.google.com/file/d/1u1zKcGavDVEAnAwZq6cI_cxQcqERvoAZ/view?usp=sharing)
+- [CG-test-single](https://drive.google.com/file/d/1zxudXsLAwYY1XnSE0SdCs30TthBWF6WR/view?usp=sharing), [CG-test-ensemble](https://drive.google.com/file/d/1NWf3WpAnPGDLnp01t7xpDf7QphqSdH5u/view?usp=sharing), [CG-dev](https://drive.google.com/file/d/1u1zKcGavDVEAnAwZq6cI_cxQcqERvoAZ/view?usp=sharing)
 - [GE11-test-single](https://drive.google.com/file/d/16P27hCOo3cjiclMJ-uTW5KMGHfxZ2MLO/view?usp=sharing), [GE11-test-ensemble](https://drive.google.com/file/d/1kDXukxggUuLD6XV8qdd7pevHMJXFRQhK/view?usp=sharing)
 
 ## Acknowledgements
