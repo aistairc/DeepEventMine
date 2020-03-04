@@ -63,7 +63,11 @@ Submit the zipped file to the shared task evaluation sites:
 ```bash
 sh evaluate_event.sh
 ```
-- [Our CG13-dev score](https://drive.google.com/file/d/1u1zKcGavDVEAnAwZq6cI_cxQcqERvoAZ/view?usp=sharing)
+
+4. Scores
+
+- [CG13-dev](https://drive.google.com/file/d/1u1zKcGavDVEAnAwZq6cI_cxQcqERvoAZ/view?usp=sharing)
+- [GE11-test-single](https://drive.google.com/file/d/16P27hCOo3cjiclMJ-uTW5KMGHfxZ2MLO/view?usp=sharing), [GE11-test-ensemble](https://drive.google.com/file/d/1kDXukxggUuLD6XV8qdd7pevHMJXFRQhK/view?usp=sharing)
 
 ## Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
