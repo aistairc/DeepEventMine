@@ -42,6 +42,14 @@ tar -xzvf id.tar.gz
 wget https://b2share.eudat.eu/api/files/6103b075-ef3f-4bbc-949c-93bec7fbda78/mlee.tar.gz
 tar -xzvf mlee.tar.gz
 
+# epi
+wget https://b2share.eudat.eu/api/files/9a9049ab-30e9-4a0b-a197-9b239c9230a1/epi.tar.gz
+tar -xzvf epi.tar.gz
+
+# pc
+wget https://b2share.eudat.eu/api/files/9a9049ab-30e9-4a0b-a197-9b239c9230a1/pc.tar.gz
+tar -xzvf pc.tar.gz
+
 rm *.tar.gz
 
 cd $root_dir
