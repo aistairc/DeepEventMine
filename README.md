@@ -56,6 +56,8 @@ Submit the zipped file to the shared task evaluation sites:
 - GE11: [Test set evaluation](http://bionlp-st.dbcls.jp/GE/2011/eval-test/), [Development set evaluation](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
 - GE13: [Test set evaluation](http://bionlp-st.dbcls.jp/GE/2013/eval-test/), [Development set evaluation](http://bionlp-st.dbcls.jp/GE/2013/eval-development/)
 - ID11: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/test-eval.html), [Development set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/devel-eval.htm)
+- EPI: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/test-eval.html), [Development set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/devel-eval.htm)
+- PC: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/PC/submission/)
 
 3. Evaluate using the shared task script
 
@@ -63,10 +65,10 @@ Submit the zipped file to the shared task evaluation sites:
 sh evaluate_event.sh
 ```
 
-4. Scores
+4. Supplemenary data
 
-- [CG-test-single](https://drive.google.com/file/d/1zxudXsLAwYY1XnSE0SdCs30TthBWF6WR/view?usp=sharing), [CG-test-ensemble](https://drive.google.com/file/d/1NWf3WpAnPGDLnp01t7xpDf7QphqSdH5u/view?usp=sharing), [CG-dev](https://drive.google.com/file/d/1u1zKcGavDVEAnAwZq6cI_cxQcqERvoAZ/view?usp=sharing)
-- [GE11-test-single](https://drive.google.com/file/d/16P27hCOo3cjiclMJ-uTW5KMGHfxZ2MLO/view?usp=sharing), [GE11-test-ensemble](https://drive.google.com/file/d/1kDXukxggUuLD6XV8qdd7pevHMJXFRQhK/view?usp=sharing)
+- Trained models: [link](https://b2share.eudat.eu/records/c51ccd9d73d2486487d110793f6bcb65)
+- Scores: [link](https://b2share.eudat.eu/api/files/0bbda752-54f0-40da-a09b-cbd300ec59a9/scores.tar.gz)
 
 ## Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
