@@ -16,15 +16,32 @@ tar -xzvf weights.tar.gz
 rm *.tar.gz
 cd $root_dir
 
-# download pretrained model on CG13
-# shared file id
-FILEID=1-jSBQSdJP6brC1QIOj_N6RHEzPBR9AYT
+# download pretrained models
 model_dir="data/models"
 
 mkdir -p $model_dir
 cd $model_dir
-gdown https://drive.google.com/uc?id=$FILEID
+
+# cg
+wget https://b2share.eudat.eu/api/files/6103b075-ef3f-4bbc-949c-93bec7fbda78/cg.tar.gz
 tar -xzvf cg.tar.gz
+
+# ge11
+wget https://b2share.eudat.eu/api/files/6103b075-ef3f-4bbc-949c-93bec7fbda78/ge11.tar.gz
+tar -xzvf ge11.tar.gz
+
+# ge13
+wget https://b2share.eudat.eu/api/files/6103b075-ef3f-4bbc-949c-93bec7fbda78/ge13.tar.gz
+tar -xzvf ge13.tar.gz
+
+# id
+wget https://b2share.eudat.eu/api/files/6103b075-ef3f-4bbc-949c-93bec7fbda78/id.tar.gz
+tar -xzvf id.tar.gz
+
+# mlee
+wget https://b2share.eudat.eu/api/files/6103b075-ef3f-4bbc-949c-93bec7fbda78/mlee.tar.gz
+tar -xzvf mlee.tar.gz
+
 rm *.tar.gz
 
 cd $root_dir
