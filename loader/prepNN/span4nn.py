@@ -3,8 +3,7 @@
 import numpy as np
 from collections import namedtuple
 
-Term = namedtuple('Term', ['id2term', 'term2id'])
-
+Term = namedtuple('Term', ['id2term', 'term2id', 'id2label'])
 
 def get_span_index(
         span_start,
@@ -71,7 +70,7 @@ def get_batch_data(fid, entities, terms, valid_starts, sw_sentence, tokenizer, p
     span_labels_match_rel = []
     entity_masks = []
     trigger_masks = []
-    span_terms = Term({}, {})
+    span_terms = Term({}, {}, {})
 
     for span_start, span_end in zip(
             span_starts.flatten(), span_ends.flatten()
@@ -116,6 +115,10 @@ def get_batch_data(fid, entities, terms, valid_starts, sw_sentence, tokenizer, p
                                             params["ner_label_limit"])
                 span_terms.id2term[span_index] = term_id
                 span_terms.term2id[term_id] = span_index
+
+                # add entity type
+                term_label = params['mappings']['nn_mapping']['id_tag_mapping'][span_label[0]]
+                span_terms.id2label[span_index] = term_label
 
             span_label = mlb.transform([span_label])[-1]
 

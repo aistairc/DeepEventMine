@@ -153,24 +153,66 @@ class DeepEM(nn.Module):
 
         trigger_idx = self.trigger_id + 1
         for sentence_idx, span_preds in enumerate(preds):
-            # Update gold labels
+
+            # store gold entity index (a1)
+            a1ent_set = set()
+
             for span_idx, span_term in span_terms[sentence_idx].id2term.items():
+
+                # replace for entity (using gold entity label)
                 if span_term != "O" and not span_term.startswith("TR") and span_preds[span_idx] != 255:
-                    span_preds[span_idx] = golds[sentence_idx][span_idx]
+
+                    # but do not replace for entity in a2 files
+                    span_label = span_terms[sentence_idx].id2label[span_idx]
+                    if span_label not in self.params['ev_eval_entities']:
+                        span_preds[span_idx] = golds[sentence_idx][span_idx]
+
+                        # save this index to ignore prediction
+                        a1ent_set.add(span_idx)
 
             for pred_idx, label_id in enumerate(span_preds):
                 span_term = span_terms[sentence_idx].id2term.get(pred_idx, "O")
-                if span_term == "O" or span_term.startswith("TR"):
+
+                # if this entity in a1: skip this span
+                if pred_idx in a1ent_set:
+                    continue
+
+                remove_span = False
+
+                # add prediction for trigger or entity a2
+                if label_id > 0:
+
+                    term = ''
+
+                    # is trigger
                     if self.is_tr(label_id):
                         term = "TR" + str(trigger_idx)
+
+                    # is entity
+                    else:
+                        etype_label = self.params['mappings']['nn_mapping']['id_tag_mapping'][label_id]
+
+                        # check this entity type in a2 or not
+                        if etype_label in self.params['ev_eval_entities']:
+                            term = "T" + str(trigger_idx)
+                        else:
+                            remove_span = True
+
+                    if len(term) > 0:
                         span_terms[sentence_idx].id2term[pred_idx] = term
                         span_terms[sentence_idx].term2id[term] = pred_idx
                         trigger_idx += 1
-                    else:
-                        span_preds[pred_idx] = 0
-                        if span_term.startswith("TR"):
-                            del span_terms[sentence_idx].id2term[pred_idx]
-                            del span_terms[sentence_idx].term2id[span_term]
+
+                # null prediction
+                if label_id == 0 or remove_span:
+
+                    # do not write anything
+                    span_preds[pred_idx] = 0
+
+                    # remove this span
+                    if span_term.startswith("T"):
+                        del span_terms[sentence_idx].id2term[pred_idx]
+                        del span_terms[sentence_idx].term2id[span_term]
 
             span_preds[span_preds == 255] = 0
         self.trigger_id = trigger_idx
