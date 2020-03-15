@@ -2,14 +2,12 @@
 
 
 # ----------data path----------
-# input & output dir
-test_data: data/corpora/CG13/test/
-output_dir: cg-predict-test/ev-ann
-
-# model path
-model_path: data/models/cg/model/
-saved_params: data/models/cg/cg.param
 bert_model: data/bert/scibert_scivocab_cased
+
+test_data: data/corpora/CG13/test/
+output_dir: cg/cg-predict-test/ev-ann
+model_path: data/models/cg/cg/model/
+saved_params: data/models/cg/cg/cg.param
 
 # eval
 ev_eval_entities: [DNA_domain_or_region,Protein_domain_or_region]

@@ -1,0 +1,18 @@
+# Configuration file to predict.
+
+
+# ----------data path----------
+bert_model: data/bert/scibert_scivocab_cased
+
+test_data: data/corpora/ID11/test/
+output_dir: id11/id11-predict-test/ev-ann
+model_path: data/models/id11/id11/model/
+saved_params: data/models/id11/id11/id11.param
+
+# eval
+ev_eval_entities: [Entity]
+
+# ----------setting----------
+gpu: 0
+batchsize: 16
+seed: 42

@@ -33,11 +33,14 @@ sh download_model.sh
 
 ### Predict
 
-- On development and test sets
+- On development and test sets. For instance: CG task
+
 ```bash
 python predict.py --yaml configs/cg-predict-dev.yaml
 python predict.py --yaml configs/cg-predict-test.yaml
 ```
+
+- Similarly, for other tasks.
 
 ### Postprocess output and evaluate
 

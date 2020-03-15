@@ -1,0 +1,18 @@
+# Configuration file to predict.
+
+
+# ----------data path----------
+bert_model: data/bert/scibert_scivocab_cased
+
+test_data: data/corpora/PC/dev/
+output_dir: pc/pc-predict-dev/ev-ann
+model_path: data/models/pc/pc/model/
+saved_params: data/models/pc/pc/pc.param
+
+# eval
+ev_eval_entities: []
+
+# ----------setting----------
+gpu: 0
+batchsize: 16
+seed: 42
