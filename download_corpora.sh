@@ -2,7 +2,7 @@
 
 root_dir=$PWD
 
-# CG13
+# CG13 -----------------------------
 cg13_dir="data/original_corpora/CG13"
 
 mkdir -p $cg13_dir
@@ -25,7 +25,7 @@ rm *.tar.gz
 
 cd $root_dir
 
-# GE13
+# GE13 -----------------------------
 ge13_dir="data/original_corpora/GE13"
 
 mkdir -p $ge13_dir
@@ -48,7 +48,7 @@ rm *.tar.gz
 
 cd $root_dir
 
-# GE11
+# GE11 -----------------------------
 ge11_dir="data/original_corpora/GE11"
 
 mkdir -p $ge11_dir
@@ -71,7 +71,7 @@ rm *.tar.gz
 
 cd $root_dir
 
-# ID11
+# ID11 -----------------------------
 id11_dir="data/original_corpora/ID11"
 
 mkdir -p $id11_dir
@@ -89,6 +89,53 @@ tar -xzvf BioNLP-ST_2011_Infectious_Diseases_test_data.tar.gz
 mv BioNLP-ST_2011_Infectious_Diseases_training_data_rev1 train
 mv BioNLP-ST_2011_Infectious_Diseases_development_data_rev1 dev
 mv BioNLP-ST_2011_Infectious_Diseases_test_data test
+
+rm *.tar.gz
+
+cd $root_dir
+
+# EPI -----------------------------
+epi_dir="data/original_corpora/EPI"
+
+mkdir -p $epi_dir
+
+cd $epi_dir
+
+wget http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/downloads/files/BioNLP-ST_2011_Epi_and_PTM_training_data_rev1.tar.gz
+wget http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/downloads/files/BioNLP-ST_2011_Epi_and_PTM_development_data_rev1.tar.gz
+wget http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/downloads/files/BioNLP-ST_2011_Epi_and_PTM_test_data.tar.gz
+
+tar -xzvf BioNLP-ST_2011_Epi_and_PTM_training_data_rev1.tar.gz
+tar -xzvf BioNLP-ST_2011_Epi_and_PTM_development_data_rev1.tar.gz
+tar -xzvf BioNLP-ST_2011_Epi_and_PTM_test_data.tar.gz
+
+mv BioNLP-ST_2011_Epi_and_PTM_training_data_rev1 train
+mv BioNLP-ST_2011_Epi_and_PTM_development_data_rev1 dev
+mv BioNLP-ST_2011_Epi_and_PTM_test_data test
+
+rm *.tar.gz
+
+cd $root_dir
+
+
+# PC -----------------------------
+pc_dir="data/original_corpora/EPI"
+
+mkdir -p $pc_dir
+
+cd $pc_dir
+
+wget http://2013.bionlp-st.org/tasks/BioNLP-ST_2013_PC_training_data.tar.gz
+wget http://2013.bionlp-st.org/tasks/BioNLP-ST_2013_PC_development_data.tar.gz
+wget http://2013.bionlp-st.org/tasks/BioNLP-ST_2013_PC_test_data.tar.gz
+
+tar -xzvf BioNLP-ST_2013_PC_training_data.tar.gz
+tar -xzvf BioNLP-ST_2013_PC_development_data.tar.gz
+tar -xzvf BioNLP-ST_2013_PC_test_data.tar.gz
+
+mv BioNLP-ST_2013_PC_training_data train
+mv BioNLP-ST_2013_PC_development_data dev
+mv BioNLP-ST_2013_PC_test_data test
 
 rm *.tar.gz
 
