@@ -70,8 +70,8 @@ sh evaluate_event.sh
 
 4. Supplemenary data
 
-- Trained models: [link](https://b2share.eudat.eu/records/c51ccd9d73d2486487d110793f6bcb65)
-- Scores: [link](https://b2share.eudat.eu/api/files/0bbda752-54f0-40da-a09b-cbd300ec59a9/scores.tar.gz)
+- Trained models: [link](https://b2share.eudat.eu/records/a207fc06b1d04180a526fd85332e0fb2)
+- Scores: [link](https://b2share.eudat.eu/api/files/46da6e84-580e-4a1b-a54c-f24df280c19f/scores.tar.gz)
 
 ## Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
