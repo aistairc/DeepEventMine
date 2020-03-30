@@ -23,31 +23,31 @@ mkdir -p $model_dir
 cd $model_dir
 
 # cg
-wget https://b2share.eudat.eu/api/files/46da6e84-580e-4a1b-a54c-f24df280c19f/cg.tar.gz
+wget https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/cg.tar.gz
 tar -xzvf cg.tar.gz
 
 # ge11
-wget https://b2share.eudat.eu/api/files/46da6e84-580e-4a1b-a54c-f24df280c19f/ge11.tar.gz
+wget https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/ge11.tar.gz
 tar -xzvf ge11.tar.gz
 
 # ge13
-wget https://b2share.eudat.eu/api/files/46da6e84-580e-4a1b-a54c-f24df280c19f/ge13.tar.gz
+wget https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/ge13.tar.gz
 tar -xzvf ge13.tar.gz
 
 # id
-wget https://b2share.eudat.eu/api/files/46da6e84-580e-4a1b-a54c-f24df280c19f/id.tar.gz
+wget https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/id.tar.gz
 tar -xzvf id.tar.gz
 
 # mlee
-wget https://b2share.eudat.eu/api/files/46da6e84-580e-4a1b-a54c-f24df280c19f/mlee.tar.gz
+wget https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/mlee.tar.gz
 tar -xzvf mlee.tar.gz
 
 # epi
-wget https://b2share.eudat.eu/api/files/46da6e84-580e-4a1b-a54c-f24df280c19f/epi.tar.gz
+wget https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/epi.tar.gz
 tar -xzvf epi.tar.gz
 
 # pc
-wget https://b2share.eudat.eu/api/files/46da6e84-580e-4a1b-a54c-f24df280c19f/pc.tar.gz
+wget https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/pc.tar.gz
 tar -xzvf pc.tar.gz
 
 rm *.tar.gz
