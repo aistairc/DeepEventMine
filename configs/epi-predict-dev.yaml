@@ -6,8 +6,8 @@ bert_model: data/bert/scibert_scivocab_cased
 
 test_data: data/corpora/EPI/dev/
 output_dir: epi/epi-predict-dev/ev-ann
-model_path: data/models/epi/epi/model/
-saved_params: data/models/epi/epi/epi.param
+model_path: data/models/epi/model/
+saved_params: data/models/epi/epi.param
 
 # eval
 ev_eval_entities: [Entity]

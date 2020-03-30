@@ -6,8 +6,8 @@ bert_model: data/bert/scibert_scivocab_cased
 
 test_data: data/corpora/GE11/dev/
 output_dir: ge11/ge11-predict-dev/ev-ann
-model_path: data/models/ge11/ge11/model/
-saved_params: data/models/ge11/ge11/ge11.param
+model_path: data/models/ge11/model/
+saved_params: data/models/ge11/ge11.param
 
 # eval
 ev_eval_entities: [Entity]

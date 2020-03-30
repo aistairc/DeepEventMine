@@ -6,8 +6,8 @@ bert_model: data/bert/scibert_scivocab_cased
 
 test_data: data/corpora/MLEE/test/
 output_dir: mlee/mlee-predict-test/ev-ann
-model_path: data/models/mlee/mlee/model/
-saved_params: data/models/mlee/mlee/mlee.param
+model_path: data/models/mlee/model/
+saved_params: data/models/mlee/mlee.param
 
 # eval
 ev_eval_entities: [DNA_domain_or_region,Protein_domain_or_region]
