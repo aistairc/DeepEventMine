@@ -46,10 +46,12 @@ python predict.py --yaml configs/cg-predict-test.yaml
 
 1. Postprocess
 - Retrieve the original offsets
-- Create a zipped file as the required format
+- Create a zipped file as the required format. For instance: CG task, test
 ```bash
-sh postprocess.sh
+python scripts/postprocess.py --corpusdir data/corpora/CG/test/ --indir results/cg/cg-predict-test/ev-ann/ --outdir results/cg/cg-predict-test/
 ```
+
+- Similarly for other tasks by changing the corresponding paths.
 
 2. Evaluate online
 
