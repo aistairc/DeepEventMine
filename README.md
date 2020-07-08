@@ -1,7 +1,8 @@
 # DeepEventMine
-DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts
-
 A model to predict nested events from biomedical texts using our pretrained models.
+
+- The model and results are reported in our paper: [DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts](https://doi.org/10.1093/bioinformatics/btaa540)
+- Bioinformatics, 2020.
 
 ## Requirements
 - Python 3.7.0
@@ -80,3 +81,19 @@ sh evaluate_event.sh
 ## Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
 This work is also supported by PRISM (Public/Private R&D Investment Strategic Expansion PrograM).
+
+## Citation
+```bash
+@article{10.1093/bioinformatics/btaa540,
+    author = {Trieu, Hai-Long and Tran, Thy Thy and Duong, Khoa N A and Nguyen, Anh and Miwa, Makoto and Ananiadou, Sophia},
+    title = "{DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts}",
+    journal = {Bioinformatics},
+    year = {2020},
+    month = {06},
+    issn = {1367-4803},
+    doi = {10.1093/bioinformatics/btaa540},
+    url = {https://doi.org/10.1093/bioinformatics/btaa540},
+    note = {btaa540},
+    eprint = {https://academic.oup.com/bioinformatics/article-pdf/doi/10.1093/bioinformatics/btaa540/33399046/btaa540.pdf},
+}
+```
