@@ -11,15 +11,15 @@ mkdir -p $log_dir
 
 # predict
 if [ "$TASK" = "predict" ]; then
-    echo "Predict:"
+    echo "Predict: "
 
     # predict
-    nohup python -u predict.py --yaml $experiment_dir/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml >> $log_dir/$TASK-$GOLD_E2E-$DEV_TEST.log &
+    python predict.py --yaml $experiment_dir/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml
 
 # evaluate
 elif [ "$TASK" = "eval" ]; then
 
-    echo "Evaluate:"
+    echo "Evaluate: "
 
     # paths
     REFDIR="data/corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data

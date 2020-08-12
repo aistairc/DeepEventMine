@@ -57,6 +57,11 @@ sh generate-config.sh [gpu]
 sh run.sh [task] predict gold dev
 sh run.sh [task] predict gold test
 ```
+- Check the output in
+```bash
+experiments/[task]/predict-gold-dev/
+experiments/[task]/predict-gold-test/
+```
 
 ### Evaluate
 
@@ -99,7 +104,12 @@ sh preprocess.sh raw
 
 3. Predict
 ```bash
-sh run.sh [task] predict raw e2e
+sh run.sh [task] predict raw text
+```
+
+- Check the output in
+```bash
+experiments/[task]/predict-raw-text/
 ```
 
 ## Acknowledgements
