@@ -48,7 +48,7 @@ def read_specific_config(task):
     """Specific config for specific task."""
 
     # open specific config
-    task_config_path = ''.join(['../configs/', task, '.yaml'])
+    task_config_path = ''.join(['configs/', task, '.yaml'])
 
     specific_config = {}
 
@@ -72,7 +72,7 @@ def generate_configs(expdir, tasks):
         utils.makedir(config_dir)
 
         # default setting
-        default_config_path = '../configs/default.yaml'
+        default_config_path = 'configs/default.yaml'
         with open(default_config_path, 'r') as stream:
             default_config = utils._ordered_load(stream)
 
@@ -96,5 +96,5 @@ def generate_configs(expdir, tasks):
 
 
 if __name__ == '__main__':
-    generate_configs("experiments/", "cg-ge11-ge13-epi-id-pc-mlee")
-    # generate_configs(sys.argv[1], sys.argv[2], sys.argv[3])
+    # generate_configs("experiments/", "cg-ge11-ge13-epi-id-pc-mlee")
+    generate_configs(sys.argv[1], sys.argv[2])
