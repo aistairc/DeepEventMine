@@ -41,26 +41,22 @@ sh download_model.sh
 ```
 
 4. Generate configs
+- If using GPU: [gpu] = 0, otherwise: [gpu]=-1
 ```bash
-sh generate-config.sh
+sh generate-config.sh [gpu]
 ```
 
 ### Predict
 
-1. CG task, development and test sets (given gold entities)
-
-```bash
-sh run.sh cg predict dev gold
-sh run.sh cg predict test gold
-```
-
-2. PC task
-```bash
-sh run.sh pc predict dev gold
-sh run.sh pc predict test gold
-```
-
+1. For development and test sets (given gold entities)
+- CG task: [task] = cg
+- PC task: [task] = pc
 - etc
+
+```bash
+sh run.sh [task] predict dev gold
+sh run.sh [task] predict test gold
+```
 
 ### Evaluate
 

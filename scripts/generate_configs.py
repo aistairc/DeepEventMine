@@ -60,7 +60,7 @@ def read_specific_config(task):
     return specific_config
 
 
-def generate_configs(expdir, tasks):
+def generate_configs(expdir, tasks, gpu):
     """Generate configs for all."""
 
     tasks_ = tasks.split('-')
@@ -81,6 +81,7 @@ def generate_configs(expdir, tasks):
 
         # generate config for each task
         task_config = default_config.copy()
+        task_config['gpu'] = gpu
         task_config['model_path'] = task_config['model_path'].replace('cg', task)
         task_config['saved_params'] = task_config['saved_params'].replace('cg', task)
         task_config['ev_eval_script_path'] = task_config['ev_eval_script_path'].replace('cg', task)
@@ -99,4 +100,4 @@ def generate_configs(expdir, tasks):
 
 if __name__ == '__main__':
     # generate_configs("experiments/", "cg-ge11-ge13-epi-id-pc-mlee")
-    generate_configs(sys.argv[1], sys.argv[2])
+    generate_configs(sys.argv[1], sys.argv[2], sys.argv[3])
