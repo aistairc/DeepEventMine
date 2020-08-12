@@ -1,0 +1,23 @@
+# Configuration file.
+
+task_name: cg
+
+# model
+bert_model: data/bert/scibert_scivocab_cased
+model_path: data/models/cg/model/
+saved_params: data/models/cg/cg.param
+
+# data
+test_data: ..
+
+# eval
+ev_eval_script_path: eval/scripts/eval-ev-cg.py
+ev_eval_entities: []
+
+# output
+result_dir: ..
+
+# params
+gpu: -1
+batchsize: 16
+seed: 42

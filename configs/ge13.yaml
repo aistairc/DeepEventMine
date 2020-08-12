@@ -1,0 +1,2 @@
+# Configs for specific task
+ev_eval_entities: [Entity,Anaphora]
