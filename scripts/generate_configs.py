@@ -24,13 +24,25 @@ def write_config(datapath, config):
 def gen_predict_config(predict_config, specific_config, eval_set, config_dir, task, taskdir):
     """For joint prediction"""
 
-    predict_config['test_data'] = ''.join(["data/corpora/", task, "/", eval_set, "/"])
-    predict_config['result_dir'] = ''.join([taskdir, 'predict-gold-', eval_set, '/'])
+    # dev and test sets
+    if eval_set == 'dev' or eval_set == 'test':
+        predict_config['test_data'] = ''.join(["data/corpora/", task, "/", eval_set, "/"])
+        predict_config['result_dir'] = ''.join([taskdir, 'predict-gold-', eval_set, '/'])
 
-    # overwrite task config
-    overwrite_task_config(predict_config, specific_config)
+        # overwrite task config
+        overwrite_task_config(predict_config, specific_config)
 
-    write_config(os.path.join(config_dir, ''.join(['predict-gold-', eval_set, '.yaml'])), predict_config)
+        write_config(os.path.join(config_dir, ''.join(['predict-gold-', eval_set, '.yaml'])), predict_config)
+
+    # for raw texts
+    elif eval_set == 'raw_text':
+        predict_config['test_data'] = ''.join(["data/raw_text/", task, "/"])
+        predict_config['result_dir'] = ''.join([taskdir, 'predict-', eval_set, '/'])
+
+        # overwrite task config
+        overwrite_task_config(predict_config, specific_config)
+
+        write_config(os.path.join(config_dir, ''.join(['predict-', eval_set, '.yaml'])), predict_config)
 
 
 def overwrite_task_config(config, specific_config):
