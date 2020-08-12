@@ -1,7 +1,8 @@
 import torch
 from tqdm import tqdm
 
-from eval.evalEV import evaluate_ev
+from eval.evalRE import write_entity_relations
+from eval.evalEV import write_events
 from utils import utils
 
 
@@ -16,6 +17,8 @@ def predict(model, eval_dir, result_dir, eval_dataloader, eval_data, params):
 
     fidss, wordss, offsetss, sub_to_wordss, span_indicess = [], [], [], [], []
 
+    # entity and relation output
+    ent_anns = []
     rel_anns = []
 
     # Evaluation phase
@@ -99,24 +102,29 @@ def predict(model, eval_dir, result_dir, eval_dataloader, eval_data, params):
                     )
             all_ner_preds.append(pred_entities)
 
+        # entity prediction
+        ent_ann = {'span_indices': nn_span_indices, 'ner_preds': ner_out['preds'], 'words': words,
+                   'offsets': offsets, 'sub_to_words': sub_to_words, 'subwords': subwords,
+                   'ner_terms': ner_terms}
+        ent_anns.append(ent_ann)
+
         fidss.append(fids)
 
         wordss.append(words)
         offsetss.append(offsets)
         sub_to_wordss.append(sub_to_words)
 
+        # relation prediction
         if rel_out != None:
-
-            if params['predict']:
-                pairs_idx = rel_out['pairs_idx']
-                rel_pred = rel_out['preds']
+            pairs_idx = rel_out['pairs_idx']
+            rel_pred = rel_out['preds']
 
             rel_ann = {'pairs_idx': pairs_idx, 'rel_preds': rel_pred}
             rel_anns.append(rel_ann)
-            is_eval_rel = True
         else:
             rel_anns.append({})
 
+        # event prediction
         if ev_out != None:
             # add predicted entity
             ent_preds.append(ner_out["nner_preds"])
@@ -140,15 +148,23 @@ def predict(model, eval_dir, result_dir, eval_dataloader, eval_data, params):
         # Clear GPU unused RAM:
         if params['gpu'] >= 0:
             torch.cuda.empty_cache()
+    # write entity and relation prediction
+    _ = write_entity_relations(
+        result_dir=result_dir,
+        fidss=fidss,
+        ent_anns=ent_anns,
+        rel_anns=rel_anns,
+        params=params
+    )
 
     if is_eval_ev > 0:
-        evaluate_ev(fids=fidss,
-                    all_ent_preds=ent_preds,
-                    all_words=wordss,
-                    all_offsets=offsetss,
-                    all_span_terms=all_ner_terms,
-                    all_span_indices=span_indicess,
-                    all_sub_to_words=sub_to_wordss,
-                    all_ev_preds=ev_preds,
-                    params=params,
-                    result_dir=result_dir)
+        write_events(fids=fidss,
+                     all_ent_preds=ent_preds,
+                     all_words=wordss,
+                     all_offsets=offsetss,
+                     all_span_terms=all_ner_terms,
+                     all_span_indices=span_indicess,
+                     all_sub_to_words=sub_to_wordss,
+                     all_ev_preds=ev_preds,
+                     params=params,
+                     result_dir=result_dir)

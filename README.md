@@ -30,7 +30,7 @@ sh download_corpora.sh
 2. Preprocess data
 - Tokenize texts and prepare data for prediction
 ```bash
-sh preprocess.sh
+sh preprocess.sh bionlp
 ```
 
 3. Download models
@@ -46,7 +46,7 @@ sh download_model.sh
 sh generate-config.sh [gpu]
 ```
 
-### Predict
+### Predict (with the BioNLP shared task data sets)
 
 1. For development and test sets (given gold entities)
 - CG task: [task] = cg
@@ -79,6 +79,29 @@ sh run.sh [task] eval test gold
 
 - [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
 - [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
+
+### Predict (with raw text)
+
+1. Prepare raw text input in the following path
+```bash
+data/raw-text/[task]/PMID-*.txt
+```
+- Eg: [task] = cg: the output is predicted based on our trained cg model
+
+2. Preprocess raw text
+
+- Tokenize raw text and prepare data for prediction
+```bash
+sh preprocess.sh raw
+```
+
+- The processed input is stored in the
+```bash
+data/processed-raw-text/[task]/
+```
+
+3. Predict
+
 
 ## Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).

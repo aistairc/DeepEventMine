@@ -57,8 +57,8 @@ def brat_loader(files_fold, params):
             fentities['ids'] = idsT
             fentities['terms'] = termsT
 
-        # check empty
-        if len(idsT) == 0:
+        # check empty entities
+        if len(idsT) == 0 and not params['raw_text']:
             continue
 
         else:

@@ -13,6 +13,8 @@ test_data: ..
 # eval
 ev_eval_script_path: eval/scripts/eval-ev-cg.py
 ev_eval_entities: []
+raw_text: False
+ner_predict_all: False
 
 # output
 result_dir: ..

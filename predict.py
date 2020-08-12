@@ -15,8 +15,14 @@ from utils import utils
 
 def main():
     # read predict config
+    # set config path by command line
     inp_args = utils._parsing()
-    with open(getattr(inp_args, 'yaml'), 'r') as stream:
+    config_path = getattr(inp_args, 'yaml')
+
+    # set config path manually
+    # config_path = 'configs/default.yaml'
+
+    with open(config_path, 'r') as stream:
         pred_params = utils._ordered_load(stream)
 
     # Fix seed for reproducibility
@@ -54,6 +60,10 @@ def main():
         os.makedirs(result_dir)
 
     parameters['result_dir'] = pred_params['result_dir']
+
+    # raw text
+    parameters['raw_text'] = pred_params['raw_text']
+    parameters['ner_predict_all'] = pred_params['raw_text']
 
     # process data
     test_data = prepdata.prep_input_data(pred_params['test_data'], parameters)

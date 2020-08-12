@@ -38,6 +38,8 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, ta
     elif eval_set == 'raw-text':
         predict_config['test_data'] = ''.join(["data/processed-raw-text/", task, "/"])
         predict_config['result_dir'] = ''.join([taskdir, 'predict-', eval_set, '/'])
+        predict_config['raw_text'] = True
+        predict_config['ner_predict_all'] = True
 
         # overwrite task config
         overwrite_task_config(predict_config, specific_config)

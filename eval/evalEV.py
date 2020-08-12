@@ -292,25 +292,90 @@ def convert_evid_to_number(str_evid):
     return int(evid[0] + evid[1])
 
 
+def mapping_entity_id(en_preds_):
+    eid = 1
+    enid_mapping = collections.OrderedDict()
+    en_preds_out_ = []
+
+    # create mapping for entity id first
+    for en_pred in en_preds_:
+
+        # id
+        en_id = en_pred[0]
+
+        if en_id.startswith('TR'):
+            continue
+
+        elif en_id.startswith('T'):
+            enid_mapping[en_id] = 'T' + str(eid)
+            eid += 1
+            en_preds_out_.append(en_pred)
+
+    # creat mapping for trigger id
+    for en_pred in en_preds_:
+        # id
+        en_id = en_pred[0]
+
+        if en_id.startswith('TR'):
+            enid_mapping[en_id] = 'T' + str(eid)
+            eid += 1
+            en_preds_out_.append(en_pred)
+
+    return enid_mapping, en_preds_out_
+
+
 # write events to file
 def write_ev_2file(pred_output, result_dir, params):
     dir2wr = result_dir + 'ev-last/ev-ann/'
     rev_type_map = params['mappings']['rev_type_map']
 
+    # entity id mapping
+    feid_mapping = collections.OrderedDict()
+
     if not os.path.exists(dir2wr):
         os.makedirs(dir2wr)
     else:
         os.system('rm ' + dir2wr + '*.a2')
+        os.system('rm ' + dir2wr + '*.a1')
 
+    # write event and triggers, (and entity: if predict both entity and trigger)
     for fid, preds in pred_output.items():
-        triggers = preds[0]
+        en_preds_ = preds[0]
         events = preds[1]
 
+        enid_mapping, en_preds_out_ = mapping_entity_id(en_preds_)
+        # store for this document
+        feid_mapping[fid] = enid_mapping
+
+        # write a1 file for entity if predict both entity and trigger
+        if params['ner_predict_all']:
+            with open(dir2wr + fid + '.a1', 'w') as o1file:
+                for e_pred in en_preds_:
+                    e_id = e_pred[0]
+
+                    if e_id.startswith('TR'):
+                        continue
+
+                    # only write entity to a1
+                    elif e_id.startswith('T'):
+                        e_id = enid_mapping[e_id]
+
+                        output = ''.join(
+                            [e_id, '\t', rev_type_map[e_pred[1]], ' ', str(e_pred[2][0]), ' ', str(e_pred[2][1]), '\t',
+                             e_pred[3], '\n'])
+                        o1file.write(output)
+
+        # write event and trigger to a2
         with open(dir2wr + fid + '.a2', 'w') as o2file:
 
-            for trigger in triggers:
-                o2file.write(trigger[0].replace('TR', 'T') + '\t' + rev_type_map[trigger[1]] + ' ' +
-                             str(trigger[2][0]) + ' ' + str(trigger[2][1]) + '\t' + trigger[3] + '\n')
+            for e_pred in en_preds_out_:
+                e_id = e_pred[0]
+                e_id = enid_mapping[e_id]
+
+                output = ''.join(
+                    [e_id, '\t', rev_type_map[e_pred[1]], ' ', str(e_pred[2][0]), ' ', str(e_pred[2][1]), '\t',
+                     e_pred[3], '\n'])
+                o2file.write(output)
 
             # count event id
             f_evid = 0
@@ -334,7 +399,8 @@ def write_ev_2file(pred_output, result_dir, params):
                     evid_out = f_evid
                     f_evid_map[evid] = evid_out
 
-                idTR = event_[1][0].replace('TR', 'T')
+                trid = event_[1][0]
+                trid = enid_mapping[trid]
                 typeEV = rev_type_map[event_[1][1]]
                 args_data = event_[2]
                 mod_pred = event_[3]
@@ -351,27 +417,30 @@ def write_ev_2file(pred_output, result_dir, params):
                         nest_evid = convert_evid_to_number(argIdE)
                         if nest_evid in f_evid_map:
                             nest_evid_out = f_evid_map[nest_evid]
-                            idT = 'E' + str(nest_evid_out)
+                            eid = 'E' + str(nest_evid_out)
                         else:
                             print('ERROR: NESTED EVENT BUT MISSING EVENT ARGUMENT.')
 
                     # entity argument
                     else:
                         a2data = arg_[1]
-                        idT = a2data[0].replace('TR', 'T')
+                        eid = a2data[0]
+                        eid = enid_mapping[eid]
 
                     if len(args_output) > 0:
                         args_output += ' '
 
-                    args_output += typeR + ':' + idT
+                    args_output += typeR + ':' + eid
 
                 # if has argument
                 if len(args_output) > 0:
-                    o2file.write('E' + str(evid_out) + '\t' + typeEV + ':' + idTR + ' ' + args_output + '\n')
+                    output = ''.join(['E', str(evid_out), '\t', typeEV, ':', trid, ' ', args_output, '\n'])
+                    o2file.write(output)
 
                 # no argument
                 else:
-                    o2file.write('E' + str(evid_out) + '\t' + typeEV + ':' + idTR + '\n')
+                    output = ''.join(['E', str(evid_out), '\t', typeEV, ':', trid, '\n'])
+                    o2file.write(output)
 
                 # check and store modality
                 if mod_pred > 1:
@@ -383,14 +452,15 @@ def write_ev_2file(pred_output, result_dir, params):
                 for mod_id, mod_data in enumerate(mod_list):
                     mod_type = mod_data[0]
                     evid_out = mod_data[1]
-                    o2file.write('M' + str(mod_id + 1) + '\t' + mod_type + ' ' + 'E' + str(evid_out) + '\n')
+                    output = ''.join(['M', str(mod_id + 1), '\t', mod_type, ' ', 'E', str(evid_out), '\n'])
+                    o2file.write(output)
 
-    return
+    return feid_mapping
 
 
 # generate event output and evaluation
-def evaluate_ev(fids, all_ent_preds, all_words, all_offsets, all_span_terms, all_span_indices, all_sub_to_words,
-                all_ev_preds, params, result_dir):
+def write_events(fids, all_ent_preds, all_words, all_offsets, all_span_terms, all_span_indices, all_sub_to_words,
+                 all_ev_preds, params, result_dir):
     # generate predicted entities
     pred_ents = generate_entities(fids=fids,
                                   all_e_preds=all_ent_preds,
@@ -410,6 +480,6 @@ def evaluate_ev(fids, all_ent_preds, all_words, all_offsets, all_span_terms, all
     preds_output = generate_ev_output(pred_ents, pred_evs, params)
 
     # write output to file
-    _ = write_ev_2file(preds_output, result_dir, params)
+    write_ev_2file(preds_output, result_dir, params)
 
     return

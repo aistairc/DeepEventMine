@@ -42,7 +42,7 @@ class DeepEM(nn.Module):
         nn_tr_types_ids = self.params['mappings']['nn_mapping']['trTypes_Ids']
         return label in nn_tr_types_ids
 
-    def gen_data_after_ner(self, bert_out, preds):
+    def generate_entity_pairs_4rel(self, bert_out, preds):
 
         lbls = preds
 
@@ -122,7 +122,7 @@ class DeepEM(nn.Module):
         etypes, max_span_labels = batch_input
 
         # predict entity
-        preds, golds, sentence_sections, span_masks, embeddings, sentence_emb, trigger_indices = self.NER_layer(
+        e_preds, e_golds, sentence_sections, span_masks, embeddings, sentence_emb, trigger_indices = self.NER_layer(
             all_tokens=nn_tokens,
             all_ids=nn_ids,
             all_token_masks=nn_token_mask,
@@ -140,91 +140,119 @@ class DeepEM(nn.Module):
         embeddings = torch.split(embeddings, torch.sum(all_span_masks, dim=-1).tolist())
 
         # Pred of each span
-        preds = np.split(preds.astype(int), sentence_sections)
-        preds = [pred.flatten() for pred in preds]
-        ner_out['preds'] = preds
+        e_preds = np.split(e_preds.astype(int), sentence_sections)
+        e_preds = [pred.flatten() for pred in e_preds]
+        ner_out['preds'] = e_preds
 
-        golds = np.split(golds.astype(int), sentence_sections)
-        golds = [gold.flatten() for gold in golds]
+        # e_golds = np.split(e_golds.astype(int), sentence_sections)
+        # e_golds = [gold.flatten() for gold in e_golds]
 
-        # Overwrite triggers
-        if self.trigger_id == -1:
-            self.trigger_id = utils.get_max_entity_id(span_terms) + 10000
+        # predict both entity and trigger
+        if self.params["ner_predict_all"]:
+            for items in span_terms:
+                items.term2id.clear()
+                items.id2term.clear()
 
-        trigger_idx = self.trigger_id + 1
-        for sentence_idx, span_preds in enumerate(preds):
+            # Overwrite triggers
+            if self.trigger_id == -1:
+                self.trigger_id = utils.get_max_entity_id(span_terms) + 10000
 
-            # store gold entity index (a1)
-            a1ent_set = set()
+            trigger_idx = self.trigger_id + 1
+            for sentence_idx, span_preds in enumerate(e_preds):
+                for pred_idx, label_id in enumerate(span_preds):
+                    if label_id > 0:
+                        term = "T" + str(trigger_idx)
 
-            for span_idx, span_term in span_terms[sentence_idx].id2term.items():
+                        # check trigger
+                        if label_id in self.params['mappings']['nn_mapping']['trTypes_Ids']:
+                            term = "TR" + str(trigger_idx)
 
-                # replace for entity (using gold entity label)
-                if span_term != "O" and not span_term.startswith("TR") and span_preds[span_idx] != 255:
-
-                    # but do not replace for entity in a2 files
-                    span_label = span_terms[sentence_idx].id2label[span_idx]
-                    if span_label not in self.params['ev_eval_entities']:
-                        span_preds[span_idx] = golds[sentence_idx][span_idx]
-
-                        # save this index to ignore prediction
-                        a1ent_set.add(span_idx)
-
-            for pred_idx, label_id in enumerate(span_preds):
-                span_term = span_terms[sentence_idx].id2term.get(pred_idx, "O")
-
-                # if this entity in a1: skip this span
-                if pred_idx in a1ent_set:
-                    continue
-
-                remove_span = False
-
-                # add prediction for trigger or entity a2
-                if label_id > 0:
-
-                    term = ''
-
-                    # is trigger
-                    if self.is_tr(label_id):
-                        term = "TR" + str(trigger_idx)
-
-                    # is entity
-                    else:
-                        etype_label = self.params['mappings']['nn_mapping']['id_tag_mapping'][label_id]
-
-                        # check this entity type in a2 or not
-                        if etype_label in self.params['ev_eval_entities']:
-                            term = "T" + str(trigger_idx)
-                        else:
-                            remove_span = True
-
-                    if len(term) > 0:
                         span_terms[sentence_idx].id2term[pred_idx] = term
                         span_terms[sentence_idx].term2id[term] = pred_idx
                         trigger_idx += 1
 
-                # null prediction
-                if label_id == 0 or remove_span:
+            self.trigger_id = trigger_idx
 
-                    # do not write anything
-                    span_preds[pred_idx] = 0
+        # given gold entity, predict trigger only
+        else:
+            # Overwrite triggers
+            if self.trigger_id == -1:
+                self.trigger_id = utils.get_max_entity_id(span_terms) + 10000
 
-                    # remove this span
-                    if span_term.startswith("T"):
-                        del span_terms[sentence_idx].id2term[pred_idx]
-                        del span_terms[sentence_idx].term2id[span_term]
+            trigger_idx = self.trigger_id + 1
+            for sentence_idx, span_preds in enumerate(e_preds):
 
-            span_preds[span_preds == 255] = 0
-        self.trigger_id = trigger_idx
+                # store gold entity index (a1)
+                a1ent_set = set()
+
+                for span_idx, span_term in span_terms[sentence_idx].id2term.items():
+
+                    # replace for entity (using gold entity label)
+                    if span_term != "O" and not span_term.startswith("TR") and span_preds[span_idx] != 255:
+
+                        # but do not replace for entity in a2 files
+                        span_label = span_terms[sentence_idx].id2label[span_idx]
+                        if span_label not in self.params['ev_eval_entities']:
+                            span_preds[span_idx] = e_golds[sentence_idx][span_idx]
+
+                            # save this index to ignore prediction
+                            a1ent_set.add(span_idx)
+
+                for pred_idx, label_id in enumerate(span_preds):
+                    span_term = span_terms[sentence_idx].id2term.get(pred_idx, "O")
+
+                    # if this entity in a1: skip this span
+                    if pred_idx in a1ent_set:
+                        continue
+
+                    remove_span = False
+
+                    # add prediction for trigger or entity a2
+                    if label_id > 0:
+
+                        term = ''
+
+                        # is trigger
+                        if self.is_tr(label_id):
+                            term = "TR" + str(trigger_idx)
+
+                        # is entity
+                        else:
+                            etype_label = self.params['mappings']['nn_mapping']['id_tag_mapping'][label_id]
+
+                            # check this entity type in a2 or not
+                            if etype_label in self.params['ev_eval_entities']:
+                                term = "T" + str(trigger_idx)
+                            else:
+                                remove_span = True
+
+                        if len(term) > 0:
+                            span_terms[sentence_idx].id2term[pred_idx] = term
+                            span_terms[sentence_idx].term2id[term] = pred_idx
+                            trigger_idx += 1
+
+                    # null prediction
+                    if label_id == 0 or remove_span:
+
+                        # do not write anything
+                        span_preds[pred_idx] = 0
+
+                        # remove this span
+                        if span_term.startswith("T"):
+                            del span_terms[sentence_idx].id2term[pred_idx]
+                            del span_terms[sentence_idx].term2id[span_term]
+
+                span_preds[span_preds == 255] = 0
+            self.trigger_id = trigger_idx
 
         num_padding = max_span_labels * self.params["ner_label_limit"]
 
-        preds = [np.pad(pred, (0, num_padding - pred.shape[0]),
-                        'constant', constant_values=-1) for pred in preds]
-        golds = [np.pad(gold, (0, num_padding - gold.shape[0]),
-                        'constant', constant_values=-1) for gold in golds]
+        e_preds = [np.pad(pred, (0, num_padding - pred.shape[0]),
+                          'constant', constant_values=-1) for pred in e_preds]
+        e_golds = [np.pad(gold, (0, num_padding - gold.shape[0]),
+                          'constant', constant_values=-1) for gold in e_golds]
 
-        preds = torch.tensor(preds, device=self.device)
+        e_preds = torch.tensor(e_preds, device=self.device)
 
         embeddings = [f.pad(embedding, (0, 0, 0, max_span_labels - embedding.shape[0]),
                             'constant', value=0) for embedding in embeddings]
@@ -233,11 +261,11 @@ class DeepEM(nn.Module):
         embeddings = embeddings.unsqueeze(dim=2).expand(-1, -1, self.params["ner_label_limit"], -1)
         embeddings = embeddings.reshape(embeddings.size(0), -1, embeddings.size(-1))
 
-        ent_embeds, tr_embeds, ent_types, tr_ids, pairs_idx = self.gen_data_after_ner(
+        ent_embeds, tr_embeds, ent_types, tr_ids, pairs_idx = self.generate_entity_pairs_4rel(
             embeddings,
-            preds=preds
+            preds=e_preds
         )
-        ner_preds = {'preds': preds, 'golds': golds, 'embeddings': embeddings,
+        ner_preds = {'preds': e_preds, 'golds': e_golds, 'embeddings': embeddings,
                      'ent_embeds': ent_embeds, 'tr_embeds': tr_embeds, 'tr_ids': tr_ids,
                      'ent_types': ent_types, 'pairs_idx': pairs_idx, 'e_types': etypes.long(),
                      'sentence_embeds': sentence_emb}
@@ -258,7 +286,7 @@ class DeepEM(nn.Module):
         ner_out['terms'] = span_terms
         ner_out['span_indices'] = nn_span_indices
 
-        nner_preds = preds.detach().cpu().numpy()
+        nner_preds = e_preds.detach().cpu().numpy()
         ner_out['nner_preds'] = nner_preds
 
         return ner_out, rel_preds, ev_preds
