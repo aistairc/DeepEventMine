@@ -81,6 +81,8 @@ def generate_configs(expdir, tasks):
 
         # generate config for each task
         task_config = default_config.copy()
+        task_config['model_path'] = task_config['model_path'].replace('cg', task)
+        task_config['saved_params'] = task_config['saved_params'].replace('cg', task)
         task_config['ev_eval_script_path'] = task_config['ev_eval_script_path'].replace('cg', task)
 
         # predict config
