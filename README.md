@@ -41,7 +41,7 @@ sh download_model.sh
 ```
 
 4. Generate configs
-- If using GPU: [gpu] = 0, otherwise: [gpu]=-1
+- If using GPU: [gpu] = 0, otherwise: [gpu] = -1
 ```bash
 sh generate-config.sh [gpu]
 ```
@@ -51,7 +51,7 @@ sh generate-config.sh [gpu]
 1. For development and test sets (given gold entities)
 - CG task: [task] = cg
 - PC task: [task] = pc
-- etc
+- Similarly for: ge11, ge13, epi, id, mlee
 
 ```bash
 sh run.sh [task] predict dev gold
@@ -62,8 +62,8 @@ sh run.sh [task] predict test gold
 
 1. Retrieve the original offsets and create zip format
 ```bash
-sh run.sh cg eval dev gold
-sh run.sh cg eval test gold
+sh run.sh [task] eval dev gold
+sh run.sh [task] eval test gold
 ```
 
 2. Submit the zipped file to the shared task evaluation sites:
