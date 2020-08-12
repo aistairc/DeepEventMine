@@ -79,7 +79,7 @@ for cur_fn in glob(os.path.join(input_dir, "**/*.a2"), recursive=True):
         os.path.join(corpus_dir, os.path.basename(cur_fn).replace(".a2", ".txt.ori"))
     )
 
-    gold_entities = offset_mapping["entities"]
+    # gold_entities = offset_mapping["entities"]
 
     processed_lines = []
 
