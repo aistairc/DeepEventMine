@@ -35,8 +35,8 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, ta
         write_config(os.path.join(config_dir, ''.join(['predict-gold-', eval_set, '.yaml'])), predict_config)
 
     # for raw texts
-    elif eval_set == 'raw_text':
-        predict_config['test_data'] = ''.join(["data/raw_text/", task, "/"])
+    elif eval_set == 'raw-text':
+        predict_config['test_data'] = ''.join(["data/raw-text/", task, "/"])
         predict_config['result_dir'] = ''.join([taskdir, 'predict-', eval_set, '/'])
 
         # overwrite task config
@@ -107,7 +107,7 @@ def generate_configs(expdir, tasks, gpu):
 
         # for raw text
         predict_test_config = task_config.copy()
-        gen_predict_config(predict_test_config, specific_config, 'raw_text', config_dir, task, taskdir)
+        gen_predict_config(predict_test_config, specific_config, 'raw-text', config_dir, task, taskdir)
 
     print('Generate configs: Done!')
 
