@@ -1,8 +1,8 @@
 #!/bin/bash
 
 CORPUS_NAME=$1 # cg, ge11, pc, etc
-TASK=$3 # predict, eval
-DEV_TEST=$4 # predict for dev, test sets
+TASK=$2 # predict, eval
+DEV_TEST=$3 # predict for dev, test sets
 
 experiment_dir="experiments/$CORPUS_NAME"
 log_dir="$experiment_dir/logs"
