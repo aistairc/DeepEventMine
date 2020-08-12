@@ -54,16 +54,16 @@ sh generate-config.sh [gpu]
 - Similarly for: ge11, ge13, epi, id, mlee
 
 ```bash
-sh run.sh [task] predict dev gold
-sh run.sh [task] predict test gold
+sh run.sh [task] predict gold dev
+sh run.sh [task] predict gold test
 ```
 
 ### Evaluate
 
 1. Retrieve the original offsets and create zip format
 ```bash
-sh run.sh [task] eval dev gold
-sh run.sh [task] eval test gold
+sh run.sh [task] eval gold dev
+sh run.sh [task] eval gold test
 ```
 
 2. Submit the zipped file to the shared task evaluation sites:
@@ -82,11 +82,13 @@ sh run.sh [task] eval test gold
 
 ### Predict (with raw text)
 
-1. Prepare raw text input in the following path
+1. Prepare raw text input
+
+- If you want to predict for your raw text using our trained model for a task ([task] = cg, pc, ge11, etc), put your raw text as the following path
+
 ```bash
 data/raw-text/[task]/PMID-*.txt
 ```
-- Eg: [task] = cg: the output is predicted based on our trained cg model
 
 2. Preprocess raw text
 
@@ -95,13 +97,10 @@ data/raw-text/[task]/PMID-*.txt
 sh preprocess.sh raw
 ```
 
-- The processed input is stored in the
-```bash
-data/processed-raw-text/[task]/
-```
-
 3. Predict
-
+```bash
+sh run.sh [task] predict raw e2e
+```
 
 ## Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).

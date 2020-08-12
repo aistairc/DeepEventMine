@@ -2,8 +2,8 @@
 
 CORPUS_NAME=$1 # cg, ge11, pc, etc
 TASK=$2 # predict, eval
-DEV_TEST=$3 # predict for dev, test sets
-GOLD_E2E=$4 # gold, e2e
+GOLD_E2E=$3 # gold, e2e
+DEV_TEST=$4 # predict for dev, test sets
 
 experiment_dir="experiments/$CORPUS_NAME"
 log_dir="$experiment_dir/logs"
