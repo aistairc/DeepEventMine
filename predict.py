@@ -49,11 +49,11 @@ def main():
 
     parameters['bert_model'] = pred_params['bert_model']
 
-    result_dir = 'results/' + pred_params['output_dir'] + '/'
+    result_dir = 'results/' + pred_params['result_dir'] + '/'
     if not os.path.exists(result_dir):
         os.makedirs(result_dir)
 
-    parameters['output_dir'] = pred_params['output_dir']
+    parameters['result_dir'] = pred_params['result_dir']
 
     # process data
     test_data = prepdata.prep_input_data(pred_params['test_data'], parameters)
