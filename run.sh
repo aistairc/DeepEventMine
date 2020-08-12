@@ -26,6 +26,11 @@ elif [ "$TASK" = "eval" ]; then
     PREDDIR="$experiment_dir/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-ann/"
     ZIPDIR="$experiment_dir/predict-$GOLD_E2E-$DEV_TEST/ev-last/" # retrieve the original offsets
 
+    # raw text
+    if [ "$GOLD_E2E" = "raw" ]; then
+        REFDIR="data/processed-raw-text/$CORPUS_NAME/" # reference gold data
+    fi
+
     # retrieve the original offsets and create zip format for online evaluation
     python scripts/postprocess.py --corpusdir $REFDIR --indir $PREDDIR --outdir $ZIPDIR --corpus_name $CORPUS_NAME --dev_test $DEV_TEST
 
