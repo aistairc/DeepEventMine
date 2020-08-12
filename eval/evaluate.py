@@ -2,7 +2,7 @@ import torch
 from tqdm import tqdm
 
 from eval.evalEV import evaluate_ev
-from loader.prepNN import utils
+from utils import utils
 
 
 def predict(model, eval_dir, result_dir, eval_dataloader, eval_data, params):

@@ -49,6 +49,11 @@ def path(*paths):
 
 def make_dirs(*paths):
     os.makedirs(path(*paths), exist_ok=True)
+    
+
+def makedir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
 
 def deserialize(filename):

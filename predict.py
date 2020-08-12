@@ -9,7 +9,8 @@ from eval.evaluate import predict
 
 from nets import deepEM
 from loader.prepData import prepdata
-from loader.prepNN import prep4nn, utils
+from loader.prepNN import prep4nn
+from utils import utils
 
 
 def main():

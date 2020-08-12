@@ -8,7 +8,7 @@ from torch import nn
 from nets import EVNet
 from nets import RELNet
 from nets.NERNet import NestedNERModel
-from loader.prepNN import utils
+from utils import utils
 
 cpu_device = torch.device("cpu")
 
