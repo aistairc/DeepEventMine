@@ -81,6 +81,8 @@ def main():
             eval_data=test_data,
             params=parameters)
 
+    print('Done!')
+
 
 def read_test_data(test_data, params):
     test = prep4nn.data2network(test_data, 'predict', params)
