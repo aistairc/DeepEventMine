@@ -5,9 +5,13 @@ A model to predict nested events from biomedical texts using our pretrained mode
 - Bioinformatics, 2020.
 
 ## Requirements
-- Python 3.7.0
-- PyTorch
-- Python packages: regex, bs4, cchardet, gdown
+- Python 3.6.5
+- PyTorch (torch==1.1.0 torchvision==0.3.0, cuda92)
+- Install Python packages
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Tasks
 1. cg: [Cancer Genetics (CG), 2013](http://2013.bionlp-st.org/tasks/cancer-genetics)

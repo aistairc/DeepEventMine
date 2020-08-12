@@ -1,0 +1,13 @@
+regex
+bs4
+cchardet
+gdown
+boto3
+loguru
+tabulate
+pyyaml
+texttable
+sklearn
+pytorch-nlp
+tqdm
+requests
