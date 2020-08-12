@@ -3,7 +3,7 @@
 root_dir=$PWD
 
 # CG13 -----------------------------
-cg13_dir="data/original_corpora/CG13"
+cg13_dir="data/original_corpora/cg"
 
 mkdir -p $cg13_dir
 
@@ -26,7 +26,7 @@ rm *.tar.gz
 cd $root_dir
 
 # GE13 -----------------------------
-ge13_dir="data/original_corpora/GE13"
+ge13_dir="data/original_corpora/ge13"
 
 mkdir -p $ge13_dir
 
@@ -49,7 +49,7 @@ rm *.tar.gz
 cd $root_dir
 
 # GE11 -----------------------------
-ge11_dir="data/original_corpora/GE11"
+ge11_dir="data/original_corpora/ge11"
 
 mkdir -p $ge11_dir
 
@@ -72,7 +72,7 @@ rm *.tar.gz
 cd $root_dir
 
 # ID11 -----------------------------
-id11_dir="data/original_corpora/ID11"
+id11_dir="data/original_corpora/id"
 
 mkdir -p $id11_dir
 
@@ -95,7 +95,7 @@ rm *.tar.gz
 cd $root_dir
 
 # EPI -----------------------------
-epi_dir="data/original_corpora/EPI"
+epi_dir="data/original_corpora/epi"
 
 mkdir -p $epi_dir
 
@@ -119,7 +119,7 @@ cd $root_dir
 
 
 # PC -----------------------------
-pc_dir="data/original_corpora/EPI"
+pc_dir="data/original_corpora/pc"
 
 mkdir -p $pc_dir
 

@@ -49,7 +49,7 @@ python predict.py --yaml configs/cg-predict-test.yaml
 - Retrieve the original offsets
 - Create a zipped file as the required format. For instance: CG task, test
 ```bash
-python scripts/postprocess.py --corpusdir data/corpora/CG/test/ 
+python scripts/postprocess.py --corpusdir data/corpora/cg/test/
 --indir results/cg/cg-predict-test/ev-ann/
 --outdir results/cg/cg-predict-test/
 ```
@@ -60,12 +60,12 @@ python scripts/postprocess.py --corpusdir data/corpora/CG/test/
 
 Submit the zipped file to the shared task evaluation sites:
 
-- CG: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/)
-- GE11: [Test set evaluation](http://bionlp-st.dbcls.jp/GE/2011/eval-test/), [Development set evaluation](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
-- GE13: [Test set evaluation](http://bionlp-st.dbcls.jp/GE/2013/eval-test/), [Development set evaluation](http://bionlp-st.dbcls.jp/GE/2013/eval-development/)
-- ID11: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/test-eval.html), [Development set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/devel-eval.htm)
-- EPI: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/test-eval.html), [Development set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/devel-eval.htm)
-- PC: [Test set evaluation](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/PC/submission/)
+- [CG Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/)
+- [GE11 Test](http://bionlp-st.dbcls.jp/GE/2011/eval-test/), [GE11 Devel](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
+- [GE13 Test](http://bionlp-st.dbcls.jp/GE/2013/eval-test/), [GE13 Devel](http://bionlp-st.dbcls.jp/GE/2013/eval-development/)
+- ID11: [ID Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/test-eval.html), [ID Devel](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/devel-eval.htm)
+- EPI: [EPI Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/test-eval.html), [EPI Devel](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/devel-eval.htm)
+- PC: [PC Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/PC/submission/)
 
 3. Evaluate using the shared task script
 
