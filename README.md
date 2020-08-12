@@ -9,6 +9,15 @@ A model to predict nested events from biomedical texts using our pretrained mode
 - PyTorch
 - Python packages: regex, bs4, cchardet, gdown
 
+## Tasks
+1. cg: [Cancer Genetics (CG), 2013](http://2013.bionlp-st.org/tasks/cancer-genetics)
+2. ge11: [GENIA Event Extraction (GENIA), 2011](http://2011.bionlp-st.org/home/genia-event-extraction-genia)
+3. ge13: [GENIA Event Extraction (GENIA), 2013](http://bionlp.dbcls.jp/projects/bionlp-st-ge-2013/wiki/Overview)
+4. id: [Infectious Diseases (ID), 2011](http://2011.bionlp-st.org/home/infectious-diseases)
+5. epi: [Epigenetics and Post-translational Modifications (EPI), 2011](http://2011.bionlp-st.org/home/epigenetics-and-post-translational-modifications)
+6. pc: [Pathway Curation (PC), 2013](http://2013.bionlp-st.org/tasks/pathway-curation)
+7. mlee: [Multi-Level Event Extraction (MLEE)](http://nactem.ac.uk/MLEE/)
+
 ## How to run
 
 ### Prepare data
