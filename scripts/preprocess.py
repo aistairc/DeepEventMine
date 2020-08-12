@@ -610,7 +610,7 @@ def convert(corpus_name, corpus_dir, output_dir):
 
         a1_file = basename + ".a1"
         if os.path.exists(a1_file):
-            original_doc, a1_entities, a1_relations, a1_events, a1_modalities, a1_attributes, a1_equivalences = parse_standoff_file(
+            _, a1_entities, a1_relations, a1_events, a1_modalities, a1_attributes, a1_equivalences = parse_standoff_file(
                 a1_file, fn, encoding="UTF-8"
             )
             entities.update(a1_entities)
@@ -639,6 +639,8 @@ def convert(corpus_name, corpus_dir, output_dir):
         doc_fn = os.path.join(
             output_dir, corpus_name, os.path.relpath(basename, corpus_dir)
         )
+
+        original_doc = read_text(fn)
 
         write_text(original_doc, doc_fn + ".txt.ori")
 
