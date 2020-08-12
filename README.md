@@ -47,31 +47,30 @@ sh generate-config.sh
 
 ### Predict
 
-- On development and test sets. For instance: CG task
+1. CG task, development and test sets (given gold entities)
 
 ```bash
-python predict.py --yaml configs/cg-predict-dev.yaml
-python predict.py --yaml configs/cg-predict-test.yaml
+sh run.sh cg predict dev gold
+sh run.sh cg predict test gold
 ```
 
-- Similarly, for other tasks.
-
-### Postprocess output and evaluate
-
-1. Postprocess
-- Retrieve the original offsets
-- Create a zipped file as the required format. For instance: CG task, test
+2. PC task
 ```bash
-python scripts/postprocess.py --corpusdir data/corpora/cg/test/
---indir results/cg/cg-predict-test/ev-ann/
---outdir results/cg/cg-predict-test/
+sh run.sh pc predict dev gold
+sh run.sh pc predict test gold
 ```
 
-- Similarly for other tasks by changing the corresponding paths.
+- etc
 
-2. Evaluate online
+### Evaluate
 
-Submit the zipped file to the shared task evaluation sites:
+1. Retrieve the original offsets and create zip format
+```bash
+sh run.sh cg eval dev gold
+sh run.sh cg eval test gold
+```
+
+2. Submit the zipped file to the shared task evaluation sites:
 
 - [CG Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/)
 - [GE11 Test](http://bionlp-st.dbcls.jp/GE/2011/eval-test/), [GE11 Devel](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
@@ -80,16 +79,10 @@ Submit the zipped file to the shared task evaluation sites:
 - [EPI Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/test-eval.html), [EPI Devel](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/devel-eval.htm)
 - [PC Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/PC/submission/)
 
-3. Evaluate using the shared task script
+3. Supplemenary data
 
-```bash
-sh evaluate_event.sh
-```
-
-4. Supplemenary data
-
-- Trained models: [link](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
-- Scores: [link](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
+- [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
+- [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
 
 ## Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).

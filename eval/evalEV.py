@@ -294,11 +294,13 @@ def convert_evid_to_number(str_evid):
 
 # write events to file
 def write_ev_2file(pred_output, result_dir, params):
-    dir2wr = result_dir
+    dir2wr = result_dir + 'ev-last/ev-ann/'
     rev_type_map = params['mappings']['rev_type_map']
 
     if not os.path.exists(dir2wr):
         os.makedirs(dir2wr)
+    else:
+        os.system('rm ' + dir2wr + '*.a2')
 
     for fid, preds in pred_output.items():
         triggers = preds[0]

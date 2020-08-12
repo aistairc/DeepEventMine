@@ -35,17 +35,27 @@ def read_json(filename, encoding="UTF-8"):
     return json.loads(read_text(filename, encoding=encoding))
 
 
+# arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--corpusdir', type=str, required=True, help='--corpusdir')
 parser.add_argument('--indir', type=str, required=True, help='--indir')
 parser.add_argument('--outdir', type=str, required=True, help='--outdir')
+parser.add_argument('--corpus_name', type=str, required=True, help='--corpus_name')
+parser.add_argument('--dev_test', type=str, required=True, help='--dev_test')
+
 args = parser.parse_args()
 
 corpus_dir = getattr(args, 'corpusdir')
 input_dir = getattr(args, 'indir')
 outdir = getattr(args, 'outdir')
+corpus_name = getattr(args, 'corpus_name')
+dev_test = getattr(args, 'dev_test')
 
-output_dir = outdir + 'ev-ann-out'
+# output dir
+output_dir = outdir + 'ev-orig-ann'
+zip_dir = outdir + 'online-eval'
+
+# create output dirs
 if not os.path.exists(output_dir):
     make_dirs(output_dir)
 else:
@@ -55,8 +65,10 @@ assert (
     len(glob(os.path.join(output_dir, "**/*"), recursive=True)) == 0
 ), "The folder `{}` must be empty!".format(output_dir)
 
-count = 0
+if not os.path.exists(zip_dir):
+    make_dirs(zip_dir)
 
+count = 0
 
 for cur_fn in glob(os.path.join(input_dir, "**/*.a2"), recursive=True):
 
@@ -158,9 +170,15 @@ for ref_fn in glob(os.path.join(corpus_dir, "**/*.a2"), recursive=True):
         # write empty file
         write_lines([], os.path.join(output_dir, os.path.basename(ref_fn)))
 
+# create zip format for online evaluation
 if count > 0:
+
+    # zip file name
     tgz_fn = "{}.tar.gz".format(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))
-    outfile_path = outdir + tgz_fn
+    zip_file_name = ''.join([corpus_name, '-', dev_test, '-', tgz_fn])
+
+    # zip file path
+    outfile_path = os.path.join(zip_dir, zip_file_name)
     with tarfile.open(outfile_path, "w:gz") as f:
         for fn in glob(os.path.join(output_dir, "*.a2")):
             f.add(fn, arcname=os.path.basename(fn))
