@@ -105,6 +105,10 @@ def generate_configs(expdir, tasks, gpu):
         predict_test_config = task_config.copy()
         gen_predict_config(predict_test_config, specific_config, 'test', config_dir, task, taskdir)
 
+        # for raw text
+        predict_test_config = task_config.copy()
+        gen_predict_config(predict_test_config, specific_config, 'raw_text', config_dir, task, taskdir)
+
     print('Generate configs: Done!')
 
     return
