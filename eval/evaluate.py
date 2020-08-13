@@ -6,7 +6,7 @@ from eval.evalEV import write_events
 from utils import utils
 
 
-def predict(model, eval_dir, result_dir, eval_dataloader, eval_data, params):
+def predict(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, params):
     mapping_id_tag = params['mappings']['nn_mapping']['id_tag_mapping']
 
     # store predicted entities
@@ -166,5 +166,6 @@ def predict(model, eval_dir, result_dir, eval_dataloader, eval_data, params):
                      all_span_indices=span_indicess,
                      all_sub_to_words=sub_to_wordss,
                      all_ev_preds=ev_preds,
+                     g_entity_ids_=g_entity_ids_,
                      params=params,
                      result_dir=result_dir)

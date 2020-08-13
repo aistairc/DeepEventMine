@@ -1,5 +1,7 @@
 """Load data from brat format and process for entity"""
 
+from collections import OrderedDict
+
 from loader.prepData.brat import brat_loader
 from loader.prepData.sentence import prep_sentence_offsets, process_input
 from loader.prepData.entity import process_etypes, process_tags, process_entities
@@ -33,4 +35,15 @@ def prep_input_data(files_fold, params):
         if diff:
             print(doc_name, sorted(diff, key=lambda _id: int(_id.replace("T", ""))))
 
-    return {'entities': entities1, 'terms': terms0, 'sentences': sentences1, 'input': input1}
+    # entity indices
+    g_entity_ids_ = OrderedDict()
+    for fid, fdata in entities0.items():
+        # get max entity id
+        eid_ = [eid for eid in fdata['ids'] if not eid.startswith('TR')]
+        ids_ = [int(eid.replace('T', '')) for eid in eid_]
+        max_id = max(ids_)
+        eid_.append(max_id)
+        g_entity_ids_[fid] = eid_
+
+    return {'entities': entities1, 'terms': terms0, 'sentences': sentences1, 'input': input1,
+            'g_entity_ids_': g_entity_ids_}

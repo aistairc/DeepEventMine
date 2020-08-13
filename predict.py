@@ -67,7 +67,7 @@ def main():
 
     # process data
     test_data = prepdata.prep_input_data(pred_params['test_data'], parameters)
-    test_data, test_dataloader = read_test_data(test_data, parameters)
+    nntest_data, test_dataloader = read_test_data(test_data, parameters)
 
     # model
     deepee_model = deepEM.DeepEM(parameters)
@@ -85,13 +85,13 @@ def main():
     deepee_model.to(device)
 
     predict(model=deepee_model,
-            eval_dir=parameters['test_data'],
             result_dir=result_dir,
             eval_dataloader=test_dataloader,
-            eval_data=test_data,
+            eval_data=nntest_data,
+            g_entity_ids_=test_data['g_entity_ids_'],
             params=parameters)
 
-    print('Done!')
+    # print('Done!')
 
 
 def read_test_data(test_data, params):

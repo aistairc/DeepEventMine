@@ -292,8 +292,16 @@ def convert_evid_to_number(str_evid):
     return int(evid[0] + evid[1])
 
 
-def mapping_entity_id(en_preds_):
-    eid = 1
+def mapping_entity_id(en_preds_, g_entity_ids_, params):
+    # if gold entity, starting trigger id from max entity id + 1
+    if not params['ner_predict_all'] and len(g_entity_ids_) > 0:
+        eid = g_entity_ids_[-1] + 1
+
+    # predict both entity and trigger
+    else:
+        eid = 1
+
+    # mapping
     enid_mapping = collections.OrderedDict()
     en_preds_out_ = []
 
@@ -325,12 +333,12 @@ def mapping_entity_id(en_preds_):
 
 
 # write events to file
-def write_ev_2file(pred_output, result_dir, params):
+def write_ev_2file(pred_output, result_dir, g_entity_ids_, params):
     dir2wr = result_dir + 'ev-last/ev-ann/'
     rev_type_map = params['mappings']['rev_type_map']
 
     # entity id mapping
-    feid_mapping = collections.OrderedDict()
+    # feid_mapping = collections.OrderedDict()
 
     if not os.path.exists(dir2wr):
         os.makedirs(dir2wr)
@@ -343,9 +351,9 @@ def write_ev_2file(pred_output, result_dir, params):
         en_preds_ = preds[0]
         events = preds[1]
 
-        enid_mapping, en_preds_out_ = mapping_entity_id(en_preds_)
+        enid_mapping, en_preds_out_ = mapping_entity_id(en_preds_, g_entity_ids_[fid], params)
         # store for this document
-        feid_mapping[fid] = enid_mapping
+        # feid_mapping[fid] = enid_mapping
 
         # write a1 file for entity if predict both entity and trigger
         if params['ner_predict_all']:
@@ -458,12 +466,12 @@ def write_ev_2file(pred_output, result_dir, params):
                     output = ''.join(['M', str(mod_id + 1), '\t', mod_type, ' ', 'E', str(evid_out), '\n'])
                     o2file.write(output)
 
-    return feid_mapping
+    return
 
 
 # generate event output and evaluation
 def write_events(fids, all_ent_preds, all_words, all_offsets, all_span_terms, all_span_indices, all_sub_to_words,
-                 all_ev_preds, params, result_dir):
+                 all_ev_preds, g_entity_ids_, params, result_dir):
     # generate predicted entities
     pred_ents = generate_entities(fids=fids,
                                   all_e_preds=all_ent_preds,
@@ -483,6 +491,6 @@ def write_events(fids, all_ent_preds, all_words, all_offsets, all_span_terms, al
     preds_output = generate_ev_output(pred_ents, pred_evs, params)
 
     # write output to file
-    write_ev_2file(preds_output, result_dir, params)
+    write_ev_2file(preds_output, result_dir, g_entity_ids_, params)
 
     return
