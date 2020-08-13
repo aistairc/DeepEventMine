@@ -267,9 +267,9 @@ def write_annotation_file(dir2wr, fid, entities=None, relations=None):
             re_lines.append(relation_annotation)
 
     # write to file
-    re_file = ''.join([dir2wr, fid, '.re'])
-    en_file = ''.join([dir2wr, fid, '.en'])
-    tr_file = ''.join([dir2wr, fid, '.tr'])
+    re_file = ''.join([dir2wr, fid, '-RE.ann'])
+    en_file = ''.join([dir2wr, fid, '-EN.ann'])
+    tr_file = ''.join([dir2wr, fid, '-TR.ann'])
 
     write_lines(re_lines, re_file)
     write_lines(en_lines, en_file)

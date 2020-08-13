@@ -61,7 +61,7 @@ sh generate-config.sh [gpu]
 sh run.sh [task] predict gold dev
 sh run.sh [task] predict gold test
 ```
-- Check the output in
+- Check the output in the path
 ```bash
 experiments/[task]/predict-gold-dev/
 experiments/[task]/predict-gold-test/
