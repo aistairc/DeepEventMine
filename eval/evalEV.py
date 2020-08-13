@@ -425,7 +425,10 @@ def write_ev_2file(pred_output, result_dir, params):
                     else:
                         a2data = arg_[1]
                         eid = a2data[0]
-                        eid = enid_mapping[eid]
+
+                        # mapping entity id
+                        if params['ner_predict_all']:
+                            eid = enid_mapping[eid]
 
                     if len(args_output) > 0:
                         args_output += ' '
