@@ -52,18 +52,24 @@ corpus_name = getattr(args, 'corpus_name')
 dev_test = getattr(args, 'dev_test')
 
 # output dir
-output_dir = outdir + 'ev-orig-ann'
+output_a2_dir = outdir + 'ev-orig-a2'
+output_ann_dir = outdir + 'ev-orig-ann'
 zip_dir = outdir + 'online-eval'
 
 # create output dirs
-if not os.path.exists(output_dir):
-    make_dirs(output_dir)
+if not os.path.exists(output_a2_dir):
+    make_dirs(output_a2_dir)
 else:
-    os.system('rm ' + output_dir + '/*.a2')
+    os.system('rm ' + output_a2_dir + '/*.a2')
+
+if not os.path.exists(output_ann_dir):
+    make_dirs(output_ann_dir)
+else:
+    os.system('rm ' + output_ann_dir + '/*.ann')
 
 assert (
-    len(glob(os.path.join(output_dir, "**/*"), recursive=True)) == 0
-), "The folder `{}` must be empty!".format(output_dir)
+        len(glob(os.path.join(output_a2_dir, "**/*"), recursive=True)) == 0
+), "The folder `{}` must be empty!".format(output_a2_dir)
 
 if not os.path.exists(zip_dir):
     make_dirs(zip_dir)
@@ -96,7 +102,7 @@ for cur_fn in glob(os.path.join(input_dir, "**/*.a2"), recursive=True):
             e_data2 = collections.Counter(e_data)
 
             valid = True
-           
+
             if e_data2 not in saved_edata_list:
                 for arg in e_data:
                     argeid = arg.split(':')[1]
@@ -149,7 +155,8 @@ for cur_fn in glob(os.path.join(input_dir, "**/*.a2"), recursive=True):
             if eid in saved_eid_list:
                 processed_lines.append(line)
 
-    write_lines(processed_lines, os.path.join(output_dir, os.path.basename(cur_fn)))
+    write_lines(processed_lines, os.path.join(output_a2_dir, os.path.basename(cur_fn)))
+    write_lines(processed_lines, os.path.join(output_ann_dir, os.path.basename(cur_fn.replace('.a2', '.ann'))))
 
     count += 1
     print(os.path.basename(cur_fn), "Done")
@@ -168,7 +175,8 @@ for ref_fn in glob(os.path.join(corpus_dir, "**/*.a2"), recursive=True):
         print(ref_fn)
 
         # write empty file
-        write_lines([], os.path.join(output_dir, os.path.basename(ref_fn)))
+        write_lines([], os.path.join(output_a2_dir, os.path.basename(ref_fn)))
+        write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace('.a2, .ann'))))
 
 # create zip format for online evaluation
 if count > 0:
@@ -180,6 +188,6 @@ if count > 0:
     # zip file path
     outfile_path = os.path.join(zip_dir, zip_file_name)
     with tarfile.open(outfile_path, "w:gz") as f:
-        for fn in glob(os.path.join(output_dir, "*.a2")):
+        for fn in glob(os.path.join(output_a2_dir, "*.a2")):
             f.add(fn, arcname=os.path.basename(fn))
         print("Please submit this file: {}".format(outfile_path))
