@@ -144,8 +144,8 @@ class DeepEM(nn.Module):
         e_preds = [pred.flatten() for pred in e_preds]
         ner_out['preds'] = e_preds
 
-        # e_golds = np.split(e_golds.astype(int), sentence_sections)
-        # e_golds = [gold.flatten() for gold in e_golds]
+        e_golds = np.split(e_golds.astype(int), sentence_sections)
+        e_golds = [gold.flatten() for gold in e_golds]
 
         # predict both entity and trigger
         if self.params["ner_predict_all"]:
