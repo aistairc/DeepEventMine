@@ -41,7 +41,10 @@ def prep_input_data(files_fold, params):
         # get max entity id
         eid_ = [eid for eid in fdata['ids'] if not eid.startswith('TR')]
         ids_ = [int(eid.replace('T', '')) for eid in eid_]
-        max_id = max(ids_)
+        if len(ids_) > 0:
+            max_id = max(ids_)
+        else:
+            max_id = 0
         eid_.append(max_id)
         g_entity_ids_[fid] = eid_
 
