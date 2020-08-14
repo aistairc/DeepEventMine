@@ -20,7 +20,7 @@ def main():
     config_path = getattr(inp_args, 'yaml')
 
     # set config path manually
-    # config_path = 'configs/default.yaml'
+    # config_path = 'configs/debug.yaml'
 
     with open(config_path, 'r') as stream:
         pred_params = utils._ordered_load(stream)

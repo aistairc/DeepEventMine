@@ -292,7 +292,7 @@ def convert_evid_to_number(str_evid):
     return int(evid[0] + evid[1])
 
 
-def mapping_entity_id(en_preds_, g_entity_ids_, params):
+def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
     # if gold entity, starting trigger id from max entity id + 1
     if not params['ner_predict_all'] and len(g_entity_ids_) > 0:
         eid = g_entity_ids_[-1] + 1
@@ -322,13 +322,13 @@ def mapping_entity_id(en_preds_, g_entity_ids_, params):
             eid += 1
             en_preds_out_.append(en_pred)
 
-            # using gold entity but in a2
-            if not params['ner_predict_all']:
-                etype = en_pred[1]
+        # using gold entity but in a2
+        if not params['ner_predict_all']:
+            etype = rev_type_map[en_pred[1]]
 
-                # check entity type in a2
-                if etype in params['ev_eval_entities']:
-                    a2_ents_.append(en_id)
+            # check entity type in a2
+            if etype in params['ev_eval_entities']:
+                a2_ents_.append(en_id)
 
     # creat mapping for trigger id
     for en_pred in en_preds_:
@@ -362,7 +362,7 @@ def write_ev_2file(pred_output, result_dir, g_entity_ids_, params):
         en_preds_ = preds[0]
         events = preds[1]
 
-        enid_mapping, en_preds_out_, a2_ents_ = mapping_entity_id(en_preds_, g_entity_ids_[fid], params)
+        enid_mapping, en_preds_out_, a2_ents_ = mapping_entity_id(en_preds_, g_entity_ids_[fid], rev_type_map, params)
         # store for this document
         # feid_mapping[fid] = enid_mapping
 
