@@ -48,13 +48,17 @@ elif [ "$TASK" = "offset" ]; then
 # evaluate
 elif [ "$TASK" = "eval" ]; then
 
-    # paths
-    REFDIR="data/original_corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
-    PREDDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-orig-a2/"
+    echo "Evaluate:"
 
     GOLD_E2E=$3 # gold, e2e
     DEV_TEST=$4 # predict for dev, test sets
     EVAL_OPTION=$5 # s: softboundary; p: partialrecursive
+
+    # paths
+    REFDIR="data/original_corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
+    PREDDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-orig-a2/"
+
+
 
     python eval/scripts/eval-ev-$CORPUS_NAME.py -r $REFDIR -d $PREDDIR -$EVAL_OPTION
 
