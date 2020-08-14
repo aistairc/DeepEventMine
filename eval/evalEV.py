@@ -305,6 +305,9 @@ def mapping_entity_id(en_preds_, g_entity_ids_, params):
     enid_mapping = collections.OrderedDict()
     en_preds_out_ = []
 
+    # entity in a2
+    a2_ents_ = []
+
     # create mapping for entity id first
     for en_pred in en_preds_:
 
@@ -319,6 +322,14 @@ def mapping_entity_id(en_preds_, g_entity_ids_, params):
             eid += 1
             en_preds_out_.append(en_pred)
 
+            # using gold entity but in a2
+            if not params['ner_predict_all']:
+                etype = en_pred[1]
+
+                # check entity type in a2
+                if etype in params['ev_eval_entities']:
+                    a2_ents_.append(en_id)
+
     # creat mapping for trigger id
     for en_pred in en_preds_:
         # id
@@ -329,7 +340,7 @@ def mapping_entity_id(en_preds_, g_entity_ids_, params):
             eid += 1
             en_preds_out_.append(en_pred)
 
-    return enid_mapping, en_preds_out_
+    return enid_mapping, en_preds_out_, a2_ents_
 
 
 # write events to file
@@ -351,7 +362,7 @@ def write_ev_2file(pred_output, result_dir, g_entity_ids_, params):
         en_preds_ = preds[0]
         events = preds[1]
 
-        enid_mapping, en_preds_out_ = mapping_entity_id(en_preds_, g_entity_ids_[fid], params)
+        enid_mapping, en_preds_out_, a2_ents_ = mapping_entity_id(en_preds_, g_entity_ids_[fid], params)
         # store for this document
         # feid_mapping[fid] = enid_mapping
 
@@ -434,8 +445,8 @@ def write_ev_2file(pred_output, result_dir, g_entity_ids_, params):
                         a2data = arg_[1]
                         eid = a2data[0]
 
-                        # mapping entity id
-                        if params['ner_predict_all']:
+                        # mapping entity id: predict entity or entity in a2
+                        if params['ner_predict_all'] or eid in a2_ents_:
                             eid = enid_mapping[eid]
 
                     if len(args_output) > 0:
