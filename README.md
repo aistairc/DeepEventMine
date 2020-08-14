@@ -27,8 +27,10 @@ pip install -r requirements.txt
 ### Prepare data
 1. Download corpora
 - To download the original data sets from BioNLP shared tasks.
+- [task] = cg, pc, ge11, etc
+
 ```bash
-sh download_corpora.sh
+sh download.sh bionlp [task]
 ```
 
 2. Preprocess data
@@ -37,14 +39,21 @@ sh download_corpora.sh
 sh preprocess.sh bionlp
 ```
 
-3. Download models
+3. Download pre-trained BERT
 - Download SciBERT model from PyTorch AllenNLP
-- Download our trained models to predict
+
 ```bash
-sh download_model.sh
+sh download.sh bert
 ```
 
-4. Generate configs
+4. Download pre-trained DeepEventMine models
+- Download the pre-trained DeepEventMine model on a given task
+
+```bash
+sh download.sh deepeventmine [task]
+```
+
+5. Generate configs
 - If using GPU: [gpu] = 0, otherwise: [gpu] = -1
 ```bash
 sh generate-config.sh [gpu]
@@ -123,6 +132,34 @@ sh run.sh [task] predict raw text
 - Check the output in
 ```bash
 experiments/[task]/predict-raw-text/
+```
+
+## Visualization
+
+- Visualize the output using the [brat](http://brat.nlplab.org)
+
+1. Install brat
+
+- Download [brat v1.3] (http://brat.nlplab.org)
+
+```bash
+sh download.sh brat
+```
+
+- Install brat based on the [brat instructions](http://brat.nlplab.org/installation.html)
+```bash
+cd brat/brat-v1.3_Crunchy_Frog/
+./install.sh -u
+python standalone.py
+```
+
+2. Copy the predicted data into the brat folder to visualize
+
+3. Visualize
+
+- The data to visualize is located in
+```bash
+brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
 ```
 
 ## Acknowledgements
