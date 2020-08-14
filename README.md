@@ -140,7 +140,7 @@ experiments/[task]/predict-raw-text/
 
 1. Install brat
 
-- Download [brat v1.3] (http://brat.nlplab.org)
+- Download [brat v1.3](http://brat.nlplab.org)
 
 ```bash
 sh download.sh brat

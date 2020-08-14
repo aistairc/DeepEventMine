@@ -183,6 +183,7 @@ elif [ "$DATA_TYPE" = "deepeventmine" ]; then
 
     echo "Download pre-trained DeepEventMine models"
 
+    CORPUS_NAME=$2
     MODEL_DIR="data/models"
 
     mkdir -p $MODEL_DIR
