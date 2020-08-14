@@ -38,8 +38,8 @@ elif [ "$TASK" = "offset" ]; then
 elif [ "$TASK" = "eval" ]; then
 
     # paths
-    REFDIR="data/original_corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
-    PREDDIR="$experiment_dir/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-orig-a2/"
+    REFDIR="data/corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
+    PREDDIR="$experiment_dir/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-tok-a2/"
 
     EVAL_OPTION=$6 # s: softboundary; p: partialrecursive
 
