@@ -55,8 +55,9 @@ sh download.sh deepeventmine [task]
 
 5. Generate configs
 - If using GPU: [gpu] = 0, otherwise: [gpu] = -1
+- [task] = cg, pc, etc
 ```bash
-sh generate-config.sh [gpu]
+sh run.sh config [task] [gpu]
 ```
 
 ### Predict (with the BioNLP shared task data sets)
@@ -67,8 +68,8 @@ sh generate-config.sh [gpu]
 - Similarly for: ge11, ge13, epi, id, mlee
 
 ```bash
-sh run.sh [task] predict gold dev
-sh run.sh [task] predict gold test
+sh run.sh predict [task] gold dev
+sh run.sh predict [task] gold test
 ```
 - Check the output in the path
 ```bash
@@ -80,8 +81,8 @@ experiments/[task]/predict-gold-test/
 
 1. Retrieve the original offsets and create zip format
 ```bash
-sh run.sh [task] offset gold dev
-sh run.sh [task] offset gold test
+sh run.sh offset [task] gold dev
+sh run.sh offset [task] gold test
 ```
 
 2. Submit the zipped file to the shared task evaluation sites:
@@ -99,7 +100,7 @@ sh run.sh [task] offset gold test
 - Evaluation options: s (softboundary), p(partialrecursive)
 
 ```bash
-sh run.sh [task] eval gold dev sp
+sh run.sh eval [task] gold dev sp
 ```
 
 4. Supplemenary data
@@ -126,7 +127,7 @@ sh preprocess.sh raw
 
 3. Predict
 ```bash
-sh run.sh [task] predict raw text
+sh run.sh predict [task] raw text
 ```
 
 - Check the output in

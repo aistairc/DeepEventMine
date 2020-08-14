@@ -74,43 +74,39 @@ def read_specific_config(task):
     return specific_config
 
 
-def generate_configs(expdir, tasks, gpu):
+def generate_configs(taskdir, task, gpu):
     """Generate configs for all."""
 
-    tasks_ = tasks.split('-')
+    # create experiment dir
+    config_dir = os.path.join(taskdir, 'configs')
+    utils.makedir(config_dir)
 
-    for task in tasks_:
-        # create experiment dir
-        taskdir = os.path.join(expdir, '/'.join([task, '']))
-        config_dir = os.path.join(expdir, '/'.join([task, 'configs', '']))
-        utils.makedir(config_dir)
+    # default setting
+    default_config_path = 'configs/default.yaml'
+    with open(default_config_path, 'r') as stream:
+        default_config = utils._ordered_load(stream)
 
-        # default setting
-        default_config_path = 'configs/default.yaml'
-        with open(default_config_path, 'r') as stream:
-            default_config = utils._ordered_load(stream)
+    # read config for specific task
+    specific_config = read_specific_config(task)
 
-        # read config for specific task
-        specific_config = read_specific_config(task)
+    # generate config for each task
+    task_config = default_config.copy()
+    task_config['gpu'] = gpu
+    task_config['task_name'] = task_config['task_name'].replace('cg', task)
+    task_config['model_path'] = task_config['model_path'].replace('cg', task)
+    task_config['saved_params'] = task_config['saved_params'].replace('cg', task)
+    task_config['ev_eval_script_path'] = task_config['ev_eval_script_path'].replace('cg', task)
 
-        # generate config for each task
-        task_config = default_config.copy()
-        task_config['gpu'] = gpu
-        task_config['task_name'] = task_config['task_name'].replace('cg', task)
-        task_config['model_path'] = task_config['model_path'].replace('cg', task)
-        task_config['saved_params'] = task_config['saved_params'].replace('cg', task)
-        task_config['ev_eval_script_path'] = task_config['ev_eval_script_path'].replace('cg', task)
+    # predict config
+    predict_dev_config = task_config.copy()
+    gen_predict_config(predict_dev_config, specific_config, 'dev', config_dir, task, taskdir)
 
-        # predict config
-        predict_dev_config = task_config.copy()
-        gen_predict_config(predict_dev_config, specific_config, 'dev', config_dir, task, taskdir)
+    predict_test_config = task_config.copy()
+    gen_predict_config(predict_test_config, specific_config, 'test', config_dir, task, taskdir)
 
-        predict_test_config = task_config.copy()
-        gen_predict_config(predict_test_config, specific_config, 'test', config_dir, task, taskdir)
-
-        # for raw text
-        predict_test_config = task_config.copy()
-        gen_predict_config(predict_test_config, specific_config, 'raw-text', config_dir, task, taskdir)
+    # for raw text
+    predict_test_config = task_config.copy()
+    gen_predict_config(predict_test_config, specific_config, 'raw-text', config_dir, task, taskdir)
 
     print('Generate configs: Done!')
 
@@ -118,5 +114,5 @@ def generate_configs(expdir, tasks, gpu):
 
 
 if __name__ == '__main__':
-    # generate_configs("experiments/", "cg-ge11-ge13-epi-id-pc-mlee")
+    # generate_configs("experiments/", "cg")
     generate_configs(sys.argv[1], sys.argv[2], sys.argv[3])
