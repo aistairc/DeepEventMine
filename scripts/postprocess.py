@@ -5,6 +5,7 @@ from datetime import datetime
 from glob import glob
 import collections
 import argparse
+import shutil
 
 
 def make_dirs(dirname):
@@ -37,23 +38,23 @@ def read_json(filename, encoding="UTF-8"):
 
 # arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--corpusdir', type=str, required=True, help='--corpusdir')
-parser.add_argument('--indir', type=str, required=True, help='--indir')
+parser.add_argument('--refdir', type=str, required=True, help='--refdir')
+parser.add_argument('--preddir', type=str, required=True, help='--preddir')
 parser.add_argument('--outdir', type=str, required=True, help='--outdir')
 parser.add_argument('--corpus_name', type=str, required=True, help='--corpus_name')
 parser.add_argument('--dev_test', type=str, required=True, help='--dev_test')
 
 args = parser.parse_args()
 
-corpus_dir = getattr(args, 'corpusdir')
-input_dir = getattr(args, 'indir')
+refdir = getattr(args, 'refdir')
+preddir = getattr(args, 'preddir')
 outdir = getattr(args, 'outdir')
 corpus_name = getattr(args, 'corpus_name')
 dev_test = getattr(args, 'dev_test')
 
 # output dir
 output_a2_dir = outdir + 'ev-orig-a2'
-output_ann_dir = outdir + 'ev-orig-ann'
+output_ann_dir = ''.join([outdir, corpus_name, '-', 'brat'])
 zip_dir = outdir + 'online-eval'
 
 # create output dirs
@@ -76,13 +77,13 @@ if not os.path.exists(zip_dir):
 
 count = 0
 
-for cur_fn in glob(os.path.join(input_dir, "**/*.a2"), recursive=True):
+for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
 
     offset_mapping = read_json(
-        os.path.join(corpus_dir, os.path.basename(cur_fn).replace(".a2", ".inv.map"))
+        os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".inv.map"))
     )
     reference = read_text(
-        os.path.join(corpus_dir, os.path.basename(cur_fn).replace(".a2", ".txt.ori"))
+        os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".txt.ori"))
     )
 
     # gold_entities = offset_mapping["entities"]
@@ -155,8 +156,15 @@ for cur_fn in glob(os.path.join(input_dir, "**/*.a2"), recursive=True):
             if eid in saved_eid_list:
                 processed_lines.append(line)
 
+    # write a2
     write_lines(processed_lines, os.path.join(output_a2_dir, os.path.basename(cur_fn)))
-    write_lines(processed_lines, os.path.join(output_ann_dir, os.path.basename(cur_fn.replace('.a2', '.ann'))))
+
+    # write ann for brat
+    write_lines(processed_lines, os.path.join(output_ann_dir, os.path.basename(cur_fn.replace(".a2", ".ann"))))
+
+    # write txt
+    txt_fn = os.path.basename(cur_fn).replace(".a2", ".txt.ori")
+    shutil.copy(os.path.join(refdir, txt_fn), os.path.join(output_ann_dir, txt_fn.replace(".txt.ori", ".txt")))
 
     count += 1
     print(os.path.basename(cur_fn), "Done")
@@ -165,9 +173,9 @@ print("Processed {} files".format(count))
 
 # write empty predicted files
 print('EMPTY FILES:')
-for ref_fn in glob(os.path.join(corpus_dir, "**/*.a2"), recursive=True):
+for ref_fn in glob(os.path.join(refdir, "**/*.a2"), recursive=True):
 
-    pred_fn = os.path.join(input_dir, os.path.basename(ref_fn))
+    pred_fn = os.path.join(preddir, os.path.basename(ref_fn))
 
     if os.path.isfile(pred_fn):
         continue
@@ -176,7 +184,11 @@ for ref_fn in glob(os.path.join(corpus_dir, "**/*.a2"), recursive=True):
 
         # write empty file
         write_lines([], os.path.join(output_a2_dir, os.path.basename(ref_fn)))
-        write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace('.a2, .ann'))))
+        write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace(".a2", ".ann"))))
+
+        # write txt
+        txt_fn = os.path.basename(ref_fn).replace(".a2", ".txt.ori")
+        shutil.copy(os.path.join(refdir, txt_fn), os.path.join(output_ann_dir, txt_fn.replace(".txt.ori", ".txt")))
 
 # create zip format for online evaluation
 if count > 0:
