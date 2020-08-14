@@ -63,6 +63,9 @@ elif [ "$TASK" = "brat" ]; then
 
     echo "Prepare data for brat"
 
+    GOLD_E2E=$3 # gold, e2e
+    DEV_TEST=$4 # predict for dev, test sets
+
     PRED_DIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/$CORPUS_NAME-brat/"
     BRAT_DIR="brat/brat-v1.3_Crunchy_Frog/data/"
 

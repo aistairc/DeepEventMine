@@ -60,7 +60,7 @@ sh download.sh deepeventmine [task]
 sh run.sh config [task] [gpu]
 ```
 
-### Predict (with the BioNLP shared task data sets)
+### Predict (BioNLP shared tasks)
 
 1. For development and test sets (given gold entities)
 - CG task: [task] = cg
@@ -77,7 +77,7 @@ experiments/[task]/predict-gold-dev/
 experiments/[task]/predict-gold-test/
 ```
 
-### Evaluate
+### Evaluate (BioNLP shared tasks)
 
 1. Retrieve the original offsets and create zip format
 ```bash
