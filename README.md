@@ -108,9 +108,11 @@ sh run.sh eval [task] gold dev sp
 - [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
 - [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
 
-### Predict (with raw text)
+## Predict (with raw text)
 
-1. Prepare raw text input
+- You can prepare raw text by your own, or you can get text given PubMed ID.
+
+### Prepare your own raw text
 
 - If you want to predict for your raw text using our trained model for a task ([task] = cg, pc, ge11, etc), put your raw text as the following path
 
@@ -118,19 +120,32 @@ sh run.sh eval [task] gold dev sp
 data/raw-text/[task]/PMID-*.txt
 ```
 
-2. Preprocess raw text
+### Get text from PubMed ID
+
+1. Installation
+
+```bash
+sh install.sh pubmed
+```
+
+2. Prepare data
+
+
+### Predict
+
+1. Preprocess raw text
 
 - Tokenize raw text and prepare data for prediction
 ```bash
 sh preprocess.sh raw
 ```
 
-3. Predict
+2. Predict
 ```bash
 sh run.sh predict [task] raw text
 ```
 
-4. Retrieve the original offsets
+3. Retrieve the original offsets
 
 ```bash
 sh run.sh offset [task] raw text
