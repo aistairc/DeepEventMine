@@ -52,6 +52,13 @@ outdir = getattr(args, 'outdir')
 corpus_name = getattr(args, 'corpus_name')
 dev_test = getattr(args, 'dev_test')
 
+# debug
+# corpus_name = 'cg'
+# outdir = '../experiments/cg/predict-gold-dev/ev-last/'
+# preddir = '../experiments/cg/predict-gold-dev/ev-last/ev-tok-a2/'
+# refdir = '../data/corpora/cg/dev/'
+# dev_test = 'dev'
+
 # output dir
 output_a2_dir = outdir + 'ev-orig-a2'
 output_ann_dir = ''.join([outdir, corpus_name, '-', 'brat'])
@@ -98,6 +105,19 @@ for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
     saved_edata_list = []
     invalid_eid_list = []
 
+    # read a1
+    for line in read_lines(os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".a1"))):
+        if line.startswith('T'):
+            _id, _attrs, _ = line.split("\t")
+            _type, *_offsets = _attrs.split()
+            _start, _end = map(lambda x: offset_mapping[x], _offsets)
+
+            # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
+
+            processed_ann_lines.append("{}\t{} {} {}\t{}".format(
+                _id, _type, _start, _end, reference[_start:_end]
+            ))
+
     for line in read_lines(cur_fn):
         if line.startswith("E"):
             line_sp = line.split("\t")
@@ -140,13 +160,13 @@ for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
             # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
 
             ent_line = "{}\t{} {} {}\t{}".format(
-                    _id, _type, _start, _end, reference[_start:_end]
-                )
+                _id, _type, _start, _end, reference[_start:_end]
+            )
 
             # for a2
             processed_lines.append(ent_line)
 
-            # for a1
+            # for ann
             processed_ann_lines.append(ent_line)
 
         elif line.startswith("E"):
@@ -168,8 +188,6 @@ for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
 
     # write a2
     write_lines(processed_lines, os.path.join(output_a2_dir, os.path.basename(cur_fn)))
-
-
 
     # write ann for brat
     write_lines(processed_ann_lines, os.path.join(output_ann_dir, os.path.basename(cur_fn.replace(".a2", ".ann"))))
@@ -199,7 +217,6 @@ for ref_fn in glob(os.path.join(refdir, "**/*.a2"), recursive=True):
         write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace(".a2", ".ann"))))
 
         # write a1
-
 
         # write txt
         txt_fn = os.path.basename(ref_fn).replace(".a2", ".txt.ori")
