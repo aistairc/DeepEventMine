@@ -16,14 +16,14 @@ if [ "$TASK" = "predict" ]; then
     # predict
     python predict.py --yaml $experiment_dir/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml
 
-# evaluate
-elif [ "$TASK" = "eval" ]; then
+# retrieve offset
+elif [ "$TASK" = "offset" ]; then
 
-    echo "Evaluate: "
+    echo "Retrieve original offsets: "
 
     # paths
     REFDIR="data/corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
-    PREDDIR="$experiment_dir/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-ann/"
+    PREDDIR="$experiment_dir/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-tok-a2/"
     ZIPDIR="$experiment_dir/predict-$GOLD_E2E-$DEV_TEST/ev-last/" # retrieve the original offsets
 
     # raw text
@@ -33,6 +33,17 @@ elif [ "$TASK" = "eval" ]; then
 
     # retrieve the original offsets and create zip format for online evaluation
     python scripts/postprocess.py --corpusdir $REFDIR --indir $PREDDIR --outdir $ZIPDIR --corpus_name $CORPUS_NAME --dev_test $DEV_TEST
+
+# evaluate
+elif [ "$TASK" = "eval" ]; then
+
+    # paths
+    REFDIR="data/original_corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
+    PREDDIR="$experiment_dir/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-orig-a2/"
+
+    EVAL_OPTION=$6 # s: softboundary; p: partialrecursive
+
+    python eval/scripts/eval-ev-$CORPUS_NAME.py -r $REFDIR -d $PREDDIR -$EVAL_OPTION
 
 fi
 

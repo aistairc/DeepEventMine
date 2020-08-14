@@ -334,7 +334,7 @@ def mapping_entity_id(en_preds_, g_entity_ids_, params):
 
 # write events to file
 def write_ev_2file(pred_output, result_dir, g_entity_ids_, params):
-    dir2wr = result_dir + 'ev-last/ev-ann/'
+    dir2wr = result_dir + 'ev-last/ev-tok-a2/'
     rev_type_map = params['mappings']['rev_type_map']
 
     # entity id mapping

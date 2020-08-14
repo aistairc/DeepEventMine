@@ -71,8 +71,8 @@ experiments/[task]/predict-gold-test/
 
 1. Retrieve the original offsets and create zip format
 ```bash
-sh run.sh [task] eval gold dev
-sh run.sh [task] eval gold test
+sh run.sh [task] offset gold dev
+sh run.sh [task] offset gold test
 ```
 
 2. Submit the zipped file to the shared task evaluation sites:
@@ -84,7 +84,16 @@ sh run.sh [task] eval gold test
 - [EPI Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/test-eval.html), [EPI Devel](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/devel-eval.htm)
 - [PC Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/PC/submission/)
 
-3. Supplemenary data
+3. Evaluate events
+
+- Evaluate event prediction for PC and CG tasks on the development sets using the shared task scripts.
+- Evaluation options: s (softboundary), p(partialrecursive)
+
+```bash
+sh run.sh [task] eval gold dev sp
+```
+
+4. Supplemenary data
 
 - [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
 - [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
