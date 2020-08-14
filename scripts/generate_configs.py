@@ -27,7 +27,7 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, ta
     # dev and test sets
     if eval_set == 'dev' or eval_set == 'test':
         predict_config['test_data'] = ''.join(["data/corpora/", task, "/", eval_set, "/"])
-        predict_config['result_dir'] = ''.join([taskdir, 'predict-gold-', eval_set, '/'])
+        predict_config['result_dir'] = ''.join([taskdir, '/predict-gold-', eval_set, '/'])
 
         # overwrite task config
         overwrite_task_config(predict_config, specific_config)
@@ -37,7 +37,7 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, ta
     # for raw texts
     elif eval_set == 'raw-text':
         predict_config['test_data'] = ''.join(["data/processed-raw-text/", task, "/"])
-        predict_config['result_dir'] = ''.join([taskdir, 'predict-', eval_set, '/'])
+        predict_config['result_dir'] = ''.join([taskdir, '/predict-', eval_set, '/'])
         predict_config['raw_text'] = True
         predict_config['ner_predict_all'] = True
 
