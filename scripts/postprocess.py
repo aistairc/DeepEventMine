@@ -90,6 +90,9 @@ for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
 
     processed_lines = []
 
+    # for brat
+    processed_ann_lines = []
+
     valid_eid_list = []
     saved_eid_list = []
     saved_edata_list = []
@@ -136,11 +139,16 @@ for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
 
             # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
 
-            processed_lines.append(
-                "{}\t{} {} {}\t{}".format(
+            ent_line = "{}\t{} {} {}\t{}".format(
                     _id, _type, _start, _end, reference[_start:_end]
                 )
-            )
+
+            # for a2
+            processed_lines.append(ent_line)
+
+            # for a1
+            processed_ann_lines.append(ent_line)
+
         elif line.startswith("E"):
             line_sp = line.split("\t")
             eid = line_sp[0]
@@ -148,6 +156,7 @@ for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
             if eid in valid_eid_list:
                 saved_eid_list.append(eid)
                 processed_lines.append(line)
+                processed_ann_lines.append(line)
 
         elif line.startswith("M"):
             line_sp = line.split("\t")
@@ -155,12 +164,15 @@ for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
             eid = line_sp[1].split(" ")[1]
             if eid in saved_eid_list:
                 processed_lines.append(line)
+                processed_ann_lines.append(line)
 
     # write a2
     write_lines(processed_lines, os.path.join(output_a2_dir, os.path.basename(cur_fn)))
 
+
+
     # write ann for brat
-    write_lines(processed_lines, os.path.join(output_ann_dir, os.path.basename(cur_fn.replace(".a2", ".ann"))))
+    write_lines(processed_ann_lines, os.path.join(output_ann_dir, os.path.basename(cur_fn.replace(".a2", ".ann"))))
 
     # write txt
     txt_fn = os.path.basename(cur_fn).replace(".a2", ".txt.ori")
@@ -185,6 +197,9 @@ for ref_fn in glob(os.path.join(refdir, "**/*.a2"), recursive=True):
         # write empty file
         write_lines([], os.path.join(output_a2_dir, os.path.basename(ref_fn)))
         write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace(".a2", ".ann"))))
+
+        # write a1
+
 
         # write txt
         txt_fn = os.path.basename(ref_fn).replace(".a2", ".txt.ori")

@@ -162,8 +162,15 @@ python standalone.py
 
 2. Copy the predicted data into the brat folder to visualize
 
+- For the raw text prediction
 ```bash
 sh run.sh brat [task] raw text
+```
+
+- Or for the shared task
+```bash
+sh run.sh brat [task] gold dev
+sh run.sh brat [task] gold test
 ```
 
 3. Visualize
