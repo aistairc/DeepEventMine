@@ -58,6 +58,23 @@ elif [ "$TASK" = "eval" ]; then
 
     python eval/scripts/eval-ev-$CORPUS_NAME.py -r $REFDIR -d $PREDDIR -$EVAL_OPTION
 
+# prepare data for brat
+elif [ "$TASK" = "brat" ]; then
+
+    echo "Prepare data for brat"
+
+    PRED_DIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/$CORPUS_NAME-brat/"
+    BRAT_DIR="brat/brat-v1.3_Crunchy_Frog/data/"
+
+    # annotation file
+    CONFIG="configs/brat/$CORPUS_NAME"
+    if [ -d $CONFIG ]; then
+        cp $CONFIG/* $PRED_DIR
+    fi
+
+    # brat
+    cp -r $PRED_DIR $BRAT_DIR
+
 fi
 
 echo "Done!"

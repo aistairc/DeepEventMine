@@ -130,9 +130,15 @@ sh preprocess.sh raw
 sh run.sh predict [task] raw text
 ```
 
+4. Retrieve the original offsets
+
+```bash
+sh run.sh offset [task] raw text
+```
+
 - Check the output in
 ```bash
-experiments/[task]/predict-raw-text/
+experiments/[task]/predict-raw-text/ev-last/[task]-brat
 ```
 
 ## Visualization
@@ -155,6 +161,10 @@ python standalone.py
 ```
 
 2. Copy the predicted data into the brat folder to visualize
+
+```bash
+sh run.sh brat [task] raw text
+```
 
 3. Visualize
 
