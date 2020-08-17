@@ -134,7 +134,7 @@ elif [ "$TASK" = "e2e" ]; then
     EXP_DIR="experiments/$MY_DATA"
 
     # predict
-    python predict.py --yaml $EXP_DIR/configs/$TASK-$MY_DATA.yaml
+    python predict.py --yaml $EXP_DIR/configs/predict-$MY_DATA.yaml
 
     echo "--------------------------------"
     echo "5. Retrieve original offsets: "
