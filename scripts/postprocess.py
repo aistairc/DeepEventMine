@@ -234,4 +234,5 @@ if count > 0:
     with tarfile.open(outfile_path, "w:gz") as f:
         for fn in glob(os.path.join(output_a2_dir, "*.a2")):
             f.add(fn, arcname=os.path.basename(fn))
-        print("Please submit this file: {}".format(outfile_path))
+        if 'dev' in dev_test or 'test' in dev_test:
+            print("Please submit this file: {}".format(outfile_path))
