@@ -1,11 +1,14 @@
 # 1. DeepEventMine
-A deep leanring model to predict named entities, triggers, and nested events from biomedical texts using our pretrained models.
+A deep leanring model to predict named entities, triggers, and nested events from biomedical texts.
 
-- The model and results are reported in our paper: [DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts](https://doi.org/10.1093/bioinformatics/btaa540)
-- Bioinformatics, 2020.
+- The model and results are reported in our paper:
+
+[DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts](https://doi.org/10.1093/bioinformatics/btaa540), Bioinformatics, 2020.
 
 ## 1.1. Features
-- We provide our trained models on the seven biomedical tasks
+- Based on [pre-trained BERT](https://github.com/allenai/scibert)
+- Predict nested entities and nested events
+- Provide our trained models on the seven biomedical tasks
 - Reproduce the results reported in our [Bioinformatics](https://doi.org/10.1093/bioinformatics/btaa540) paper
 - Predict for new data given raw text input or PubMed ID
 - Visualize the predicted entities and events on the [brat](http://brat.nlplab.org)
