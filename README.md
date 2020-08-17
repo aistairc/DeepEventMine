@@ -1,9 +1,33 @@
 # DeepEventMine
-A model to predict nested events from biomedical texts using our pretrained models.
+A deep leanring model to predict named entities, triggers, and nested events from biomedical texts using our pretrained models.
 
 - The model and results are reported in our paper: [DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts](https://doi.org/10.1093/bioinformatics/btaa540)
 - Bioinformatics, 2020.
 
+## Features
+- We provide our trained models on the seven biomedical tasks
+- Reproduce the results reported in our Bioinformatics paper
+- Predict for new data given raw text input or PubMed ID
+- Visualize the predicted entities and events on the brat
+
+## Tasks
+
+- DeepEventMine has been trained and evaluated on the following tasks (six BioNLP shared tasks and MLEE).
+
+1. cg: [Cancer Genetics (CG), 2013](http://2013.bionlp-st.org/tasks/cancer-genetics)
+2. ge11: [GENIA Event Extraction (GENIA), 2011](http://2011.bionlp-st.org/home/genia-event-extraction-genia)
+3. ge13: [GENIA Event Extraction (GENIA), 2013](http://bionlp.dbcls.jp/projects/bionlp-st-ge-2013/wiki/Overview)
+4. id: [Infectious Diseases (ID), 2011](http://2011.bionlp-st.org/home/infectious-diseases)
+5. epi: [Epigenetics and Post-translational Modifications (EPI), 2011](http://2011.bionlp-st.org/home/epigenetics-and-post-translational-modifications)
+6. pc: [Pathway Curation (PC), 2013](http://2013.bionlp-st.org/tasks/pathway-curation)
+7. mlee: [Multi-Level Event Extraction (MLEE)](http://nactem.ac.uk/MLEE/)
+
+## Our trained models and scores
+
+- [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
+- [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
+
+# Before prediction
 ## Requirements
 - Python 3.6.5
 - PyTorch (torch==1.1.0 torchvision==0.3.0, cuda92)
@@ -13,18 +37,23 @@ A model to predict nested events from biomedical texts using our pretrained mode
 pip install -r requirements.txt
 ```
 
-## Tasks
-1. cg: [Cancer Genetics (CG), 2013](http://2013.bionlp-st.org/tasks/cancer-genetics)
-2. ge11: [GENIA Event Extraction (GENIA), 2011](http://2011.bionlp-st.org/home/genia-event-extraction-genia)
-3. ge13: [GENIA Event Extraction (GENIA), 2013](http://bionlp.dbcls.jp/projects/bionlp-st-ge-2013/wiki/Overview)
-4. id: [Infectious Diseases (ID), 2011](http://2011.bionlp-st.org/home/infectious-diseases)
-5. epi: [Epigenetics and Post-translational Modifications (EPI), 2011](http://2011.bionlp-st.org/home/epigenetics-and-post-translational-modifications)
-6. pc: [Pathway Curation (PC), 2013](http://2013.bionlp-st.org/tasks/pathway-curation)
-7. mlee: [Multi-Level Event Extraction (MLEE)](http://nactem.ac.uk/MLEE/)
+## Download pre-trained BERT
+- Download SciBERT model from PyTorch AllenNLP
 
-## How to run
+```bash
+sh download.sh bert
+```
 
-### Prepare data
+## Download pre-trained DeepEventMine models
+- Download the pre-trained DeepEventMine model on a given task
+
+```bash
+sh download.sh deepeventmine [task]
+```
+
+# Predict on the BioNLP tasks
+
+## Prepare data
 1. Download corpora
 - To download the original data sets from BioNLP shared tasks.
 - [task] = cg, pc, ge11, etc
@@ -39,28 +68,14 @@ sh download.sh bionlp [task]
 sh preprocess.sh bionlp
 ```
 
-3. Download pre-trained BERT
-- Download SciBERT model from PyTorch AllenNLP
-
-```bash
-sh download.sh bert
-```
-
-4. Download pre-trained DeepEventMine models
-- Download the pre-trained DeepEventMine model on a given task
-
-```bash
-sh download.sh deepeventmine [task]
-```
-
-5. Generate configs
+3. Generate configs
 - If using GPU: [gpu] = 0, otherwise: [gpu] = -1
 - [task] = cg, pc, etc
 ```bash
 sh run.sh config [task] [gpu]
 ```
 
-### Predict (BioNLP shared tasks)
+## Predict
 
 1. For development and test sets (given gold entities)
 - CG task: [task] = cg
@@ -77,7 +92,7 @@ experiments/[task]/predict-gold-dev/
 experiments/[task]/predict-gold-test/
 ```
 
-### Evaluate (BioNLP shared tasks)
+## Evaluate
 
 1. Retrieve the original offsets and create zip format
 ```bash
@@ -103,16 +118,11 @@ sh run.sh offset [task] gold test
 sh run.sh eval [task] gold dev sp
 ```
 
-4. Supplemenary data
-
-- [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
-- [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
-
-## Predict (with raw text)
+# Predict given raw text
 
 - You can prepare raw text by your own, or you can get text given PubMed ID.
 
-### Prepare your own raw text
+## Prepare your own raw text
 
 - If you want to predict for your raw text using our trained model for a task ([task] = cg, pc, ge11, etc), put your raw text as the following path
 
@@ -120,7 +130,7 @@ sh run.sh eval [task] gold dev sp
 data/raw-text/[task]/PMID-*.txt
 ```
 
-### Get text from PubMed ID
+## Get text from PubMed ID
 
 1. Installation
 
@@ -131,7 +141,7 @@ sh install.sh pubmed
 2. Prepare data
 
 
-### Predict
+## Predict
 
 1. Preprocess raw text
 
@@ -156,7 +166,7 @@ sh run.sh offset [task] raw text
 experiments/[task]/predict-raw-text/ev-last/[task]-brat
 ```
 
-## Visualization
+# Visualization
 
 - Visualize the output using the [brat](http://brat.nlplab.org)
 
@@ -195,7 +205,7 @@ sh run.sh brat [task] gold test
 brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
 ```
 
-## Acknowledgements
+# Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
 This work is also supported by PRISM (Public/Private R&D Investment Strategic Expansion PrograM).
 
