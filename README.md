@@ -121,7 +121,7 @@ sh run.sh eval [task] gold dev sp
 # 4. End-to-end
 
 ```bash
-sh pubmed.sh e2e pmid [1370299](https://pubmed.ncbi.nlm.nih.gov/1370299/) [cg](http://2013.bionlp-st.org/tasks/cancer-genetics) 0
+sh pubmed.sh e2e pmid 1370299 cg 0
 ```
 
 - Input: [1370299](https://pubmed.ncbi.nlm.nih.gov/1370299/) (raw text given a single PubMed ID)
