@@ -145,10 +145,10 @@ sh install.sh pubmed
 
 1. PubMed ID list
 - In order to get full text given PMC ID, the text should be available in ePub (for our current version).
-- Prepare your list of PubMed ID and PMC ID in the path, E.g [your_dir_name] = my-pubmed
+- Prepare your list of PubMed ID and PMC ID in the path, E.g [your_data_name] = my-pubmed
 
 ```bash
-data/[your_dir_name]/my-pmid.txt
+data/[your_data_name]/my-pmid.txt
 ```
 
 - Get text from the PubMed ID
@@ -165,13 +165,25 @@ sh pubmed.sh pmcid PMC4353630
 
 ### Preprocess
 
-- E.g: [your_dir_name] = my-pubmed
+- E.g: [your_data_name] = my-pubmed
 
 ```bash
-sh pubmed.sh preprocess [your_dir_name]
+sh pubmed.sh preprocess [your_data_name]
 ```
 
 ## 4.3. Predict
+
+1. Generate config
+- Generate config for prediction
+- The data to predict: [your_data_name] = my-pubmed
+- The trained model used for predict: [model_name] = cg (or pc, ge11, etc)
+- If you use gpu [gpu]=0, otherwise [gpu]=-1
+
+```bash
+sh pubmed.sh config [your_data_name] [model_name] [gpu]
+```
+
+## 4.4. Predict
 
 1. Preprocess raw text
 

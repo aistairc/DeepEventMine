@@ -31,16 +31,29 @@ elif [ "$TASK" = "pmcid" ]; then
 # Preprocess
 elif [ "$TASK" = "preprocess" ]; then
 
-    MY_DATA_DIR=$2
+    echo "Preprocess pubmed text"
+    MY_DATA=$2
 
-    IN_DIR="data/$MY_DATA_DIR"
+    IN_DIR="data/$MY_DATA"
     OUT_DIR="data/tmp/"
 
     python scripts/preprocess.py --indir $IN_DIR --outdir $OUT_DIR
 
     mv "$OUT_DIR" "$IN_DIR/processed-text"
 
+# Generate config
+elif [ "$TASK" = "config" ]; then
+    echo "Generate pubmed config"
+
+    MY_DATA=$2
+    MODEL_NAME=$3
+    GPU=$4
+    EXP_DIR="experiments/"
+
+    python scripts/generate_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
+
 fi
+
 
 echo "Done!"
 
