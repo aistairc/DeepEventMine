@@ -144,7 +144,7 @@ E24	Positive_regulation:T32 Theme:E10
 
 <p align="center">
     <br>
-    <img src="https://raw.githubusercontent.com/aistairc/DeepEventMine/master/img/PMID-1370299.png" width="400"/>
+    <img src="https://raw.githubusercontent.com/aistairc/DeepEventMine/master/img/PMID-1370299.png" width="800"/>
     <br>
 <p>
 
