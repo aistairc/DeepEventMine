@@ -183,29 +183,23 @@ sh pubmed.sh preprocess [your_data_name]
 sh pubmed.sh config [your_data_name] [model_name] [gpu]
 ```
 
-## 4.4. Predict
-
-1. Preprocess raw text
-
-- Tokenize raw text and prepare data for prediction
-```bash
-sh preprocess.sh raw
-```
-
 2. Predict
+
+- [your_data_name] = my-pubmed
+
 ```bash
-sh run.sh predict [task] raw text
+sh pubmed.sh predict [your_data_name]
 ```
 
 3. Retrieve the original offsets
 
 ```bash
-sh run.sh offset [task] raw text
+sh run.sh offset [your_data_name]
 ```
 
 - Check the output in
 ```bash
-experiments/[task]/predict-raw-text/ev-last/[task]-brat
+experiments/[your_data_name]/results/ev-last/[your_data_name]-brat
 ```
 
 # 5. Visualization
@@ -229,9 +223,9 @@ python standalone.py
 
 2. Copy the predicted data into the brat folder to visualize
 
-- For the raw text prediction
+- For the raw text prediction: [your_data_name] = my-pubmed, [model_name]=cg
 ```bash
-sh run.sh brat [task] raw text
+sh run.sh brat [your_data_name] [model_name]
 ```
 
 - Or for the shared task
@@ -243,8 +237,9 @@ sh run.sh brat [task] gold test
 3. Visualize
 
 - The data to visualize is located in
+
 ```bash
-brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
+brat/brat-v1.3_Crunchy_Frog/data/[your_data_name]-brat
 ```
 
 # 6. Acknowledgements

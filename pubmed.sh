@@ -52,6 +52,49 @@ elif [ "$TASK" = "config" ]; then
 
     python scripts/generate_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
 
+# predict
+elif [ "$TASK" = "predict" ]; then
+    echo "Predict: "
+
+    MY_DATA=$2
+    EXP_DIR="experiments/$MY_DATA"
+
+    # predict
+    python predict.py --yaml $EXP_DIR/configs/$TASK-$MY_DATA.yaml
+
+# retrieve offset
+elif [ "$TASK" = "offset" ]; then
+
+    echo "Retrieve original offsets: "
+
+    MY_DATA=$2
+
+    # paths
+    REFDIR="data/$MY_DATA/processed-text/$MY_DATA-text" # reference gold data
+    PREDDIR="experiments/$MY_DATA/results/ev-last/ev-tok-a2/"
+    OUTDIR="experiments/$MY_DATA/results/ev-last/" # retrieve the original offsets
+
+    python scripts/postprocess.py --refdir $REFDIR --preddir $PREDDIR --outdir $OUTDIR --corpus_name $MY_DATA --dev_test pubmed
+
+# prepare data for brat
+elif [ "$TASK" = "brat" ]; then
+
+    echo "Prepare data for brat"
+
+    MY_DATA=$2
+    MODEL_NAME=$3
+
+    PRED_DIR="experiments/$MY_DATA/results/ev-last/$MY_DATA-brat/"
+    BRAT_DIR="brat/brat-v1.3_Crunchy_Frog/data/"
+
+    # annotation file
+    CONFIG="configs/brat/$MODEL_NAME"
+    if [ -d $CONFIG ]; then
+        cp $CONFIG/* $PRED_DIR
+    fi
+
+    # brat
+    cp -r $PRED_DIR $BRAT_DIR
 fi
 
 
