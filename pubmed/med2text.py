@@ -37,6 +37,22 @@ def pmc2text(pmid):
 
                 body_tag = markup.find("div", class_="body")
                 sec_tags = body_tag and body_tag.find_all("div", class_="sec")
-                content = "\n".join(sec_tag.get_text().strip() for sec_tag in sec_tags) if sec_tags else "N/A"
+                # content = "\n".join(sec_tag.get_text().strip() for sec_tag in sec_tags) if sec_tags else "N/A"
 
-                return title, abstract, content
+                sections_ = []
+
+                # get text
+                if sec_tags:
+                    for sec_tag in sec_tags:
+                        sec_title = sec_tag.find("h2")
+                        if sec_title:
+                            sec_title = sec_title.text
+                        else:
+                            sec_title = sec_tag.find("h3")
+                            if sec_title:
+                                sec_title = sec_title.text
+                        sec_text = sec_tag.get_text().strip()
+
+                        sections_.append((sec_title, sec_text))
+
+                return title, abstract, sections_

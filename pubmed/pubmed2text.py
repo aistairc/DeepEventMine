@@ -34,6 +34,7 @@ def pmids2text(pmid_path, textdir):
 
     # get text given each PMID, write to file
     for pmid in pmid_list:
+
         print(pmid)
         title, abstract = med2text.pmid2text(pmid)
 
@@ -47,6 +48,7 @@ def pmids2text(pmid_path, textdir):
     # get text given PMCID
     for pmcid in pmcid_list:
         try:
+
             print(pmcid)
             title, abstract, content = med2text.pmc2text(pmcid)
             if len(title) > 0:
@@ -72,6 +74,9 @@ def pmid2text(pmid, textdir):
     if not os.path.exists(textdir):
         os.makedirs(textdir)
 
+    if os.path.exists(textdir):
+        os.system('rm ' + textdir + 'PMID-' + pmid + '*')
+
     # get text given each PMID, write to file
     print(pmid)
     title, abstract = med2text.pmid2text(pmid)
@@ -91,16 +96,33 @@ def pmcid2text(pmcid, textdir):
         os.makedirs(textdir)
 
     try:
+
+        if os.path.exists(textdir):
+            os.system('rm ' + textdir + pmcid.replace('PMC', 'PMC-') + '*')
+
         print(pmcid)
-        title, abstract, content = med2text.pmc2text(pmcid)
+        title, abstract, sections_ = med2text.pmc2text(pmcid)
+
         if len(title) > 0:
-            with open(os.path.join(textdir, ''.join(['PMC-', pmcid.replace('PMC', ''), '.txt'])), 'w') as fo:
+            ftitle = ''.join(['PMC-', pmcid.replace('PMC', ''), '-0', str(0), '-', 'TIAB', '.txt'])
+            with open(os.path.join(textdir, ftitle), 'w') as fo:
                 fo.write(title)
                 fo.write('\n\n')
                 fo.write(abstract)
-                fo.write('\n\n')
-                fo.write(content)
-            print('Done', pmcid)
+
+        if len(sections_) > 0:
+
+            for sec_id, sec_data in enumerate(sections_):
+                sec_title = sec_data[0].strip().replace(' ', '_')
+                sec_text = sec_data[1]
+                if sec_id < 9:
+                    ftitle = ''.join(['PMC-', pmcid.replace('PMC', ''), '-0', str(sec_id + 1), '-', sec_title, '.txt'])
+                else:
+                    ftitle = ''.join(['PMC-', pmcid.replace('PMC', ''), '-', str(sec_id + 1), '-', sec_title, '.txt'])
+                with open(os.path.join(textdir, ftitle), 'w') as fo:
+                    fo.write(sec_text)
+
+        print('Done', pmcid)
 
     except urllib3.exceptions.ProtocolError as error:
         print('Protocol Error', pmcid)
@@ -112,15 +134,16 @@ def pmcid2text(pmcid, textdir):
 
 if __name__ == '__main__':
     # pmid2text('../data/my-pubmed/pmid.txt', '../data/my-pubmed/original_text/')
+    pmcid2text('PMC4353630', '../data/my-pubmed/original_text/')
 
-    option = sys.argv[1]
-
-    # pubmed id list
-    if option == 'pmids':
-        pmids2text(sys.argv[2], sys.argv[3])
-
-    elif option == 'pmid':
-        pmid2text(sys.argv[2], sys.argv[3])
-
-    elif option == 'pmcid':
-        pmcid2text(sys.argv[2], sys.argv[3])
+    # option = sys.argv[1]
+    #
+    # # pubmed id list
+    # if option == 'pmids':
+    #     pmids2text(sys.argv[2], sys.argv[3])
+    #
+    # elif option == 'pmid':
+    #     pmid2text(sys.argv[2], sys.argv[3])
+    #
+    # elif option == 'pmcid':
+    #     pmcid2text(sys.argv[2], sys.argv[3])
