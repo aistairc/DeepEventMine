@@ -4,6 +4,7 @@ import urllib3
 import requests
 import sys
 
+sys.path.insert(0, '.')
 from pubmed import med2text
 
 
