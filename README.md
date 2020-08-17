@@ -125,9 +125,9 @@ sh pubmed.sh e2e pmid 1370299 cg 0
 ```
 
 - Input: [1370299](https://pubmed.ncbi.nlm.nih.gov/1370299/) (raw text given a single PubMed ID)
-- Model to predict: DeepEventMine trained on cg [Cancer Genetics (CG), 2013](http://2013.bionlp-st.org/tasks/cancer-genetics), (other options: pc, ge11, etc)
+- Model to predict: DeepEventMine trained on [cg (Cancer Genetics 2013)](http://2013.bionlp-st.org/tasks/cancer-genetics), (other options: pc, ge11, etc)
 - GPU: 0 (if CPU: -1)
-- Output: in brat format and [brat](http://brat.nlplab.org) visualization
+- Output: in brat format and [brat visualization](http://brat.nlplab.org)
 
 ```bash
 T9	Gene_or_gene_product 1184 1188	u-PA
