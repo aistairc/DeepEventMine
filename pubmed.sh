@@ -96,13 +96,14 @@ elif [ "$TASK" = "brat" ]; then
     # brat
     cp -r $PRED_DIR $BRAT_DIR
 
-elif [ "$TASK" = "e2e pmid" ]; then
+elif [ "$TASK" = "e2e" ]; then
 
     echo "End-to-end event extraction"
     echo "--------------------------------"
     echo "1. Get text from PubMed ID"
 
-    PMID=$2
+    PM_TYPE=$2
+    PMID=$3
 
     TEXT_DIR="data/my-pubmed-$PMID/my-pubmed-$PMID-text/"
     python pubmed/pubmed2text.py $TASK $PMID $TEXT_DIR
@@ -121,8 +122,8 @@ elif [ "$TASK" = "e2e pmid" ]; then
     echo "--------------------------------"
     echo "3. Generate pubmed config"
 
-    MODEL_NAME=$3
-    GPU=$4
+    MODEL_NAME=$4
+    GPU=$5
     EXP_DIR="experiments/"
 
     python scripts/generate_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
