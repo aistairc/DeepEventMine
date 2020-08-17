@@ -48,7 +48,7 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, mo
 
 
 def gen_predict_config_pubmed(predict_config, specific_config, config_dir, expdir, dataname):
-    predict_config['test_data'] = ''.join(["data/", dataname, "/processed-text/", dataname, "-text"])
+    predict_config['test_data'] = ''.join(["data/", dataname, "/processed-text/", dataname, "-text/"])
     predict_config['result_dir'] = ''.join([expdir, dataname, '/results/'])
     predict_config['raw_text'] = True
     predict_config['ner_predict_all'] = True
