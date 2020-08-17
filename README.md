@@ -144,10 +144,11 @@ sh install.sh pubmed
 ### Get raw text
 
 1. PubMed ID list
-- Prepare your list of PubMed ID and PMC ID in the path
 - In order to get full text given PMC ID, the text should be available in ePub (for our current version).
+- Prepare your list of PubMed ID and PMC ID in the path, E.g [your_dir_name] = my-pubmed
+
 ```bash
-data/my-pubmed/my-pmid.txt
+data/[your_dir_name]/my-pmid.txt
 ```
 
 - Get text from the PubMed ID
@@ -160,6 +161,14 @@ sh pubmed.sh pmids
 ```bash
 sh pubmed.sh pmid 1370299
 sh pubmed.sh pmcid PMC4353630
+```
+
+### Preprocess
+
+- E.g: [your_dir_name] = my-pubmed
+
+```bash
+sh pubmed.sh preprocess [your_dir_name]
 ```
 
 ## 4.3. Predict

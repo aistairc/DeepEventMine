@@ -114,7 +114,7 @@ def parse_standoff_file(standoff_file, text_file, encoding=None):
         line = line.strip()
 
         if line.startswith(
-            "T"
+                "T"
         ):  # Entities (T), Triggers (TR) (are also included in this case)
             entity_id, entity_annotation, entity_reference = line.split("\t")
 
@@ -226,14 +226,14 @@ def parse_standoff_file(standoff_file, text_file, encoding=None):
 
 
 def write_ann_file(
-    ann_file,
-    entities=None,
-    equivalences=None,
-    relations=None,
-    events=None,
-    modalities=None,
-    attributes=None,
-    normalise_triggers=False,
+        ann_file,
+        entities=None,
+        equivalences=None,
+        relations=None,
+        events=None,
+        modalities=None,
+        attributes=None,
+        normalise_triggers=False,
 ):
     lines = []
 
@@ -244,10 +244,10 @@ def write_ann_file(
 
     if equivalences:
         for equivalence in sorted(
-            set(
-                tuple(sorted(equivalence, key=lambda val: int(val.lstrip("TR"))))
-                for equivalence in equivalences
-            )
+                set(
+                    tuple(sorted(equivalence, key=lambda val: int(val.lstrip("TR"))))
+                    for equivalence in equivalences
+                )
         ):
             if equivalence:
                 lines.append(
@@ -317,9 +317,9 @@ def split_token(token, offsets):
     subtokens.append(token[: offsets[0]])
 
     for i in range(1, len(offsets)):
-        subtokens.append(token[offsets[i - 1] : offsets[i]])
+        subtokens.append(token[offsets[i - 1]: offsets[i]])
 
-    subtokens.append(token[offsets[-1] :])
+    subtokens.append(token[offsets[-1]:])
     return list(filter(len, subtokens))
 
 
@@ -518,8 +518,8 @@ def build_subtoken_map(corpus_name, corpus_dir, output_dir):
 
             if extended_entity_start < entity_start or entity_end < extended_entity_end:
                 full_token = original_doc[
-                    extended_entity_start:extended_entity_end
-                ].lower()
+                             extended_entity_start:extended_entity_end
+                             ].lower()
 
                 unique_offsets = sorted(
                     {
@@ -650,7 +650,7 @@ def convert(corpus_name, corpus_dir, output_dir):
 
         # Split into sentences and ensure that there is no broken entities
         for sentence_idx, (start_offset, end_offset) in enumerate(
-            generate_sentence_boundaries(original_doc)
+                generate_sentence_boundaries(original_doc)
         ):
             sentence_boundaries.append({"start": start_offset, "end": end_offset})
             for offset in range(start_offset, end_offset + 1):
@@ -688,8 +688,8 @@ def convert(corpus_name, corpus_dir, output_dir):
             end_offset = sentence_boundaries[sentence_idx]["end"]
 
             while (
-                sentence_idx < len(sentence_boundaries)
-                and "broken" in sentence_boundaries[sentence_idx]
+                    sentence_idx < len(sentence_boundaries)
+                    and "broken" in sentence_boundaries[sentence_idx]
             ):
                 broken_sentence_idx = sentence_boundaries[sentence_idx]["broken"]
                 end_offset = sentence_boundaries[broken_sentence_idx]["end"]
@@ -714,9 +714,9 @@ def convert(corpus_name, corpus_dir, output_dir):
                     )
 
                     sentence = (
-                        sentence[: matcher.start()]
-                        + normalized_span
-                        + sentence[matcher.end() :]
+                            sentence[: matcher.start()]
+                            + normalized_span
+                            + sentence[matcher.end():]
                     )
 
                     matcher = regex.search(
@@ -750,7 +750,7 @@ def convert(corpus_name, corpus_dir, output_dir):
         _normalized_doc = normalized_doc.replace("\r", " ").replace("\n", " ")
 
         while original_doc_pos < len(_original_doc) and normalized_doc_pos < len(
-            _normalized_doc
+                _normalized_doc
         ):
             original_doc_char = _original_doc[original_doc_pos]
             normalized_doc_char = _normalized_doc[normalized_doc_pos]
@@ -773,7 +773,7 @@ def convert(corpus_name, corpus_dir, output_dir):
 
         if inverse_offset_map:
             inverse_offset_map[max(inverse_offset_map) + 1] = (
-                max(inverse_offset_map.values()) + 1
+                    max(inverse_offset_map.values()) + 1
             )
 
         assert max(offset_map.values()) == len(_normalized_doc) and max(
@@ -909,7 +909,6 @@ def convert(corpus_name, corpus_dir, output_dir):
 
 
 def main():
-    
     parser = argparse.ArgumentParser()
     parser.add_argument('--indir', type=str, required=True, help='--indir')
     parser.add_argument('--outdir', type=str, required=True, help='--outdir')
@@ -918,20 +917,21 @@ def main():
     input_dir = getattr(args, 'indir')
     output_dir = getattr(args, 'outdir')
 
-
     # Step 1:
     # Collect token which contain entity as substring
     for fn in glob(os.path.join(input_dir, "*")):
-        print("Building subtoken map: " + os.path.basename(fn))
-        build_subtoken_map(os.path.relpath(fn, input_dir), fn, output_dir)
+        if os.path.isdir(fn):
+            print("Building subtoken map: " + os.path.basename(fn))
+            build_subtoken_map(os.path.relpath(fn, input_dir), fn, output_dir)
 
     time.sleep(10)
 
     # Step 2:
     # Build annotation files
     for fn in glob(os.path.join(input_dir, "*")):
-        print("Converting: " + os.path.basename(fn))
-        convert(os.path.relpath(fn, input_dir), fn, output_dir)
+        if os.path.isdir(fn):
+            print("Converting: " + os.path.basename(fn))
+            convert(os.path.relpath(fn, input_dir), fn, output_dir)
 
 
 if __name__ == "__main__":
