@@ -133,16 +133,17 @@ data/raw-text/[task]/PMID-*.txt
 
 ## 4.2. PubMed ID
 
-- Get text given PubMed ID
+- Get text given PubMed ID or PMC ID
 
-1. Installation
+### Installation
 
 ```bash
 sh install.sh pubmed
 ```
 
-2. Prepare data
+### Get raw text
 
+1. PubMed ID list
 - Prepare your list of PubMed ID and PMC ID in the path
 - In order to get full text given PMC ID, the text should be available in ePub (for our current version).
 ```bash
@@ -152,6 +153,13 @@ data/my-pubmed/my-pmid.txt
 - Get text from the PubMed ID
 ```bash
 sh pubmed.sh pmids
+```
+
+2. PubMed ID
+- You can also get text by directly input a PubMed or PMC ID
+```bash
+sh pubmed.sh pmid 1370299
+sh pubmed.sh pmcid PMC4353630
 ```
 
 ## 4.3. Predict
