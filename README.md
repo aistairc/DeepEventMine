@@ -120,7 +120,9 @@ sh run.sh eval [task] gold dev sp
 
 # 4. Predict (given raw text)
 
-- You can prepare raw text by your own, or you can get text given PubMed ID.
+- Input: your own raw text or PubMed ID
+- Output: predicted entities and events in brat format
+- Visualize the prediction
 
 ## 4.1. Raw text
 
@@ -194,7 +196,7 @@ sh pubmed.sh predict [your_data_name]
 3. Retrieve the original offsets
 
 ```bash
-sh run.sh offset [your_data_name]
+sh pubmed.sh offset [your_data_name]
 ```
 
 - Check the output in
@@ -225,7 +227,7 @@ python standalone.py
 
 - For the raw text prediction: [your_data_name] = my-pubmed, [model_name]=cg
 ```bash
-sh run.sh brat [your_data_name] [model_name]
+sh pubmed.sh brat [your_data_name] [model_name]
 ```
 
 - Or for the shared task
@@ -240,6 +242,7 @@ sh run.sh brat [task] gold test
 
 ```bash
 brat/brat-v1.3_Crunchy_Frog/data/[your_data_name]-brat
+brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
 ```
 
 # 6. Acknowledgements
