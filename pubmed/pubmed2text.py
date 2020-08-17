@@ -62,7 +62,15 @@ def pmids2text(pmid_path, textdir):
             if len(sections_) > 0:
 
                 for sec_id, sec_data in enumerate(sections_):
-                    sec_title = sec_data[0].strip().replace(' ', '_')
+                    sec_title = sec_data[0].strip()
+
+                    # shorten the section title
+                    sec_title_words = sec_title.split(' ')
+                    if len(sec_title_words) > 5:
+                        sec_title = '_'.join(sec_title_words[:5])
+                    else:
+                        sec_title = sec_title.replace(' ', '_')
+
                     sec_text = sec_data[1]
                     if sec_id < 9:
                         ftitle = ''.join(
@@ -128,7 +136,14 @@ def pmcid2text(pmcid, textdir):
         if len(sections_) > 0:
 
             for sec_id, sec_data in enumerate(sections_):
-                sec_title = sec_data[0].strip().replace(' ', '_')
+                sec_title = sec_data[0].strip()
+
+                # shorten the section title
+                sec_title_words = sec_title.split(' ')
+                if len(sec_title_words) > 5:
+                    sec_title = '_'.join(sec_title_words[:5])
+                else:
+                    sec_title = sec_title.replace(' ', '_')
                 sec_text = sec_data[1]
                 if sec_id < 9:
                     ftitle = ''.join(['PMC-', pmcid.replace('PMC', ''), '-0', str(sec_id + 1), '-', sec_title, '.txt'])
