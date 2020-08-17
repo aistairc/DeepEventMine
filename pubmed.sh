@@ -95,6 +95,71 @@ elif [ "$TASK" = "brat" ]; then
 
     # brat
     cp -r $PRED_DIR $BRAT_DIR
+
+elif [ "$TASK" = "e2e pmid" ]; then
+
+    echo "End-to-end event extraction"
+    echo "--------------------------------"
+    echo "1. Get text from PubMed ID"
+
+    PMID=$2
+
+    TEXT_DIR="data/my-pubmed-$PMID/my-pubmed-$PMID-text/"
+    python pubmed/pubmed2text.py $TASK $PMID $TEXT_DIR
+
+    echo "--------------------------------"
+    echo "2. Preprocess pubmed text"
+    MY_DATA=my-pubmed-$PMID
+
+    IN_DIR="data/$MY_DATA"
+    OUT_DIR="data/tmp/"
+
+    python scripts/preprocess.py --indir $IN_DIR --outdir $OUT_DIR
+
+    mv "$OUT_DIR" "$IN_DIR/processed-text"
+
+    echo "--------------------------------"
+    echo "3. Generate pubmed config"
+
+    MODEL_NAME=$3
+    GPU=$4
+    EXP_DIR="experiments/"
+
+    python scripts/generate_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
+
+    echo "--------------------------------"
+    echo "4. Predict: "
+
+    EXP_DIR="experiments/$MY_DATA"
+
+    # predict
+    python predict.py --yaml $EXP_DIR/configs/$TASK-$MY_DATA.yaml
+
+    echo "--------------------------------"
+    echo "5. Retrieve original offsets: "
+
+    # paths
+    REFDIR="data/$MY_DATA/processed-text/$MY_DATA-text" # reference gold data
+    PREDDIR="experiments/$MY_DATA/results/ev-last/ev-tok-a2/"
+    OUTDIR="experiments/$MY_DATA/results/ev-last/" # retrieve the original offsets
+
+    python scripts/postprocess.py --refdir $REFDIR --preddir $PREDDIR --outdir $OUTDIR --corpus_name $MY_DATA --dev_test pubmed
+
+    echo "--------------------------------"
+    echo "6. Prepare data for brat"
+
+    PRED_DIR="experiments/$MY_DATA/results/ev-last/$MY_DATA-brat/"
+    BRAT_DIR="brat/brat-v1.3_Crunchy_Frog/data/"
+
+    # annotation file
+    CONFIG="configs/brat/$MODEL_NAME"
+    if [ -d $CONFIG ]; then
+        cp $CONFIG/* $PRED_DIR
+    fi
+
+    # brat
+    cp -r $PRED_DIR $BRAT_DIR
+
 fi
 
 

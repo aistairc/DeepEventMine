@@ -118,13 +118,24 @@ sh run.sh offset [task] gold test
 sh run.sh eval [task] gold dev sp
 ```
 
-# 4. Predict (given raw text)
+# 4. End-to-end
+
+```bash
+sh pubmed.sh e2e pmid 1370299 cg 0
+```
+
+- Input: [1370299](https://pubmed.ncbi.nlm.nih.gov/1370299/) (Raw text given a single PubMed ID)
+- Model to predict: cg (Cancer Genetics), (other options: pc, ge11, etc)
+- GPU: 0 (if CPU: -1)
+- Output: in brat format and visualization
+
+# 5. Predict (given raw text)
 
 - Input: your own raw text or PubMed ID
 - Output: predicted entities and events in brat format
 - Visualize the prediction
 
-## 4.1. Raw text
+## 5.1. Raw text
 
 - You can prepare your own raw text in the following path, E.g [your_data_name] = my-pubmed
 
@@ -133,7 +144,7 @@ data/[your_data_name]/[your_data_name]-text/PMID-*.txt
 data/[your_data_name]/[your_data_name]-text/PMC-*.txt
 ```
 
-## 4.2. PubMed ID
+## 5.2. PubMed ID
 
 - Or, you can automatically get raw text given PubMed ID or PMC ID
 
@@ -173,7 +184,7 @@ sh pubmed.sh pmcid PMC4353630
 sh pubmed.sh preprocess [your_data_name]
 ```
 
-## 4.3. Predict
+## 5.3. Predict
 
 1. Generate config
 - Generate config for prediction
@@ -204,11 +215,11 @@ sh pubmed.sh offset [your_data_name]
 experiments/[your_data_name]/results/ev-last/[your_data_name]-brat
 ```
 
-# 5. Visualization
+# 6. Visualization
 
 - Visualize the output using the [brat](http://brat.nlplab.org)
 
-1. Install brat
+## 6.1. Install brat
 
 - Download [brat v1.3](http://brat.nlplab.org)
 
@@ -223,8 +234,9 @@ cd brat/brat-v1.3_Crunchy_Frog/
 python standalone.py
 ```
 
-2. Copy the predicted data into the brat folder to visualize
+## 6.2. Prepare data
 
+- Copy the predicted data into the brat folder to visualize
 - For the raw text prediction: [your_data_name] = my-pubmed, [model_name]=cg
 ```bash
 sh pubmed.sh brat [your_data_name] [model_name]
@@ -236,7 +248,7 @@ sh run.sh brat [task] gold dev
 sh run.sh brat [task] gold test
 ```
 
-3. Visualize
+## 6.3. Visualize
 
 - The data to visualize is located in
 
@@ -245,11 +257,11 @@ brat/brat-v1.3_Crunchy_Frog/data/[your_data_name]-brat
 brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
 ```
 
-# 6. Acknowledgements
+# 7. Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
 This work is also supported by PRISM (Public/Private R&D Investment Strategic Expansion PrograM).
 
-# 7. Citation
+# 8. Citation
 ```bash
 @article{10.1093/bioinformatics/btaa540,
     author = {Trieu, Hai-Long and Tran, Thy Thy and Duong, Khoa N A and Nguyen, Anh and Miwa, Makoto and Ananiadou, Sophia},
