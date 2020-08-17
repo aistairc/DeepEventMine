@@ -60,7 +60,7 @@ def pmid2text(pmid_path, textdir):
 
         except urllib3.exceptions.ProtocolError as error:
             print('Protocol Error', pmcid)
-        except ConnectionError as error:
+        except requests.exceptions.ConnectionError as error:
             print('Connection Error', pmcid)
         except requests.exceptions.HTTPError as error:
             print('HTTP Error', pmcid)
