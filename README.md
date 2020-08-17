@@ -133,7 +133,7 @@ data/[your_data_name]/[your_data_name]-text/PMC-*.txt
 
 ## 4.2. PubMed ID
 
-- Get text given PubMed ID or PMC ID
+- Or, you can automatically get raw text given PubMed ID or PMC ID
 
 ### Installation
 
