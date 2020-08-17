@@ -124,10 +124,10 @@ sh run.sh eval [task] gold dev sp
 sh pubmed.sh e2e pmid 1370299 cg 0
 ```
 
-- Input: [1370299](https://pubmed.ncbi.nlm.nih.gov/1370299/) (Raw text given a single PubMed ID)
-- Model to predict: cg (Cancer Genetics), (other options: pc, ge11, etc)
+- Input: [1370299](https://pubmed.ncbi.nlm.nih.gov/1370299/) (raw text given a single PubMed ID)
+- Model to predict: DeepEventMine trained on cg [Cancer Genetics (CG), 2013](http://2013.bionlp-st.org/tasks/cancer-genetics), (other options: pc, ge11, etc)
 - GPU: 0 (if CPU: -1)
-- Output: in brat format and visualization
+- Output: in brat format and [brat](http://brat.nlplab.org) visualization
 
 ```bash
 T9	Gene_or_gene_product 1184 1188	u-PA
@@ -144,7 +144,7 @@ E24	Positive_regulation:T32 Theme:E10
 
 <p align="center">
     <br>
-    <img src="https://raw.githubusercontent.com/aistairc/DeepEventMine/master/img/PMID-1370299.png" width="800"/>
+    <img src="https://raw.githubusercontent.com/aistairc/DeepEventMine/master/img/PMID-1370299.png" width="900"/>
     <br>
 <p>
 
@@ -252,7 +252,7 @@ sh download.sh brat
 ```bash
 cd brat/brat-v1.3_Crunchy_Frog/
 ./install.sh -u
-python standalone.py
+python2 standalone.py
 ```
 
 ## 6.2. Prepare data
