@@ -19,8 +19,6 @@ elif [ "$TASK" = "pmid" ]; then
     TEXT_DIR="data/my-pubmed/original_text/"
     python pubmed/pubmed2text.py $TASK $PMID $TEXT_DIR
 
-fi
-
 # Get Text from PMC ID
 elif [ "$TASK" = "pmcid" ]; then
     echo "Get text from PMC ID"
