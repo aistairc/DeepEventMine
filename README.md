@@ -144,6 +144,7 @@ sh install.sh pubmed
 2. Prepare data
 
 - Prepare your list of PubMed ID and PMC ID in the path
+- In order to get full text given PMC ID, the text should be available in ePub (for our current version).
 ```bash
 data/my-pubmed/my-pmid.txt
 ```

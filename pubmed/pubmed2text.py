@@ -34,6 +34,7 @@ def pmid2text(pmid_path, textdir):
 
     # get text given each PMID, write to file
     for pmid in pmid_list:
+        print(pmid)
         title, abstract = med2text.pmid2text(pmid)
 
         if len(title) > 0:
@@ -46,6 +47,7 @@ def pmid2text(pmid_path, textdir):
     # get text given PMCID
     for pmcid in pmcid_list:
         try:
+            print(pmcid)
             title, abstract, content = med2text.pmc2text(pmcid)
             if len(title) > 0:
                 with open(os.path.join(textdir, ''.join(['PMC-', pmcid.replace('PMC', ''), '.txt'])), 'w') as fo:
