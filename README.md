@@ -124,11 +124,11 @@ sh run.sh eval [task] gold dev sp
 
 ## 4.1. Raw text
 
-- Prepare raw text
-- If you want to predict for your raw text using our trained model for a task ([task] = cg, pc, ge11, etc), put your raw text as the following path
+- You can prepare your own raw text in the following path, E.g [your_data_name] = my-pubmed
 
 ```bash
-data/raw-text/[task]/PMID-*.txt
+data/[your_data_name]/[your_data_name]-text/PMID-*.txt
+data/[your_data_name]/[your_data_name]-text/PMC-*.txt
 ```
 
 ## 4.2. PubMed ID
