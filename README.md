@@ -37,7 +37,7 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 - Install Python packages
 
 ```bash
-pip install -r requirements.txt
+sh install.sh
 ```
 
 ## 2.2. BERT
@@ -159,11 +159,10 @@ E24	Positive_regulation:T32 Theme:E10
 
 
 
-# 5. Predict (given raw text)
+# 5. Predict for new data
 
 - Input: your own raw text or PubMed ID
 - Output: predicted entities and events in brat format
-- Visualize the prediction
 
 ## 5.1. Raw text
 
@@ -177,12 +176,6 @@ data/[your_data_name]/[your_data_name]-text/PMC-*.txt
 ## 5.2. PubMed ID
 
 - Or, you can automatically get raw text given PubMed ID or PMC ID
-
-### Installation
-
-```bash
-sh install.sh pubmed
-```
 
 ### Get raw text
 
