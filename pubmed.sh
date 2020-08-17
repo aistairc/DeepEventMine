@@ -8,7 +8,7 @@ if [ "$TASK" = "pmids" ]; then
 
     PMIDS="data/my-pubmed/my-pmid.txt"
     TEXT_DIR="data/my-pubmed/original_text/"
-    python pubmed/pubmed2texts.py $TASK $PMIDS $TEXT_DIR
+    python pubmed/pubmed2text.py $TASK $PMIDS $TEXT_DIR
 
 # Get Text from PubMed ID
 elif [ "$TASK" = "pmid" ]; then
@@ -17,7 +17,7 @@ elif [ "$TASK" = "pmid" ]; then
     PMID=$2
 
     TEXT_DIR="data/my-pubmed/original_text/"
-    python pubmed/pubmed2texts.py $TASK $PMID $TEXT_DIR
+    python pubmed/pubmed2text.py $TASK $PMID $TEXT_DIR
 
 fi
 
@@ -28,7 +28,7 @@ elif [ "$TASK" = "pmcid" ]; then
     PMCID=$2
 
     TEXT_DIR="data/my-pubmed/original_text/"
-    python pubmed/pubmed2texts.py $TASK $PMCID $TEXT_DIR
+    python pubmed/pubmed2text.py $TASK $PMCID $TEXT_DIR
 
 fi
 
