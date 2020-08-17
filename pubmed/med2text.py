@@ -8,12 +8,12 @@ import requests
 import tempfile
 
 
-def medline2text(mlid):
-    outputs = pp.parse_xml_web(mlid, save_xml=False)
+def pmid2text(pmid):
+    outputs = pp.parse_xml_web(pmid, save_xml=False)
     return outputs["title"], outputs["abstract"]
 
 
-def pubmed2text(pmid):
+def pmc2text(pmid):
     headers = {
         "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36"}
     response = requests.get(url=f"https://www.ncbi.nlm.nih.gov/pmc/articles/{pmid}/epub/", headers=headers)
@@ -40,23 +40,3 @@ def pubmed2text(pmid):
                 content = "\n".join(sec_tag.get_text().strip() for sec_tag in sec_tags) if sec_tags else "N/A"
 
                 return title, abstract, content
-
-
-def main():
-
-    # medline
-    title, abstract = medline2text("18483370")
-    print("Title: \n", title)
-    print("Abstract: \n", abstract)
-
-    # pubmed
-    title, abstract, content = pubmed2text("PMC441591")
-    print("Title: \n", title)
-    print("Abstract: \n", abstract)
-    print("Content: \n", content)
-
-    return
-
-
-if __name__ == '__main__':
-    main()

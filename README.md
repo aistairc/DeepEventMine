@@ -6,9 +6,9 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 
 ## 1.1. Features
 - We provide our trained models on the seven biomedical tasks
-- Reproduce the results reported in our Bioinformatics paper
+- Reproduce the results reported in our [Bioinformatics](https://doi.org/10.1093/bioinformatics/btaa540) paper
 - Predict for new data given raw text input or PubMed ID
-- Visualize the predicted entities and events on the brat
+- Visualize the predicted entities and events on the [brat](http://brat.nlplab.org)
 
 ## 1.2. Tasks
 
@@ -142,7 +142,16 @@ sh install.sh pubmed
 ```
 
 2. Prepare data
-- TODO
+
+- Prepare your list of PubMed ID and PMC ID in the path
+```bash
+data/my-pubmed/my-pmid.txt
+```
+
+- Get text from the PubMed ID
+```bash
+sh pubmed.sh pmids
+```
 
 ## 4.3. Predict
 
