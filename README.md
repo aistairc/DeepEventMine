@@ -1,16 +1,16 @@
-# DeepEventMine
+# 1. DeepEventMine
 A deep leanring model to predict named entities, triggers, and nested events from biomedical texts using our pretrained models.
 
 - The model and results are reported in our paper: [DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts](https://doi.org/10.1093/bioinformatics/btaa540)
 - Bioinformatics, 2020.
 
-## Features
+## 1.1. Features
 - We provide our trained models on the seven biomedical tasks
 - Reproduce the results reported in our Bioinformatics paper
 - Predict for new data given raw text input or PubMed ID
 - Visualize the predicted entities and events on the brat
 
-## Tasks
+## 1.2. Tasks
 
 - DeepEventMine has been trained and evaluated on the following tasks (six BioNLP shared tasks and MLEE).
 
@@ -22,13 +22,13 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 6. pc: [Pathway Curation (PC), 2013](http://2013.bionlp-st.org/tasks/pathway-curation)
 7. mlee: [Multi-Level Event Extraction (MLEE)](http://nactem.ac.uk/MLEE/)
 
-## Our trained models and scores
+## 1.3. Our trained models and scores
 
 - [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
 - [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
 
-# Before prediction
-## Requirements
+# 2. Preparation
+## 2.1. Requirements
 - Python 3.6.5
 - PyTorch (torch==1.1.0 torchvision==0.3.0, cuda92)
 - Install Python packages
@@ -37,23 +37,23 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 pip install -r requirements.txt
 ```
 
-## Download pre-trained BERT
-- Download SciBERT model from PyTorch AllenNLP
+## 2.2. BERT
+- Download SciBERT BERT model from PyTorch AllenNLP
 
 ```bash
 sh download.sh bert
 ```
 
-## Download pre-trained DeepEventMine models
-- Download the pre-trained DeepEventMine model on a given task
+## 2.3. DeepEventMine
+- Download  pre-trained DeepEventMine model on a given task
 
 ```bash
 sh download.sh deepeventmine [task]
 ```
 
-# Predict on the BioNLP tasks
+# 3. Predict (BioNLP tasks)
 
-## Prepare data
+## 3.1. Prepare data
 1. Download corpora
 - To download the original data sets from BioNLP shared tasks.
 - [task] = cg, pc, ge11, etc
@@ -75,7 +75,7 @@ sh preprocess.sh bionlp
 sh run.sh config [task] [gpu]
 ```
 
-## Predict
+## 3.2. Predict
 
 1. For development and test sets (given gold entities)
 - CG task: [task] = cg
@@ -92,7 +92,7 @@ experiments/[task]/predict-gold-dev/
 experiments/[task]/predict-gold-test/
 ```
 
-## Evaluate
+## 3.3. Evaluate
 
 1. Retrieve the original offsets and create zip format
 ```bash
@@ -118,19 +118,22 @@ sh run.sh offset [task] gold test
 sh run.sh eval [task] gold dev sp
 ```
 
-# Predict given raw text
+# 4. Predict (given raw text)
 
 - You can prepare raw text by your own, or you can get text given PubMed ID.
 
-## Prepare your own raw text
+## 4.1. Raw text
 
+- Prepare raw text
 - If you want to predict for your raw text using our trained model for a task ([task] = cg, pc, ge11, etc), put your raw text as the following path
 
 ```bash
 data/raw-text/[task]/PMID-*.txt
 ```
 
-## Get text from PubMed ID
+## 4.2. PubMed ID
+
+- Get text given PubMed ID
 
 1. Installation
 
@@ -139,9 +142,9 @@ sh install.sh pubmed
 ```
 
 2. Prepare data
+- TODO
 
-
-## Predict
+## 4.3. Predict
 
 1. Preprocess raw text
 
@@ -166,7 +169,7 @@ sh run.sh offset [task] raw text
 experiments/[task]/predict-raw-text/ev-last/[task]-brat
 ```
 
-# Visualization
+# 5. Visualization
 
 - Visualize the output using the [brat](http://brat.nlplab.org)
 
@@ -205,11 +208,11 @@ sh run.sh brat [task] gold test
 brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
 ```
 
-# Acknowledgements
+# 6. Acknowledgements
 This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
 This work is also supported by PRISM (Public/Private R&D Investment Strategic Expansion PrograM).
 
-## Citation
+# 7. Citation
 ```bash
 @article{10.1093/bioinformatics/btaa540,
     author = {Trieu, Hai-Long and Tran, Thy Thy and Duong, Khoa N A and Nguyen, Anh and Miwa, Makoto and Ananiadou, Sophia},
