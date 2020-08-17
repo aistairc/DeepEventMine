@@ -129,6 +129,27 @@ sh pubmed.sh e2e pmid 1370299 cg 0
 - GPU: 0 (if CPU: -1)
 - Output: in brat format and visualization
 
+```bash
+T9	Gene_or_gene_product 1184 1188	u-PA
+T23	Positive_regulation 1157 1166	increases
+E9	Positive_regulation:T23 Theme:T9
+
+T10	Gene_or_gene_product 1320 1325	c-src
+T24	Gene_expression 1326 1336	expression
+E10	Gene_expression:T24 Theme:T10
+
+T32	Positive_regulation 1310 1319	increased
+E24	Positive_regulation:T32 Theme:E10
+```
+
+<p align="center">
+    <br>
+    <img src="https://raw.githubusercontent.com/aistairc/DeepEventMine/master/img/PMID-1370299.png" width="400"/>
+    <br>
+<p>
+
+
+
 # 5. Predict (given raw text)
 
 - Input: your own raw text or PubMed ID

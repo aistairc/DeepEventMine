@@ -161,9 +161,9 @@ elif [ "$TASK" = "e2e" ]; then
     # brat
     cp -r $PRED_DIR $BRAT_DIR
 
-    echo "Done end-to-end prediction for: ", $PMID
-    echo "Check the prediction at: ", $PRED_DIR
-    echo "Data for brat visualization at: ", "$BRAT_DIR$MY_DATA-brat"
+    echo "Done end-to-end prediction for: " $PMID
+    echo "Check the prediction at: " $PRED_DIR
+    echo "Data for brat visualization at: " "$BRAT_DIR$MY_DATA-brat"
 
 fi
 
