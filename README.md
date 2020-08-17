@@ -27,12 +27,6 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 - [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
 - [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
 
-(%) | CG |  GE11 | GE13 | ID | EPI | PC | MLEE
----- | ---- | ---- | ---- | ---- | ---- | ---- | ----
-P | 69.54 |
-R | 54.24 | 
-F | 60.94 |
-
 # 2. Preparation
 ## 2.1. Requirements
 - Python 3.6.5
