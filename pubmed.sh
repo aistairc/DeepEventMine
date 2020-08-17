@@ -106,7 +106,7 @@ elif [ "$TASK" = "e2e" ]; then
     PMID=$3
 
     TEXT_DIR="data/my-pubmed-$PMID/my-pubmed-$PMID-text/"
-    python pubmed/pubmed2text.py $TASK $PMID $TEXT_DIR
+    python pubmed/pubmed2text.py $PM_TYPE $PMID $TEXT_DIR
 
     echo "--------------------------------"
     echo "2. Preprocess pubmed text"
