@@ -309,7 +309,7 @@ def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
     a2_ents_ = []
 
     # create mapping for entity id first
-    for pr_id, en_pred in en_preds_.items():
+    for en_pred in en_preds_:
 
         # id
         en_id = en_pred[0]
@@ -331,7 +331,7 @@ def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
                 a2_ents_.append(en_id)
 
     # creat mapping for trigger id
-    for pr_id, en_pred in en_preds_.items():
+    for en_pred in en_preds_:
         # id
         en_id = en_pred[0]
 
@@ -344,7 +344,7 @@ def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
 
 
 # write events to file
-def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
+def write_ev_2file(pred_output, result_dir, g_entity_ids_, params):
     dir2wr = result_dir + 'ev-last/ev-tok-a2/'
     rev_type_map = params['mappings']['rev_type_map']
 
@@ -359,13 +359,7 @@ def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
 
     # write event and triggers, (and entity: if predict both entity and trigger)
     for fid, preds in pred_output.items():
-
-        # write entity from events
-        # en_preds_ = preds[0]
-
-        # or include entity not in events
-        en_preds_ = pred_ents[fid]
-
+        en_preds_ = preds[0]
         events = preds[1]
 
         enid_mapping, en_preds_out_, a2_ents_ = mapping_entity_id(en_preds_, g_entity_ids_[fid], rev_type_map, params)
@@ -375,7 +369,7 @@ def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
         # write a1 file for entity if predict both entity and trigger
         if params['ner_predict_all']:
             with open(dir2wr + fid + '.a1', 'w') as o1file:
-                for pr_id, e_pred in en_preds_.items():
+                for e_pred in en_preds_:
                     e_id = e_pred[0]
 
                     if e_id.startswith('TR'):
@@ -508,6 +502,6 @@ def write_events(fids, all_ent_preds, all_words, all_offsets, all_span_terms, al
     preds_output = generate_ev_output(pred_ents, pred_evs, params)
 
     # write output to file
-    write_ev_2file(preds_output, pred_ents, result_dir, g_entity_ids_, params)
+    write_ev_2file(preds_output, result_dir, g_entity_ids_, params)
 
     return
