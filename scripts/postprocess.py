@@ -4,7 +4,7 @@ import tarfile
 from datetime import datetime
 from glob import glob
 import collections
-import argparse
+import sys
 import shutil
 
 
@@ -36,203 +36,330 @@ def read_json(filename, encoding="UTF-8"):
     return json.loads(read_text(filename, encoding=encoding))
 
 
-# arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('--refdir', type=str, required=True, help='--refdir')
-parser.add_argument('--preddir', type=str, required=True, help='--preddir')
-parser.add_argument('--outdir', type=str, required=True, help='--outdir')
-parser.add_argument('--corpus_name', type=str, required=True, help='--corpus_name')
-parser.add_argument('--dev_test', type=str, required=True, help='--dev_test')
+def retrieve_offset_a2(refdir, preddir, outdir, corpus_name, dev_test):
+    # output dir
+    output_a2_dir = outdir + 'ev-orig-a2'
+    zip_dir = outdir + 'online-eval'
 
-args = parser.parse_args()
+    # create output dirs
+    if not os.path.exists(output_a2_dir):
+        make_dirs(output_a2_dir)
+    else:
+        os.system('rm ' + output_a2_dir + '/*.a2')
 
-refdir = getattr(args, 'refdir')
-preddir = getattr(args, 'preddir')
-outdir = getattr(args, 'outdir')
-corpus_name = getattr(args, 'corpus_name')
-dev_test = getattr(args, 'dev_test')
+    assert (
+            len(glob(os.path.join(output_a2_dir, "**/*"), recursive=True)) == 0
+    ), "The folder `{}` must be empty!".format(output_a2_dir)
 
-# debug
-# corpus_name = 'cg'
-# outdir = '../experiments/cg/predict-gold-dev/ev-last/'
-# preddir = '../experiments/cg/predict-gold-dev/ev-last/ev-tok-a2/'
-# refdir = '../data/corpora/cg/dev/'
-# dev_test = 'dev'
+    if not os.path.exists(zip_dir):
+        make_dirs(zip_dir)
 
-# output dir
-output_a2_dir = outdir + 'ev-orig-a2'
-output_ann_dir = ''.join([outdir, corpus_name, '-', 'brat'])
-zip_dir = outdir + 'online-eval'
+    count = 0
 
-# create output dirs
-if not os.path.exists(output_a2_dir):
-    make_dirs(output_a2_dir)
-else:
-    os.system('rm ' + output_a2_dir + '/*.a2')
+    for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
 
-if not os.path.exists(output_ann_dir):
-    make_dirs(output_ann_dir)
-else:
-    os.system('rm ' + output_ann_dir + '/*.ann')
+        offset_mapping = read_json(
+            os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".inv.map"))
+        )
+        reference = read_text(
+            os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".txt.ori"))
+        )
 
-assert (
-        len(glob(os.path.join(output_a2_dir, "**/*"), recursive=True)) == 0
-), "The folder `{}` must be empty!".format(output_a2_dir)
+        # gold_entities = offset_mapping["entities"]
 
-if not os.path.exists(zip_dir):
-    make_dirs(zip_dir)
+        processed_lines = []
 
-count = 0
+        # for brat
+        processed_ann_lines = []
 
-for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
+        valid_eid_list = []
+        saved_eid_list = []
+        saved_edata_list = []
+        invalid_eid_list = []
 
-    offset_mapping = read_json(
-        os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".inv.map"))
-    )
-    reference = read_text(
-        os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".txt.ori"))
-    )
+        # read a1
+        for line in read_lines(os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".a1"))):
+            if line.startswith('T'):
+                _id, _attrs, _ = line.split("\t")
+                _type, *_offsets = _attrs.split()
+                _start, _end = map(lambda x: offset_mapping[x], _offsets)
 
-    # gold_entities = offset_mapping["entities"]
+                # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
 
-    processed_lines = []
+                processed_ann_lines.append("{}\t{} {} {}\t{}".format(
+                    _id, _type, _start, _end, reference[_start:_end]
+                ))
 
-    # for brat
-    processed_ann_lines = []
+        for line in read_lines(cur_fn):
+            if line.startswith("E"):
+                line_sp = line.split("\t")
+                eid = line_sp[0]
+                e_data = line_sp[1].split(" ")
+                e_data2 = collections.Counter(e_data)
 
-    valid_eid_list = []
-    saved_eid_list = []
-    saved_edata_list = []
-    invalid_eid_list = []
+                valid = True
 
-    # read a1
-    for line in read_lines(os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".a1"))):
-        if line.startswith('T'):
-            _id, _attrs, _ = line.split("\t")
-            _type, *_offsets = _attrs.split()
-            _start, _end = map(lambda x: offset_mapping[x], _offsets)
+                if e_data2 not in saved_edata_list:
+                    for arg in e_data:
+                        argeid = arg.split(':')[1]
 
-            # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
+                        # argument is in the duplicated event list
+                        if argeid in invalid_eid_list:
+                            valid = False
+                            break
 
-            processed_ann_lines.append("{}\t{} {} {}\t{}".format(
-                _id, _type, _start, _end, reference[_start:_end]
-            ))
-
-    for line in read_lines(cur_fn):
-        if line.startswith("E"):
-            line_sp = line.split("\t")
-            eid = line_sp[0]
-            e_data = line_sp[1].split(" ")
-            e_data2 = collections.Counter(e_data)
-
-            valid = True
-
-            if e_data2 not in saved_edata_list:
-                for arg in e_data:
-                    argeid = arg.split(':')[1]
-
-                    # argument is in the duplicated event list
-                    if argeid in invalid_eid_list:
-                        valid = False
-                        break
-
-            # event is duplicated
-            else:
-                valid = False
-
-            # for ge13: no Cause but CSite
-            if 'CSite' in line:
-                if not 'Cause' in line:
+                # event is duplicated
+                else:
                     valid = False
 
-            if valid:
-                saved_edata_list.append(e_data2)
-                valid_eid_list.append(eid)
-            else:
-                invalid_eid_list.append(eid)
+                # for ge13: no Cause but CSite
+                if 'CSite' in line:
+                    if not 'Cause' in line:
+                        valid = False
 
-    for line in read_lines(cur_fn):
-        if line.startswith("T"):
-            _id, _attrs, _ = line.split("\t")
-            _type, *_offsets = _attrs.split()
-            _start, _end = map(lambda x: offset_mapping[x], _offsets)
+                if valid:
+                    saved_edata_list.append(e_data2)
+                    valid_eid_list.append(eid)
+                else:
+                    invalid_eid_list.append(eid)
 
-            # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
+        for line in read_lines(cur_fn):
+            if line.startswith("T"):
+                _id, _attrs, _ = line.split("\t")
+                _type, *_offsets = _attrs.split()
+                _start, _end = map(lambda x: offset_mapping[x], _offsets)
 
-            ent_line = "{}\t{} {} {}\t{}".format(
-                _id, _type, _start, _end, reference[_start:_end]
-            )
+                # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
 
-            # for a2
-            processed_lines.append(ent_line)
+                ent_line = "{}\t{} {} {}\t{}".format(
+                    _id, _type, _start, _end, reference[_start:_end]
+                )
 
-            # for ann
-            processed_ann_lines.append(ent_line)
+                # for a2
+                processed_lines.append(ent_line)
 
-        elif line.startswith("E"):
-            line_sp = line.split("\t")
-            eid = line_sp[0]
+                # for ann
+                processed_ann_lines.append(ent_line)
 
-            if eid in valid_eid_list:
-                saved_eid_list.append(eid)
-                processed_lines.append(line)
-                processed_ann_lines.append(line)
+            elif line.startswith("E"):
+                line_sp = line.split("\t")
+                eid = line_sp[0]
 
-        elif line.startswith("M"):
-            line_sp = line.split("\t")
-            mid = line_sp[0]
-            eid = line_sp[1].split(" ")[1]
-            if eid in saved_eid_list:
-                processed_lines.append(line)
-                processed_ann_lines.append(line)
+                if eid in valid_eid_list:
+                    saved_eid_list.append(eid)
+                    processed_lines.append(line)
+                    processed_ann_lines.append(line)
 
-    # write a2
-    write_lines(processed_lines, os.path.join(output_a2_dir, os.path.basename(cur_fn)))
+            elif line.startswith("M"):
+                line_sp = line.split("\t")
+                mid = line_sp[0]
+                eid = line_sp[1].split(" ")[1]
+                if eid in saved_eid_list:
+                    processed_lines.append(line)
+                    processed_ann_lines.append(line)
 
-    # write ann for brat
-    write_lines(processed_ann_lines, os.path.join(output_ann_dir, os.path.basename(cur_fn.replace(".a2", ".ann"))))
+        # write a2
+        write_lines(processed_lines, os.path.join(output_a2_dir, os.path.basename(cur_fn)))
 
-    # write txt
-    txt_fn = os.path.basename(cur_fn).replace(".a2", ".txt.ori")
-    shutil.copy(os.path.join(refdir, txt_fn), os.path.join(output_ann_dir, txt_fn.replace(".txt.ori", ".txt")))
+        count += 1
+        print(os.path.basename(cur_fn), "Done")
 
-    count += 1
-    print(os.path.basename(cur_fn), "Done")
+    print("Processed {} files".format(count))
 
-print("Processed {} files".format(count))
+    # write empty predicted files
+    print('EMPTY FILES:')
+    for ref_fn in glob(os.path.join(refdir, "**/*.a2"), recursive=True):
 
-# write empty predicted files
-print('EMPTY FILES:')
-for ref_fn in glob(os.path.join(refdir, "**/*.a2"), recursive=True):
+        pred_fn = os.path.join(preddir, os.path.basename(ref_fn))
 
-    pred_fn = os.path.join(preddir, os.path.basename(ref_fn))
+        if os.path.isfile(pred_fn):
+            continue
+        else:
+            print(ref_fn)
 
-    if os.path.isfile(pred_fn):
-        continue
+            # write empty file
+            write_lines([], os.path.join(output_a2_dir, os.path.basename(ref_fn)))
+
+    # create zip format for online evaluation
+    if count > 0:
+
+        # zip file name
+        tgz_fn = "{}.tar.gz".format(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))
+        zip_file_name = ''.join([corpus_name, '-', dev_test, '-', tgz_fn])
+
+        # zip file path
+        outfile_path = os.path.join(zip_dir, zip_file_name)
+        with tarfile.open(outfile_path, "w:gz") as f:
+            for fn in glob(os.path.join(output_a2_dir, "*.a2")):
+                f.add(fn, arcname=os.path.basename(fn))
+            if 'dev' in dev_test or 'test' in dev_test:
+                print("Please submit this file: {}".format(outfile_path))
+
+
+def retrieve_offset_ann(refdir, preddir, outdir, corpus_name):
+    # output dir
+    output_ann_dir = ''.join([outdir, corpus_name, '-', 'brat'])
+
+    # create output dirs
+
+    if not os.path.exists(output_ann_dir):
+        make_dirs(output_ann_dir)
     else:
-        print(ref_fn)
+        os.system('rm ' + output_ann_dir + '/*.ann')
 
-        # write empty file
-        write_lines([], os.path.join(output_a2_dir, os.path.basename(ref_fn)))
-        write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace(".a2", ".ann"))))
+    assert (
+            len(glob(os.path.join(output_ann_dir, "**/*"), recursive=True)) == 0
+    ), "The folder `{}` must be empty!".format(output_ann_dir)
 
-        # write a1
+    count = 0
+
+    for cur_fn in glob(os.path.join(preddir, "**/*.a2"), recursive=True):
+
+        offset_mapping = read_json(
+            os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".inv.map"))
+        )
+        reference = read_text(
+            os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".txt.ori"))
+        )
+
+        # gold_entities = offset_mapping["entities"]
+
+        processed_lines = []
+
+        # for brat
+        processed_ann_lines = []
+
+        valid_eid_list = []
+        saved_eid_list = []
+        saved_edata_list = []
+        invalid_eid_list = []
+
+        # read a1
+        for line in read_lines(os.path.join(refdir, os.path.basename(cur_fn).replace(".a2", ".a1"))):
+            if line.startswith('T'):
+                _id, _attrs, _ = line.split("\t")
+                _type, *_offsets = _attrs.split()
+                _start, _end = map(lambda x: offset_mapping[x], _offsets)
+
+                # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
+
+                processed_ann_lines.append("{}\t{} {} {}\t{}".format(
+                    _id, _type, _start, _end, reference[_start:_end]
+                ))
+
+        for line in read_lines(cur_fn):
+            if line.startswith("E"):
+                line_sp = line.split("\t")
+                eid = line_sp[0]
+                e_data = line_sp[1].split(" ")
+                e_data2 = collections.Counter(e_data)
+
+                valid = True
+
+                if e_data2 not in saved_edata_list:
+                    for arg in e_data:
+                        argeid = arg.split(':')[1]
+
+                        # argument is in the duplicated event list
+                        if argeid in invalid_eid_list:
+                            valid = False
+                            break
+
+                # event is duplicated
+                else:
+                    valid = False
+
+                # for ge13: no Cause but CSite
+                if 'CSite' in line:
+                    if not 'Cause' in line:
+                        valid = False
+
+                if valid:
+                    saved_edata_list.append(e_data2)
+                    valid_eid_list.append(eid)
+                else:
+                    invalid_eid_list.append(eid)
+
+        for line in read_lines(cur_fn):
+            if line.startswith("T"):
+                _id, _attrs, _ = line.split("\t")
+                _type, *_offsets = _attrs.split()
+                _start, _end = map(lambda x: offset_mapping[x], _offsets)
+
+                # assert _id in gold_entities and (_start, _end) == gold_entities[_id]
+
+                ent_line = "{}\t{} {} {}\t{}".format(
+                    _id, _type, _start, _end, reference[_start:_end]
+                )
+
+                # for a2
+                processed_lines.append(ent_line)
+
+                # for ann
+                processed_ann_lines.append(ent_line)
+
+            elif line.startswith("E"):
+                line_sp = line.split("\t")
+                eid = line_sp[0]
+
+                if eid in valid_eid_list:
+                    saved_eid_list.append(eid)
+                    processed_lines.append(line)
+                    processed_ann_lines.append(line)
+
+            elif line.startswith("M"):
+                line_sp = line.split("\t")
+                mid = line_sp[0]
+                eid = line_sp[1].split(" ")[1]
+                if eid in saved_eid_list:
+                    processed_lines.append(line)
+                    processed_ann_lines.append(line)
+
+        # write ann for brat
+        write_lines(processed_ann_lines, os.path.join(output_ann_dir, os.path.basename(cur_fn.replace(".a2", ".ann"))))
 
         # write txt
-        txt_fn = os.path.basename(ref_fn).replace(".a2", ".txt.ori")
+        txt_fn = os.path.basename(cur_fn).replace(".a2", ".txt.ori")
         shutil.copy(os.path.join(refdir, txt_fn), os.path.join(output_ann_dir, txt_fn.replace(".txt.ori", ".txt")))
 
-# create zip format for online evaluation
-if count > 0:
+        count += 1
+        print(os.path.basename(cur_fn), "Done")
 
-    # zip file name
-    tgz_fn = "{}.tar.gz".format(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))
-    zip_file_name = ''.join([corpus_name, '-', dev_test, '-', tgz_fn])
+    print("Processed {} files".format(count))
 
-    # zip file path
-    outfile_path = os.path.join(zip_dir, zip_file_name)
-    with tarfile.open(outfile_path, "w:gz") as f:
-        for fn in glob(os.path.join(output_a2_dir, "*.a2")):
-            f.add(fn, arcname=os.path.basename(fn))
-        if 'dev' in dev_test or 'test' in dev_test:
-            print("Please submit this file: {}".format(outfile_path))
+    # write empty predicted files
+    print('EMPTY FILES:')
+    for ref_fn in glob(os.path.join(refdir, "**/*.a2"), recursive=True):
+
+        pred_fn = os.path.join(preddir, os.path.basename(ref_fn))
+
+        if os.path.isfile(pred_fn):
+            continue
+        else:
+            print(ref_fn)
+
+            # write empty file
+            write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace(".a2", ".ann"))))
+
+            # write a1
+
+            # write txt
+            shutil.copy(os.path.join(refdir, txt_fn), os.path.join(output_ann_dir, txt_fn.replace(".txt.ori", ".txt")))
+
+
+if __name__ == '__main__':
+
+    # debug
+    # corpus_name = 'cg'
+    # outdir = '../experiments/cg/predict-gold-dev/ev-last/'
+    # preddir = '../experiments/cg/predict-gold-dev/ev-last/ev-tok-a2/'
+    # refdir = '../data/corpora/cg/dev/'
+    # dev_test = 'dev'
+
+    # a2 files
+    if len(sys.argv == 6):
+        retrieve_offset_a2(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+
+    # ann files
+    elif len(sys.argv == 5):
+        retrieve_offset_ann(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])

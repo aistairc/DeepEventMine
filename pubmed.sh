@@ -71,10 +71,10 @@ elif [ "$TASK" = "offset" ]; then
 
     # paths
     REFDIR="data/$MY_DATA/processed-text/$MY_DATA-text" # reference gold data
-    PREDDIR="experiments/$MY_DATA/results/ev-last/ev-tok-a2/"
+    PREDDIR="experiments/$MY_DATA/results/ev-last/ev-tok-ann/"
     OUTDIR="experiments/$MY_DATA/results/ev-last/" # retrieve the original offsets
 
-    python scripts/postprocess.py --refdir $REFDIR --preddir $PREDDIR --outdir $OUTDIR --corpus_name $MY_DATA --dev_test pubmed
+    python scripts/postprocess.py $REFDIR $PREDDIR $OUTDIR $MY_DATA
 
 # prepare data for brat
 elif [ "$TASK" = "brat" ]; then
@@ -141,10 +141,10 @@ elif [ "$TASK" = "e2e" ]; then
 
     # paths
     REFDIR="data/$MY_DATA/processed-text/$MY_DATA-text" # reference gold data
-    PREDDIR="experiments/$MY_DATA/results/ev-last/ev-tok-a2/"
+    PREDDIR="experiments/$MY_DATA/results/ev-last/ev-tok-ann/"
     OUTDIR="experiments/$MY_DATA/results/ev-last/" # retrieve the original offsets
 
-    python scripts/postprocess.py --refdir $REFDIR --preddir $PREDDIR --outdir $OUTDIR --corpus_name $MY_DATA --dev_test pubmed
+    python scripts/postprocess.py $REFDIR $PREDDIR $OUTDIR $MY_DATA
 
     echo "--------------------------------"
     echo "6. Prepare data for brat"

@@ -38,7 +38,7 @@ elif [ "$TASK" = "offset" ]; then
     OUTDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/" # retrieve the original offsets
 
     # retrieve the original offsets and create zip format for online evaluation
-    python scripts/postprocess.py --refdir $REFDIR --preddir $PREDDIR --outdir $OUTDIR --corpus_name $CORPUS_NAME --dev_test $DEV_TEST
+    python scripts/postprocess.py $REFDIR $PREDDIR $OUTDIR $CORPUS_NAME $DEV_TEST
 
 # evaluate
 elif [ "$TASK" = "eval" ]; then

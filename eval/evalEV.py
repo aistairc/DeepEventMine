@@ -309,7 +309,7 @@ def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
     a2_ents_ = []
 
     # create mapping for entity id first
-    for en_pred in en_preds_:
+    for pr_id, en_pred in en_preds_.items():
 
         # id
         en_id = en_pred[0]
@@ -331,7 +331,7 @@ def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
                 a2_ents_.append(en_id)
 
     # creat mapping for trigger id
-    for en_pred in en_preds_:
+    for pr_id, en_pred in en_preds_.items():
         # id
         en_id = en_pred[0]
 
@@ -344,138 +344,178 @@ def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
 
 
 # write events to file
-def write_ev_2file(pred_output, result_dir, g_entity_ids_, params):
-    dir2wr = result_dir + 'ev-last/ev-tok-a2/'
+def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
+    a2dir = result_dir + 'ev-last/ev-tok-a2/'
+    anndir = result_dir + 'ev-last/ev-tok-ann/'
     rev_type_map = params['mappings']['rev_type_map']
 
     # entity id mapping
     # feid_mapping = collections.OrderedDict()
 
-    if not os.path.exists(dir2wr):
-        os.makedirs(dir2wr)
+    if not os.path.exists(a2dir):
+        os.makedirs(a2dir)
     else:
-        os.system('rm ' + dir2wr + '*.a2')
-        os.system('rm ' + dir2wr + '*.a1')
+        os.system('rm ' + a2dir + '*.a2')
+
+    if not os.path.exists(anndir):
+        os.makedirs(anndir)
+    else:
+        os.system('rm ' + anndir + '*.a2')
+        os.system('rm ' + anndir + '*.a1')
 
     # write event and triggers, (and entity: if predict both entity and trigger)
     for fid, preds in pred_output.items():
-        en_preds_ = preds[0]
+        ev_en_preds_ = preds[0]
         events = preds[1]
 
-        enid_mapping, en_preds_out_, a2_ents_ = mapping_entity_id(en_preds_, g_entity_ids_[fid], rev_type_map, params)
-        # store for this document
-        # feid_mapping[fid] = enid_mapping
+        enid_mapping, en_preds_out_, a2_ents_ = mapping_entity_id(pred_ents, g_entity_ids_[fid], rev_type_map, params)
 
-        # write a1 file for entity if predict both entity and trigger
+        # entity and trigger for ann file
+        ann_en_lines = []
+        ann_tr_lines = []
         if params['ner_predict_all']:
-            with open(dir2wr + fid + '.a1', 'w') as o1file:
-                for e_pred in en_preds_:
-                    e_id = e_pred[0]
-
-                    if e_id.startswith('TR'):
-                        continue
-
-                    # only write entity to a1
-                    elif e_id.startswith('T'):
-                        e_id = enid_mapping[e_id]
-
-                        output = ''.join(
-                            [e_id, '\t', rev_type_map[e_pred[1]], ' ', str(e_pred[2][0]), ' ', str(e_pred[2][1]), '\t',
-                             e_pred[3], '\n'])
-                        o1file.write(output)
-
-        # write event and trigger to a2
-        with open(dir2wr + fid + '.a2', 'w') as o2file:
-
-            for e_pred in en_preds_out_:
-                e_id = e_pred[0]
-                e_id = enid_mapping[e_id]
+            # write entity and trigger from entity predictions
+            for pr_id, e_pred in pred_ents[fid].items():
+                e0_id = e_pred[0]
+                e_id = enid_mapping[e0_id]
 
                 output = ''.join(
                     [e_id, '\t', rev_type_map[e_pred[1]], ' ', str(e_pred[2][0]), ' ', str(e_pred[2][1]), '\t',
                      e_pred[3], '\n'])
-                o2file.write(output)
 
-            # count event id
-            f_evid = 0
+                if e0_id.startswith('TR'):
+                    ann_tr_lines.append(output)
 
-            # mapping event id to incremental id
-            f_evid_map = collections.OrderedDict()
+                # only write entity to a1
+                elif e0_id.startswith('T'):
+                    ann_en_lines.append(output)
 
-            # store modality
-            mod_list = []
+                    # entity and trigger output for a2
+        a2_en_lines_ = []
+        a2_tr_lines_ = []
 
-            for event_ in events:
+        # write entity and trigger only included event predictions
+        # write entity and then trigger
+        for e_pred in ev_en_preds_:
+            e0_id = e_pred[0]
+            e_id = enid_mapping[e0_id]
 
-                # create event id
-                evid = convert_evid_to_number(event_[0])
+            output = ''.join(
+                [e_id, '\t', rev_type_map[e_pred[1]], ' ', str(e_pred[2][0]), ' ', str(e_pred[2][1]), '\t',
+                 e_pred[3], '\n'])
 
-                # lookup in the map or create a new id
-                if evid in f_evid_map:
-                    evid_out = f_evid_map[evid]
-                else:
-                    f_evid += 1
-                    evid_out = f_evid
-                    f_evid_map[evid] = evid_out
+            if e0_id.startswith('TR'):
+                a2_tr_lines_.append(output)
+            elif e0_id.startswith('T'):
+                a2_en_lines_.append(output)
 
-                trid = event_[1][0]
-                trid = enid_mapping[trid]
-                typeEV = rev_type_map[event_[1][1]]
-                args_data = event_[2]
-                mod_pred = event_[3]
+        # event output
+        ev_lines = []
 
-                args_output = ''
-                for arg_ in args_data:
+        # count event id
+        f_evid = 0
 
-                    # relation type
-                    typeR = arg_[0]
+        # mapping event id to incremental id
+        f_evid_map = collections.OrderedDict()
 
-                    # check event or entity argument
-                    if len(arg_) > 2:
-                        argIdE = arg_[1]
-                        nest_evid = convert_evid_to_number(argIdE)
-                        if nest_evid in f_evid_map:
-                            nest_evid_out = f_evid_map[nest_evid]
-                            eid = 'E' + str(nest_evid_out)
-                        else:
-                            print('ERROR: NESTED EVENT BUT MISSING EVENT ARGUMENT.')
+        # store modality
+        mod_list = []
 
-                    # entity argument
+        for event_ in events:
+
+            # create event id
+            evid = convert_evid_to_number(event_[0])
+
+            # lookup in the map or create a new id
+            if evid in f_evid_map:
+                evid_out = f_evid_map[evid]
+            else:
+                f_evid += 1
+                evid_out = f_evid
+                f_evid_map[evid] = evid_out
+
+            trid = event_[1][0]
+            trid = enid_mapping[trid]
+            typeEV = rev_type_map[event_[1][1]]
+            args_data = event_[2]
+            mod_pred = event_[3]
+
+            args_output = ''
+            for arg_ in args_data:
+
+                # relation type
+                typeR = arg_[0]
+
+                # check event or entity argument
+                if len(arg_) > 2:
+                    argIdE = arg_[1]
+                    nest_evid = convert_evid_to_number(argIdE)
+                    if nest_evid in f_evid_map:
+                        nest_evid_out = f_evid_map[nest_evid]
+                        eid = 'E' + str(nest_evid_out)
                     else:
-                        a2data = arg_[1]
-                        eid = a2data[0]
+                        print('ERROR: NESTED EVENT BUT MISSING EVENT ARGUMENT.')
 
-                        # mapping entity id: predict entity or entity in a2
-                        if params['ner_predict_all'] or eid in a2_ents_:
-                            eid = enid_mapping[eid]
-
-                    if len(args_output) > 0:
-                        args_output += ' '
-
-                    args_output += typeR + ':' + eid
-
-                # if has argument
-                if len(args_output) > 0:
-                    output = ''.join(['E', str(evid_out), '\t', typeEV, ':', trid, ' ', args_output, '\n'])
-                    o2file.write(output)
-
-                # no argument
+                # entity argument
                 else:
-                    output = ''.join(['E', str(evid_out), '\t', typeEV, ':', trid, '\n'])
-                    o2file.write(output)
+                    a2data = arg_[1]
+                    eid = a2data[0]
 
-                # check and store modality
-                if mod_pred > 1:
-                    mod_value = params['mappings']['rev_modality_map'][mod_pred]
-                    mod_list.append([mod_value, evid_out])
+                    # mapping entity id: predict entity or entity in a2
+                    if params['ner_predict_all'] or eid in a2_ents_:
+                        eid = enid_mapping[eid]
 
-            # write modality
-            if len(mod_list) > 0:
-                for mod_id, mod_data in enumerate(mod_list):
-                    mod_type = mod_data[0]
-                    evid_out = mod_data[1]
-                    output = ''.join(['M', str(mod_id + 1), '\t', mod_type, ' ', 'E', str(evid_out), '\n'])
-                    o2file.write(output)
+                if len(args_output) > 0:
+                    args_output += ' '
+
+                args_output += typeR + ':' + eid
+
+            # if has argument
+            if len(args_output) > 0:
+                output = ''.join(['E', str(evid_out), '\t', typeEV, ':', trid, ' ', args_output, '\n'])
+                ev_lines.append(output)
+
+            # no argument
+            else:
+                output = ''.join(['E', str(evid_out), '\t', typeEV, ':', trid, '\n'])
+                ev_lines.append(output)
+
+            # check and store modality
+            if mod_pred > 1:
+                mod_value = params['mappings']['rev_modality_map'][mod_pred]
+                mod_list.append([mod_value, evid_out])
+
+        # write modality
+        if len(mod_list) > 0:
+            for mod_id, mod_data in enumerate(mod_list):
+                mod_type = mod_data[0]
+                evid_out = mod_data[1]
+                output = ''.join(['M', str(mod_id + 1), '\t', mod_type, ' ', 'E', str(evid_out), '\n'])
+                ev_lines.append(output)
+
+        # write a2 files
+        with open(a2dir + fid + '.a2', 'w') as o2file:
+            for entity in a2_en_lines_:
+                o2file.write(entity)
+            for trigger in a2_tr_lines_:
+                o2file.write(trigger)
+            for event in ev_lines:
+                o2file.write(event)
+
+        # write ann file
+        with open(anndir + fid + '.a1', 'w') as o1file:
+            for entity in ann_en_lines:
+                o1file.write(entity)
+
+        with open(anndir + fid + '.a2', 'w') as annfile:
+            for entity in ann_en_lines:
+                annfile.write(entity)
+            for trigger in ann_tr_lines:
+                annfile.write(trigger)
+
+            # events are the same for both a2 and ann
+            for event in ev_lines:
+                annfile.write(event)
 
     return
 
@@ -502,6 +542,6 @@ def write_events(fids, all_ent_preds, all_words, all_offsets, all_span_terms, al
     preds_output = generate_ev_output(pred_ents, pred_evs, params)
 
     # write output to file
-    write_ev_2file(preds_output, result_dir, g_entity_ids_, params)
+    write_ev_2file(preds_output, pred_ents, result_dir, g_entity_ids_, params)
 
     return
