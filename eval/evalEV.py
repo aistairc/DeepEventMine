@@ -373,24 +373,24 @@ def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
         # entity and trigger for ann file
         ann_en_lines = []
         ann_tr_lines = []
-        if params['ner_predict_all']:
-            # write entity and trigger from entity predictions
-            for pr_id, e_pred in pred_ents[fid].items():
-                e0_id = e_pred[0]
-                e_id = enid_mapping[e0_id]
+        # write entity and trigger from entity predictions
+        for pr_id, e_pred in pred_ents[fid].items():
+            e0_id = e_pred[0]
+            e_id = enid_mapping[e0_id]
 
-                output = ''.join(
-                    [e_id, '\t', rev_type_map[e_pred[1]], ' ', str(e_pred[2][0]), ' ', str(e_pred[2][1]), '\t',
-                     e_pred[3], '\n'])
+            output = ''.join(
+                [e_id, '\t', rev_type_map[e_pred[1]], ' ', str(e_pred[2][0]), ' ', str(e_pred[2][1]), '\t',
+                 e_pred[3], '\n'])
 
-                if e0_id.startswith('TR'):
-                    ann_tr_lines.append(output)
+            if e0_id.startswith('TR'):
+                ann_tr_lines.append(output)
 
-                # only write entity to a1
-                elif e0_id.startswith('T'):
-                    ann_en_lines.append(output)
+            # only write entity to a1
+            elif e0_id.startswith('T'):
+                ann_en_lines.append(output)
 
-                    # entity and trigger output for a2
+
+        # entity and trigger output for a2
         a2_en_lines_ = []
         a2_tr_lines_ = []
 
@@ -495,8 +495,12 @@ def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
 
         # write a2 files
         with open(a2dir + fid + '.a2', 'w') as o2file:
-            for entity in a2_en_lines_:
-                o2file.write(entity)
+
+            # write entity
+            if params['ner_predict_all']:
+                for entity in a2_en_lines_:
+                    o2file.write(entity)
+
             for trigger in a2_tr_lines_:
                 o2file.write(trigger)
             for event in ev_lines:
