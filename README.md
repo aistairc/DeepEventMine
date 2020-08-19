@@ -169,8 +169,8 @@ E24	Positive_regulation:T32 Theme:E10
 - You can prepare your own raw text in the following path, E.g [your_data_name] = my-pubmed
 
 ```bash
-data/[your_data_name]/[your_data_name]-text/PMID-*.txt
-data/[your_data_name]/[your_data_name]-text/PMC-*.txt
+data/[your_data_name]/text/PMID-*.txt
+data/[your_data_name]/text/PMC-*.txt
 ```
 
 ## 5.2. PubMed ID

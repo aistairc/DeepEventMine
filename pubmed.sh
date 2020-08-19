@@ -7,7 +7,7 @@ if [ "$TASK" = "pmids" ]; then
     echo "Get text from PubMed ID and PMC ID list"
 
     PMIDS="data/my-pubmed/my-pmid.txt"
-    TEXT_DIR="data/my-pubmed/my-pubmed-text/"
+    TEXT_DIR="data/my-pubmed/text/"
     python pubmed/pubmed2text.py $TASK $PMIDS $TEXT_DIR
 
 # Get Text from PubMed ID
@@ -16,7 +16,7 @@ elif [ "$TASK" = "pmid" ]; then
 
     PMID=$2
 
-    TEXT_DIR="data/my-pubmed/my-pubmed-text/"
+    TEXT_DIR="data/my-pubmed/text/"
     python pubmed/pubmed2text.py $TASK $PMID $TEXT_DIR
 
 # Get Text from PMC ID
@@ -25,7 +25,7 @@ elif [ "$TASK" = "pmcid" ]; then
 
     PMCID=$2
 
-    TEXT_DIR="data/my-pubmed/my-pubmed-text/"
+    TEXT_DIR="data/my-pubmed/text/"
     python pubmed/pubmed2text.py $TASK $PMCID $TEXT_DIR
 
 # Preprocess
@@ -70,7 +70,7 @@ elif [ "$TASK" = "offset" ]; then
     MY_DATA=$2
 
     # paths
-    REFDIR="data/$MY_DATA/processed-text/$MY_DATA-text" # reference gold data
+    REFDIR="data/$MY_DATA/processed-text/text" # reference gold data
     PREDDIR="experiments/$MY_DATA/results/ev-last/ev-tok-ann/"
     OUTDIR="experiments/$MY_DATA/results/ev-last/" # retrieve the original offsets
 
@@ -140,7 +140,7 @@ elif [ "$TASK" = "e2e" ]; then
     echo "5. Retrieve original offsets: "
 
     # paths
-    REFDIR="data/$MY_DATA/processed-text/$MY_DATA-text" # reference gold data
+    REFDIR="data/$MY_DATA/processed-text/text" # reference gold data
     PREDDIR="experiments/$MY_DATA/results/ev-last/ev-tok-ann/"
     OUTDIR="experiments/$MY_DATA/results/ev-last/" # retrieve the original offsets
 
