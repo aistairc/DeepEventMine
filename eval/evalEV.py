@@ -368,7 +368,7 @@ def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
         ev_en_preds_ = preds[0]
         events = preds[1]
 
-        enid_mapping, en_preds_out_, a2_ents_ = mapping_entity_id(pred_ents, g_entity_ids_[fid], rev_type_map, params)
+        enid_mapping, en_preds_out_, a2_ents_ = mapping_entity_id(pred_ents[fid], g_entity_ids_[fid], rev_type_map, params)
 
         # entity and trigger for ann file
         ann_en_lines = []
