@@ -357,9 +357,9 @@ if __name__ == '__main__':
     # dev_test = 'dev'
 
     # a2 files
-    if len(sys.argv == 6):
+    if len(sys.argv) == 6:
         retrieve_offset_a2(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
 
     # ann files
-    elif len(sys.argv == 5):
+    elif len(sys.argv) == 5:
         retrieve_offset_ann(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
