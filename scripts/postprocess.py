@@ -45,11 +45,11 @@ def retrieve_offset_a2(refdir, preddir, outdir, corpus_name, dev_test):
     if not os.path.exists(output_a2_dir):
         make_dirs(output_a2_dir)
     else:
-        os.system('rm ' + output_a2_dir + '/*.a2')
+        os.system('rm -rf ' + output_a2_dir + '/*')
 
-    assert (
-            len(glob(os.path.join(output_a2_dir, "**/*"), recursive=True)) == 0
-    ), "The folder `{}` must be empty!".format(output_a2_dir)
+    # assert (
+    #         len(glob(os.path.join(output_a2_dir, "**/*"), recursive=True)) == 0
+    # ), "The folder `{}` must be empty!".format(output_a2_dir)
 
     if not os.path.exists(zip_dir):
         make_dirs(zip_dir)
@@ -205,11 +205,11 @@ def retrieve_offset_ann(refdir, preddir, outdir, corpus_name):
     if not os.path.exists(output_ann_dir):
         make_dirs(output_ann_dir)
     else:
-        os.system('rm ' + output_ann_dir + '/*.ann')
+        os.system('rm -rf ' + output_ann_dir + '/*')
 
-    assert (
-            len(glob(os.path.join(output_ann_dir, "**/*"), recursive=True)) == 0
-    ), "The folder `{}` must be empty!".format(output_ann_dir)
+    # assert (
+    #         len(glob(os.path.join(output_ann_dir, "**/*"), recursive=True)) == 0
+    # ), "The folder `{}` must be empty!".format(output_ann_dir)
 
     count = 0
 
