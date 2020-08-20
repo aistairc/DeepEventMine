@@ -167,7 +167,6 @@ def retrieve_offset_a2(refdir, preddir, outdir, corpus_name, dev_test):
     print("Processed {} files".format(count))
 
     # write empty predicted files
-    print('EMPTY FILES:')
     for ref_fn in glob(os.path.join(refdir, "**/*.a2"), recursive=True):
 
         pred_fn = os.path.join(preddir, os.path.basename(ref_fn))
@@ -175,7 +174,7 @@ def retrieve_offset_a2(refdir, preddir, outdir, corpus_name, dev_test):
         if os.path.isfile(pred_fn):
             continue
         else:
-            print(ref_fn)
+            print('empty file: ', ref_fn)
 
             # write empty file
             write_lines([], os.path.join(output_a2_dir, os.path.basename(ref_fn)))
@@ -328,7 +327,6 @@ def retrieve_offset_ann(refdir, preddir, outdir, corpus_name):
     print("Processed {} files".format(count))
 
     # write empty predicted files
-    print('EMPTY FILES:')
     for ref_fn in glob(os.path.join(refdir, "**/*.a2"), recursive=True):
 
         pred_fn = os.path.join(preddir, os.path.basename(ref_fn))
@@ -336,7 +334,7 @@ def retrieve_offset_ann(refdir, preddir, outdir, corpus_name):
         if os.path.isfile(pred_fn):
             continue
         else:
-            print(ref_fn)
+            print('empty file: ', ref_fn)
 
             # write empty file
             write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace(".a2", ".ann"))))
