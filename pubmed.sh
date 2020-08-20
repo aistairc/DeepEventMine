@@ -110,7 +110,7 @@ elif [ "$TASK" = "e2e" ]; then
         echo "Get text from PubMed ID"
 
         PMID=$MY_DATA
-        TEXT_DIR="data/$PMID/$PMID-text/"
+        TEXT_DIR="data/$PMID/text/"
         python pubmed/pubmed2text.py $PM_TYPE $PMID $TEXT_DIR
 
     # list of pmid
