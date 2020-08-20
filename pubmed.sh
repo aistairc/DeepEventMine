@@ -6,7 +6,7 @@ TASK=$1
 if [ "$TASK" = "pmids" ]; then
     echo "Get text from PubMed ID and PMC ID list"
 
-    PMIDS="data/my-pubmed/my-pmid.txt"
+    PMIDS="data/my-pubmed/pmids.txt"
     TEXT_DIR="data/my-pubmed/text/"
     python pubmed/pubmed2text.py $TASK $PMIDS $TEXT_DIR
 
@@ -100,17 +100,36 @@ elif [ "$TASK" = "e2e" ]; then
 
     echo "End-to-end event extraction"
     echo "--------------------------------"
-    echo "1. Get text from PubMed ID"
+    echo "1. Prepare input raw text"
 
     PM_TYPE=$2
-    PMID=$3
+    MY_DATA=$3 # a single PMID (e.g 1370299) or data name (e.g my-pubmed)
 
-    TEXT_DIR="data/my-pubmed-$PMID/my-pubmed-$PMID-text/"
-    python pubmed/pubmed2text.py $PM_TYPE $PMID $TEXT_DIR
+    # Get Text from a single PubMed ID
+    if [ "$TASK" = "pmid" ] || [ "$TASK" = "pmcid" ] ; then
+        echo "Get text from PubMed ID"
+
+        PMID=$MY_DATA
+        TEXT_DIR="data/$PMID/$PMID-text/"
+        python pubmed/pubmed2text.py $PM_TYPE $PMID $TEXT_DIR
+
+    # list of pmid
+    elif [ "PM_TYPE" = "pmids" ]; then
+        echo "Get text from PubMed ID and PMC ID list"
+
+        PMIDS="data/$MY_DATA/pmid.txt"
+        TEXT_DIR="data/$MY_DATA/text/"
+        python pubmed/pubmed2text.py $PM_TYPE $PMIDS $TEXT_DIR
+
+    # already have raw text
+    elif [ "PM_TYPE" = "rawtext" ]; then
+        TEXT_DIR="data/$MY_DATA/text/"
+        echo "Process the raw text:" $TEXT_DIR
+
+    fi
 
     echo "--------------------------------"
     echo "2. Preprocess pubmed text"
-    MY_DATA=my-pubmed-$PMID
 
     IN_DIR="data/$MY_DATA"
     OUT_DIR="data/tmp/"

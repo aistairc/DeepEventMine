@@ -49,9 +49,25 @@ sh download.sh bert
 
 ## 2.3. DeepEventMine
 - Download  pre-trained DeepEventMine model on a given task
+- [task] = cg (or pc, ge11, epi, etc)
 
 ```bash
 sh download.sh deepeventmine [task]
+```
+
+## 2.4 Brat
+- To visualize the output using the [brat](http://brat.nlplab.org)
+- Download [brat v1.3](http://brat.nlplab.org)
+
+```bash
+sh download.sh brat
+```
+
+- Install brat based on the [brat instructions](http://brat.nlplab.org/installation.html)
+```bash
+cd brat/brat-v1.3_Crunchy_Frog/
+./install.sh -u
+python2 standalone.py
 ```
 
 # 3. Predict (BioNLP tasks)
@@ -123,6 +139,7 @@ sh run.sh eval [task] gold dev sp
 
 # 4. End-to-end
 
+## Input: a single PMID or PMCID
 - Abstract
 ```bash
 sh pubmed.sh e2e pmid 1370299 cg 0
@@ -157,7 +174,30 @@ E24	Positive_regulation:T32 Theme:E10
     <br>
 <p>
 
+## Input: a list of PMIDs
 
+- Given an arbitrary name for your raw text data, for example "my-pubmed"
+- Prepare a list of PMID and PMCID in the path
+```bash
+data/my-pubmed/pmid.txt
+```
+
+```bash
+sh pubmed.sh e2e pmids my-pubmed cg 0
+```
+
+## Input: raw text files
+
+- Given an arbitrary name for your raw text data, for example "my-pubmed"
+- Prepare your raw text files in the path
+```bash
+data/my-pubmed/text/PMID-*.txt
+data/my-pubmed/text/PMC-*.txt
+```
+
+```bash
+sh pubmed.sh e2e rawtext my-pubmed cg 0
+```
 
 # 5. Predict for new data
 
@@ -166,11 +206,12 @@ E24	Positive_regulation:T32 Theme:E10
 
 ## 5.1. Raw text
 
-- You can prepare your own raw text in the following path, E.g [your_data_name] = my-pubmed
+- Given an arbitrary name for your raw text data, for example "my-pubmed"
+- Prepare your own raw text in the following path
 
 ```bash
-data/[your_data_name]/text/PMID-*.txt
-data/[your_data_name]/text/PMC-*.txt
+data/my-pubmed/text/PMID-*.txt
+data/my-pubmed/text/PMC-*.txt
 ```
 
 ## 5.2. PubMed ID
@@ -181,10 +222,10 @@ data/[your_data_name]/text/PMC-*.txt
 
 1. PubMed ID list
 - In order to get full text given PMC ID, the text should be available in ePub (for our current version).
-- Prepare your list of PubMed ID and PMC ID in the path, E.g [your_data_name] = my-pubmed
+- Prepare your list of PubMed ID and PMC ID in the path
 
 ```bash
-data/[your_data_name]/my-pmid.txt
+data/my-pubmed/my-pmid.txt
 ```
 
 - Get text from the PubMed ID
@@ -201,68 +242,47 @@ sh pubmed.sh pmcid PMC4353630
 
 ### Preprocess
 
-- E.g: [your_data_name] = my-pubmed
-
 ```bash
-sh pubmed.sh preprocess [your_data_name]
+sh pubmed.sh preprocess my-pubmed
 ```
 
 ## 5.3. Predict
 
 1. Generate config
 - Generate config for prediction
-- The data to predict: [your_data_name] = my-pubmed
-- The trained model used for predict: [model_name] = cg (or pc, ge11, etc)
+- The data name to predict: my-pubmed
+- The trained model used for predict: cg (or pc, ge11, etc)
 - If you use gpu [gpu]=0, otherwise [gpu]=-1
 
 ```bash
-sh pubmed.sh config [your_data_name] [model_name] [gpu]
+sh pubmed.sh config my-pubmed cg 0
 ```
 
 2. Predict
 
-- [your_data_name] = my-pubmed
-
 ```bash
-sh pubmed.sh predict [your_data_name]
+sh pubmed.sh predict my-pubmed
 ```
 
 3. Retrieve the original offsets
 
 ```bash
-sh pubmed.sh offset [your_data_name]
+sh pubmed.sh offset my-pubmed
 ```
 
 - Check the output in
 ```bash
-experiments/[your_data_name]/results/ev-last/[your_data_name]-brat
+experiments/my-pubmed/results/ev-last/my-pubmed-brat
 ```
 
 # 6. Visualization
 
-- Visualize the output using the [brat](http://brat.nlplab.org)
-
-## 6.1. Install brat
-
-- Download [brat v1.3](http://brat.nlplab.org)
-
-```bash
-sh download.sh brat
-```
-
-- Install brat based on the [brat instructions](http://brat.nlplab.org/installation.html)
-```bash
-cd brat/brat-v1.3_Crunchy_Frog/
-./install.sh -u
-python2 standalone.py
-```
-
-## 6.2. Prepare data
+## 6.1. Prepare data
 
 - Copy the predicted data into the brat folder to visualize
-- For the raw text prediction: [your_data_name] = my-pubmed, [model_name]=cg
+- For the raw text prediction:
 ```bash
-sh pubmed.sh brat [your_data_name] [model_name]
+sh pubmed.sh brat my-pubmed cg
 ```
 
 - Or for the shared task
@@ -271,12 +291,12 @@ sh run.sh brat [task] gold dev
 sh run.sh brat [task] gold test
 ```
 
-## 6.3. Visualize
+## 6.2. Visualize
 
 - The data to visualize is located in
 
 ```bash
-brat/brat-v1.3_Crunchy_Frog/data/[your_data_name]-brat
+brat/brat-v1.3_Crunchy_Frog/data/my-pubmed-brat
 brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
 ```
 
