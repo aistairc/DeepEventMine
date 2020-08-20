@@ -230,7 +230,7 @@ data/my-pubmed/pmid.txt
 
 - Get text from the PubMed ID
 ```bash
-sh pubmed.sh pmids
+sh pubmed.sh pmids my-pubmed
 ```
 
 2. PubMed ID

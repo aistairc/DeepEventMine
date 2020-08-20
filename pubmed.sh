@@ -6,9 +6,11 @@ TASK=$1
 if [ "$TASK" = "pmids" ]; then
     echo "Get text from PubMed ID and PMC ID list"
 
-    PMIDS="data/my-pubmed/pmid.txt"
-    TEXT_DIR="data/my-pubmed/text/"
-    python pubmed/pubmed2text.py $TASK $PMIDS $TEXT_DIR
+    PM_TYPE=$TASK
+    MY_DATA=$2
+    PMIDS="data/$MY_DATA/pmid.txt"
+    TEXT_DIR="data/$MY_DATA/text/"
+    python pubmed/pubmed2text.py $PM_TYPE $PMIDS $TEXT_DIR
 
 # Get Text from PubMed ID
 elif [ "$TASK" = "pmid" ]; then
