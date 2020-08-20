@@ -225,7 +225,7 @@ data/my-pubmed/text/PMC-*.txt
 - Prepare your list of PubMed ID and PMC ID in the path
 
 ```bash
-data/my-pubmed/my-pmid.txt
+data/my-pubmed/pmid.txt
 ```
 
 - Get text from the PubMed ID
