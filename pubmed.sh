@@ -106,7 +106,7 @@ elif [ "$TASK" = "e2e" ]; then
     MY_DATA=$3 # a single PMID (e.g 1370299) or data name (e.g my-pubmed)
 
     # Get Text from a single PubMed ID
-    if [ ["$TASK" = "pmid" || "$TASK" = "pmcid" ]] ; then
+    if [ "$PM_TYPE" = "pmid" || "$PM_TYPE" = "pmcid" ] ; then
         echo "Get text from PubMed ID"
 
         PMID=$MY_DATA
@@ -114,7 +114,7 @@ elif [ "$TASK" = "e2e" ]; then
         python pubmed/pubmed2text.py $PM_TYPE $PMID $TEXT_DIR
 
     # list of pmid
-    elif [ "PM_TYPE" = "pmids" ]; then
+    elif [ "$PM_TYPE" = "pmids" ]; then
         echo "Get text from PubMed ID and PMC ID list"
 
         PMIDS="data/$MY_DATA/pmid.txt"
@@ -122,7 +122,7 @@ elif [ "$TASK" = "e2e" ]; then
         python pubmed/pubmed2text.py $PM_TYPE $PMIDS $TEXT_DIR
 
     # already have raw text
-    elif [ "PM_TYPE" = "rawtext" ]; then
+    elif [ "$PM_TYPE" = "rawtext" ]; then
         TEXT_DIR="data/$MY_DATA/text/"
         echo "Process the raw text:" $TEXT_DIR
 
