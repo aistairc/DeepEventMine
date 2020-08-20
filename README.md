@@ -139,7 +139,7 @@ sh run.sh eval [task] gold dev sp
 
 # 4. End-to-end
 
-## Input: a single PMID or PMCID
+## 4.1. Input: a single PMID or PMCID
 - Abstract
 ```bash
 sh pubmed.sh e2e pmid 1370299 cg 0
@@ -174,7 +174,7 @@ E24	Positive_regulation:T32 Theme:E10
     <br>
 <p>
 
-## Input: a list of PMIDs
+## 4.2. Input: a list of PMIDs
 
 - Given an arbitrary name for your raw text data, for example "my-pubmed"
 - Prepare a list of PMID and PMCID in the path
@@ -186,7 +186,7 @@ data/my-pubmed/pmid.txt
 sh pubmed.sh e2e pmids my-pubmed cg 0
 ```
 
-## Input: raw text files
+## 4.3. Input: raw text files
 
 - Given an arbitrary name for your raw text data, for example "my-pubmed"
 - Prepare your raw text files in the path
@@ -199,7 +199,7 @@ data/my-pubmed/text/PMC-*.txt
 sh pubmed.sh e2e rawtext my-pubmed cg 0
 ```
 
-# 5. Predict for new data
+# 5. Predict for new data (step-by-step)
 
 - Input: your own raw text or PubMed ID
 - Output: predicted entities and events in brat format
