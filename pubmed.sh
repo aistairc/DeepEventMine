@@ -106,7 +106,7 @@ elif [ "$TASK" = "e2e" ]; then
     MY_DATA=$3 # a single PMID (e.g 1370299) or data name (e.g my-pubmed)
 
     # Get Text from a single PubMed ID
-    if [ "$TASK" = "pmid" ] || [ "$TASK" = "pmcid" ] ; then
+    if [ ["$TASK" = "pmid" || "$TASK" = "pmcid" ]] ; then
         echo "Get text from PubMed ID"
 
         PMID=$MY_DATA
