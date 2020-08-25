@@ -156,16 +156,23 @@ sh pubmed.sh e2e pmcid PMC4353630 cg 0
 - Output: in brat format and [brat visualization](http://brat.nlplab.org)
 
 ```bash
-T9	Gene_or_gene_product 1184 1188	u-PA
-T23	Positive_regulation 1157 1166	increases
-E9	Positive_regulation:T23 Theme:T9
+T24	Organism 1248 1254	bovine
+T25	Gene_or_gene_product 1255 1259	u-PA
+T55	Positive_regulation 1107 1116	increased
+T57	Localization 1170 1179	migration
+T58	Negative_regulation 1260 1267	blocked
+...
 
-T10	Gene_or_gene_product 1320 1325	c-src
-T24	Gene_expression 1326 1336	expression
-E10	Gene_expression:T24 Theme:T10
+T23	Gene_or_gene_product 1184 1188	u-PA
+T56	Positive_regulation 1157 1166	increases
+E9	Positive_regulation:T56 Theme:T23
 
-T32	Positive_regulation 1310 1319	increased
-E24	Positive_regulation:T32 Theme:E10
+T26	Gene_or_gene_product 1320 1325	c-src
+T62	Gene_expression 1326 1336	expression
+E10	Gene_expression:T62 Theme:T26
+
+T61	Positive_regulation 1310 1319	increased
+E24	Positive_regulation:T61 Theme:E10
 ```
 
 <p align="center">
