@@ -192,7 +192,7 @@ class DeepEM(nn.Module):
 
                         # but do not replace for entity in a2 files
                         span_label = span_terms[sentence_idx].id2label[span_idx]
-                        if span_label not in self.params['ev_eval_entities']:
+                        if span_label not in self.params['a2_entities']:
                             span_preds[span_idx] = e_golds[sentence_idx][span_idx]
 
                             # save this index to ignore prediction
@@ -221,7 +221,7 @@ class DeepEM(nn.Module):
                             etype_label = self.params['mappings']['nn_mapping']['id_tag_mapping'][label_id]
 
                             # check this entity type in a2 or not
-                            if etype_label in self.params['ev_eval_entities']:
+                            if etype_label in self.params['a2_entities']:
                                 term = "T" + str(trigger_idx)
                             else:
                                 remove_span = True

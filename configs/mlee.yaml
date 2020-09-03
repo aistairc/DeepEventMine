@@ -1,2 +1,2 @@
 # Configs for specific task
-ev_eval_entities: [DNA_domain_or_region,Protein_domain_or_region]
+a2_entities: [DNA_domain_or_region,Protein_domain_or_region]

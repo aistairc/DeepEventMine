@@ -249,7 +249,7 @@ def generate_ev_output(pred_ents, pred_evs, params):
 
                                 # check if it is entity but should be written to *.a2 file
                                 # CG: DNA_domain_or_region, Protein_domain_or_region
-                                elif a2type in params['ev_eval_entities']:
+                                elif a2type in params['a2_entities']:
                                     arg2s.append(a2data)
 
                                 # store if predict both entity and trigger
@@ -327,7 +327,7 @@ def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
             etype = rev_type_map[en_pred[1]]
 
             # check entity type in a2
-            if etype in params['ev_eval_entities']:
+            if etype in params['a2_entities']:
                 a2_ents_.append(en_id)
 
     # creat mapping for trigger id
@@ -387,7 +387,13 @@ def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
 
             # only write entity to a1
             elif e0_id.startswith('T'):
-                ann_en_lines.append(output)
+
+                # entity in a2
+                if e0_id in a2_ents_:
+                    ann_tr_lines.append(output)
+
+                else:
+                    ann_en_lines.append(output)
 
 
         # entity and trigger output for a2
@@ -407,7 +413,13 @@ def write_ev_2file(pred_output, pred_ents, result_dir, g_entity_ids_, params):
             if e0_id.startswith('TR'):
                 a2_tr_lines_.append(output)
             elif e0_id.startswith('T'):
-                a2_en_lines_.append(output)
+
+                # entity in a2
+                if e0_id in a2_ents_:
+                    a2_tr_lines_.append(output)
+
+                else:
+                    a2_en_lines_.append(output)
 
         # event output
         ev_lines = []

@@ -339,9 +339,8 @@ def retrieve_offset_ann(refdir, preddir, outdir, corpus_name):
             # write empty file
             write_lines([], os.path.join(output_ann_dir, os.path.basename(ref_fn.replace(".a2", ".ann"))))
 
-            # write a1
-
             # write txt
+            txt_fn = os.path.basename(ref_fn).replace(".a2", ".txt.ori")
             shutil.copy(os.path.join(refdir, txt_fn), os.path.join(output_ann_dir, txt_fn.replace(".txt.ori", ".txt")))
 
 
