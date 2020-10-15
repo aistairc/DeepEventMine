@@ -64,6 +64,7 @@ def main():
     # raw text
     parameters['raw_text'] = pred_params['raw_text']
     parameters['ner_predict_all'] = pred_params['raw_text']
+    parameters['a2_entities'] = pred_params['a2_entities']
 
     # process data
     test_data = prepdata.prep_input_data(pred_params['test_data'], parameters)
