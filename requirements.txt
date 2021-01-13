@@ -7,7 +7,6 @@ loguru
 tabulate
 pyyaml
 texttable
-sklearn
 pytorch-nlp
 tqdm
 requests

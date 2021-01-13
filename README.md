@@ -43,6 +43,7 @@ CUDA_PATH=/usr/local/cuda pip install torch==1.1.0 torchvision==0.3.0
 ```
 
 - Install Python packages
+- sklearn 0.23.2
 
 ```bash
 sh install.sh
