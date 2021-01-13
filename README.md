@@ -34,6 +34,12 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 ## 2.1. Requirements
 - Python 3.6.5
 - PyTorch (torch==1.1.0 torchvision==0.3.0, cuda92)
+```bash
+virtualenv -p python3 pytorch-env
+source pytorch-env/bin/activate
+export CUDA_VISIBLE_DEVICES=0
+CUDA_PATH=/usr/local/cuda pip install torch==1.1.0 torchvision==0.3.0
+```
 
 - Install Python packages
 - sklearn 0.23.2
