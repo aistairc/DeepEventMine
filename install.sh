@@ -3,7 +3,6 @@
 HOME=$PWD
 
 # dependencies
-pip install --upgrade pip
 pip install -r requirements.txt
 
 # we used an older sklearn version (temporarily install the following; we may update an alternative way in the future)
