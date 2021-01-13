@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # dependencies
+pip install --upgrade pip
 pip install -r requirements.txt
 
 # pubmed_parser
