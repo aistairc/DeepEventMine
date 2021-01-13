@@ -44,6 +44,7 @@ CUDA_PATH=/usr/local/cuda pip install torch==1.1.0 torchvision==0.3.0
 
 - Install Python packages
 - sklearn 0.23.2
+- brat for visualization (optional) (https://github.com/nlplab/brat)
 
 ```bash
 sh install.sh
@@ -67,14 +68,12 @@ sh download.sh deepeventmine [task]
 ## 2.4 Brat
 - To visualize the output using the [brat](http://brat.nlplab.org)
 - Download [brat v1.3](http://brat.nlplab.org)
+- Or clone from github: https://github.com/nlplab/brat
 
-```bash
-sh download.sh brat
-```
 
 - Install brat based on the [brat instructions](http://brat.nlplab.org/installation.html)
 ```bash
-cd brat/brat-v1.3_Crunchy_Frog/
+cd brat
 ./install.sh -u
 python2 standalone.py
 ```
@@ -312,8 +311,8 @@ sh run.sh brat [task] gold test
 - The data to visualize is located in
 
 ```bash
-brat/brat-v1.3_Crunchy_Frog/data/my-pubmed-brat
-brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
+brat/data/my-pubmed-brat
+brat/data/[task]-brat
 ```
 
 # 7. Acknowledgements

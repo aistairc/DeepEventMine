@@ -243,15 +243,11 @@ elif [ "$DATA_TYPE" = "deepeventmine" ]; then
 # BRAT FOR VISUALIZATION
 elif [ "$DATA_TYPE" = "brat" ]; then
     echo "Download brat"
-    
-    BRAT_DIR="brat"
-    
-    mkdir -p $BRAT_DIR
-    cd $BRAT_DIR
-    
+
     wget http://weaver.nlplab.org/~brat/releases/brat-v1.3_Crunchy_Frog.tar.gz
     tar -xzvf brat-v1.3_Crunchy_Frog.tar.gz
     rm *.tar.gz
+    mv brat-v1.3_Crunchy_Frog brat
 
     cd $ROOT_DIR
         
