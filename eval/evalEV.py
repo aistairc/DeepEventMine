@@ -529,6 +529,56 @@ def write_events_bio(fids, all_ent_preds, all_words, all_offsets, all_span_terms
 
     return
 
+def mapping_entity_id(en_preds_, g_entity_ids_, rev_type_map, params):
+    # if gold entity, starting trigger id from max entity id + 1
+    if not params['ner_predict_all'] and len(g_entity_ids_) > 0:
+        eid = g_entity_ids_[-1] + 1
+
+    # predict both entity and trigger
+    else:
+        eid = 1
+
+    # mapping
+    enid_mapping = collections.OrderedDict()
+    en_preds_out_ = []
+
+    # entity in a2
+    a2_ents_ = []
+
+    # create mapping for entity id first
+    for pr_id, en_pred in en_preds_.items():
+
+        # id
+        en_id = en_pred[0]
+
+        if en_id.startswith('TR'):
+            continue
+
+        elif en_id.startswith('T'):
+            enid_mapping[en_id] = 'T' + str(eid)
+            eid += 1
+            en_preds_out_.append(en_pred)
+
+        # using gold entity but in a2
+        if not params['ner_predict_all']:
+            etype = rev_type_map[en_pred[1]]
+
+            # check entity type in a2
+            if etype in params['a2_entities']:
+                a2_ents_.append(en_id)
+
+    # creat mapping for trigger id
+    for pr_id, en_pred in en_preds_.items():
+        # id
+        en_id = en_pred[0]
+
+        if en_id.startswith('TR'):
+            enid_mapping[en_id] = 'T' + str(eid)
+            eid += 1
+            en_preds_out_.append(en_pred)
+
+    return enid_mapping, en_preds_out_, a2_ents_
+
 def write_ev_2file_bio(pred_output, pred_ents, result_dir, g_entity_ids_, params):
     a2dir = result_dir + 'ev-last/ev-tok-a2/'
     anndir = result_dir + 'ev-last/ev-tok-ann/'
