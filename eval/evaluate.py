@@ -560,7 +560,7 @@ def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, pa
         ]
 
         with torch.no_grad():
-            ner_out, rel_out, ev_out = model(tensors, params)
+            ner_out, rel_out, ev_out, _ = model(tensors, params)
 
         ner_preds = ner_out['preds']
 
