@@ -81,9 +81,9 @@ python2 standalone.py
 - Tokenize texts and retrieve offsets
 - Data statistics
 - Download the processed event structures
-- The original BioNLP 2013 (for downloading CG data) seems unavailable recently. We found an alternative link
+- The [original BioNLP 2013](http://2013.bionlp-st.org/tasks/cancer-genetics) (for downloading CG data) seems unavailable recently. We found an alternative link
   for [CG13 task](https://sites.google.com/site/bionlpst2013/tasks/cancer-genetics-cg-task). You may download the data
-  by yourself (we are not sure the data is the same as the original link, so please check by yourself).
+  by yourself. We are not sure the data is the same as the original link, so please check by yourself or contact the workshop's organizers.
 
 ```bash
 sh run/prepare-cg.sh
