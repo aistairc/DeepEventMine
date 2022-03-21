@@ -38,8 +38,8 @@ elif [ "$TASK" = "offset" ]; then
 
     # paths
     REFDIR="data/corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
-    PREDDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-tok-a2/"
-    OUTDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/" # retrieve the original offsets
+    PREDDIR="$TASK_DIR/deepem-bionlp/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-tok-a2/"
+    OUTDIR="$TASK_DIR/deepem-bionlp/predict-$GOLD_E2E-$DEV_TEST/ev-last/" # retrieve the original offsets
 
     # retrieve the original offsets and create zip format for online evaluation
     python scripts/postprocess.py $REFDIR $PREDDIR $OUTDIR $CORPUS_NAME $DEV_TEST
@@ -55,7 +55,7 @@ elif [ "$TASK" = "eval" ]; then
 
     # paths
     REFDIR="data/original_corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
-    PREDDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-orig-a2/"
+    PREDDIR="$TASK_DIR/deepem-bionlp/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-orig-a2/"
 
 
 
