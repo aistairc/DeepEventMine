@@ -128,7 +128,8 @@ def generate_configs_pubmed(expdir, dataname, model_name, gpu):
     """Generate configs for all."""
 
     # create experiment dir
-    config_dir = os.path.join(expdir, ''.join([dataname, '/deepem-bionlp', '/configs']))
+    config_dir = os.path.join(os.path.join(expdir, dataname), 'deepem-bionlp')
+    config_dir = os.path.join(config_dir, 'configs')
     utils.makedir(config_dir)
 
     # default setting
