@@ -502,6 +502,33 @@ def extract_fscore(path):
             'tot_scores': (float(tot_precision.strip()), float(tot_recall.strip()), float(tot_fscore.strip()))}
 
 # write events to file
+
+# generate event output and evaluation
+def write_events_bio(fids, all_ent_preds, all_words, all_offsets, all_span_terms, all_span_indices, all_sub_to_words,
+                 all_ev_preds, g_entity_ids_, params, result_dir):
+    # generate predicted entities
+    pred_ents = generate_entities(fids=fids,
+                                  all_e_preds=all_ent_preds,
+                                  all_words=all_words,
+                                  all_offsets=all_offsets,
+                                  all_span_terms=all_span_terms,
+                                  all_span_indices=all_span_indices,
+                                  all_sub_to_words=all_sub_to_words,
+                                  params=params)
+
+    # generate predicted events
+    pred_evs = generate_events(fids=fids,
+                               all_ev_preds=all_ev_preds,
+                               params=params)
+
+    # generate event output
+    preds_output = generate_ev_output(pred_ents, pred_evs, params)
+
+    # write output to file
+    write_ev_2file_bio(preds_output, pred_ents, result_dir, g_entity_ids_, params)
+
+    return
+
 def write_ev_2file_bio(pred_output, pred_ents, result_dir, g_entity_ids_, params):
     a2dir = result_dir + 'ev-last/ev-tok-a2/'
     anndir = result_dir + 'ev-last/ev-tok-ann/'

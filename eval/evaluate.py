@@ -3,7 +3,7 @@ import time
 import torch
 from tqdm import tqdm
 
-from eval.evalEV import evaluate_ev, write_ev_2file_bio
+from eval.evalEV import evaluate_ev, write_events_bio
 from eval.evalRE import estimate_perf, estimate_rel, write_entity_relations
 from eval.evalNER import eval_nner
 from scripts.pipeline_process import gen_ner_ann_files, gen_rel_ann_files
@@ -658,7 +658,7 @@ def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, pa
     )
 
     if is_eval_ev > 0:
-        write_ev_2file_bio(fids=fidss,
+        write_events_bio(fids=fidss,
                            all_ent_preds=ent_preds,
                            all_words=wordss,
                            all_offsets=offsetss,
