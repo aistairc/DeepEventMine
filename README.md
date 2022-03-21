@@ -1,11 +1,12 @@
-# 1. DeepEventMine
+# DeepEventMine
 A deep leanring model to predict named entities, triggers, and nested events from biomedical texts.
 
 - The model and results are reported in our paper:
 
 [DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts](https://doi.org/10.1093/bioinformatics/btaa540), Bioinformatics, 2020.
 
-## 1.1. Features
+## Overview
+1. Features
 - Based on [pre-trained BERT](https://github.com/allenai/scibert)
 - Predict nested entities and nested events
 - Provide our trained models on the seven biomedical tasks
@@ -13,7 +14,7 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 - Predict for new data given raw text input or PubMed ID
 - Visualize the predicted entities and events on the [brat](http://brat.nlplab.org)
 
-## 1.2. Tasks
+2. Tasks
 
 - DeepEventMine has been trained and evaluated on the following tasks (six BioNLP shared tasks and MLEE).
 
@@ -25,14 +26,7 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 6. pc: [Pathway Curation (PC), 2013](http://2013.bionlp-st.org/tasks/pathway-curation)
 7. mlee: [Multi-Level Event Extraction (MLEE)](http://nactem.ac.uk/MLEE/)
 
-## 1.3. Our trained models and scores
-
-- [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
-- [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
-
-# 2. Preparation
-## 2.1. Environment
-
+# 1. Preparation
 1. Install conda environment
 
 ```bash
@@ -62,42 +56,32 @@ sh setup/conda-install.sh
 pip install -r requirements.txt
 ```
 
-```bash
-virtualenv -p python3 pytorch-env
-source pytorch-env/bin/activate
-export CUDA_VISIBLE_DEVICES=0
-CUDA_PATH=/usr/local/cuda pip install torch==1.1.0 torchvision==0.3.0
-```
-
-## 2.2. BERT
-- Download SciBERT BERT model from PyTorch AllenNLP
+5. [Brat](https://github.com/nlplab/brat) for visualization
+- brat instructions](http://brat.nlplab.org/installation.html)
 
 ```bash
-sh download.sh bert
-```
-
-## 2.3. DeepEventMine
-- Download  pre-trained DeepEventMine model on a given task
-- [task] = cg (or pc, ge11, epi, etc)
-
-```bash
-sh download.sh deepeventmine [task]
-```
-
-## 2.4 Brat
-- To visualize the output using the [brat](http://brat.nlplab.org)
-- Download [brat v1.3](http://brat.nlplab.org)
-
-```bash
-sh download.sh brat
-```
-
-- Install brat based on the [brat instructions](http://brat.nlplab.org/installation.html)
-```bash
-cd brat/brat-v1.3_Crunchy_Frog/
-./install.sh -u
+sh setup/install-brat.sh
 python2 standalone.py
 ```
+
+# 2. Training CG
+1. Download data and process
+- Download data
+- Process data to appropriate format
+- Tokenize texts and retrieve offsets
+- Data statistics
+- Download the processed event structures
+
+```bash
+sh run/train/prepare-cg.sh
+```
+
+2. Download models
+- Download SciBERT model from PyTorch AllenNLP
+```bash
+sh run/train/download-bert.sh
+```
+
 
 # 3. Predict (BioNLP tasks)
 
@@ -110,13 +94,22 @@ python2 standalone.py
 sh download.sh bionlp [task]
 ```
 
-2. Preprocess data
+2. Download our pre-trained DeepEventMine model on a given task
+- [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
+- [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
+- [task] = cg (or pc, ge11, epi, etc)
+
+```bash
+sh download.sh deepeventmine [task]
+```
+
+3. Preprocess data
 - Tokenize texts and prepare data for prediction
 ```bash
 sh preprocess.sh bionlp
 ```
 
-3. Generate configs
+4. Generate configs
 - If using GPU: [gpu] = 0, otherwise: [gpu] = -1
 - [task] = cg, pc, etc
 ```bash
