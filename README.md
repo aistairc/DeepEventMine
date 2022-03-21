@@ -97,20 +97,20 @@ sh run/train/generate_configs-debug.sh cg debug
 - Pretrain layers (these need to be done before training the joint model)
 - Replace "basic" by "debug" to quickly try experiments on the small data (debug mode)
 ```bash
-sh run.sh cg basic train ner
-sh run.sh cg basic train rel
-sh run.sh cg basic train ev
+sh run/train/train.sh experiments/cg/basic/configs/train-ner.yaml
+sh run/train/train.sh experiments/cg/basic/configs/train-rel.yaml
+sh run/train/train.sh experiments/cg/basic/configs/train-ev.yaml
 ```
 
 - Train joint model: given gold entity
 ```bash
-sh run.sh cg basic train joint gold
+sh run/train/train.sh experiments/cg/basic/configs/train-joint-gold.yaml
 ```
 
 - Train joint end-to-end model
 
 ```bash
-sh run.sh cg basic train joint e2e
+sh run/train/train.sh experiments/cg/basic/configs/train-joint-e2e.yaml
 ```
 
 # 3. Predict (BioNLP tasks)
