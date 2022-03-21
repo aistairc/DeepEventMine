@@ -1,25 +1,123 @@
-# Configuration file.
+# Configuration file for training model.
 
+# data path
 task_name: cg
+train_data: data/corpora/cg/train/
+dev_data: data/corpora/cg/dev/
+test_data: data/corpora/cg/dev/
 
-# model
 bert_model: data/bert/scibert_scivocab_cased
-model_path: data/models/cg/model/
-saved_params: data/models/cg/cg.param
 
-# data
-test_data: ..
-
-# eval
-ev_eval_script_path: eval/scripts/eval-ev-cg.py
-a2_entities: []
-raw_text: False
-ner_predict_all: False
-
-# output
+# saving options
 result_dir: ..
+save_params: False
+save_ner: False
+save_rel: False
+save_ev: False
+save_all_models: False
+save_model_pipeline: False
 
-# params
-gpu: -1
+# hyperparameters
+epoch: 100
 batchsize: 16
+learning_rate: 3e-5
+dropout: 0.3
+fp16: False
+gpu: 0
+
+# dimensions
+bert_dim: 768
+hidden_dim: 1000
+etype_dim: 300 # entity type
+rtype_dim: 150 # relation type
+role_dim: 1000 # event argument
+
+ner_reduce: False
+ner_reduced_size: 500
+rel_reduced_size: 500
+ev_reduced_size: 500
+
+# bert
 seed: 42
+gradient_accumulation_steps: 1
+loss_scale: 128
+warmup_proportion: 0.1
+max_seq: 128
+bert_warmup_lr: True
+
+# ner config
+ner_label_limit: 2 # nested level
+ner_threshold: 0.5
+max_entity_width: 14
+max_trigger_width: 10
+
+# event config
+ev_threshold: 0.5
+max_ev_level: 3 # nested level
+max_ev_args: 4 # maximum number of arguments
+ev_nested_epoch: 0
+modality_epoch: 0
+flat_ev_scale: 1
+nest_ev_scale: 1
+modality_weight: 1
+use_dev_rule: False
+use_general_rule: False
+rule_dir: data/event-structures/cg/
+
+# training options
+use_gold_ner: False
+use_gold_rel: False
+ner_predict_all: True # True/False: predict entity or not
+skip_ner: False
+skip_rel: False
+ner_epoch: 100
+rel_epoch: 100
+
+freeze_bert: False
+freeze_ner: False
+freeze_rel: False
+
+ner_epoch_limit: -1
+rel_epoch_limit: -1
+ner_loss_weight_main: 1
+rel_loss_weight_minor: 1
+ev_loss_weight_minor: 1
+ner_loss_weight_minor: 1
+rel_loss_weight_main: 1
+ev_loss_weight_main: 1
+
+direction: l2r+r2l
+lab2ign: 1:Other:2
+include_nested: True
+enable_triggers_pair: True
+train: True
+rel_lb_weight: -1
+
+lowercase : False
+filter_no_ent_sents: False
+use_context: True
+min_w_freq: 1 # for singletonW
+unk_w_prob: 0.01 # for pre_sentences
+
+# lstm
+use_lstm: False
+pretrain_word_model: word-embs/PubMed-shuffle-win-2-sample200.txt
+
+# evaluation
+ner_eval_corpus: cg
+rel_eval_script_path: eval/scripts/n2c2.py
+ev_eval_script_path: eval/scripts/eval-ev-cg.py # for event
+ev_matching: -sp # s: softboundary, p: partialrecursive
+a2_entities: []
+
+# prediction setting
+predict: False
+pipelines: False
+t_batch_size: 16
+t_gpu: 0
+t_fp16: False
+gold_eval: False
+
+# display options
+stats: True # print relations
+show_macro: False # print result for relations

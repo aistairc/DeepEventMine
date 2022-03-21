@@ -1,2 +1,2 @@
-# Configs for specific task
-a2_entities: [DNA_domain_or_region,Protein_domain_or_region]
+# Configuration for CG task.
+a2_entities: [DNA_domain_or_region, Protein_domain_or_region]

@@ -10,63 +10,165 @@ from utils import utils
 def write_config(datapath, config):
     """Write config to file"""
 
+    # with open(datapath, 'w') as outfile:
+    #     yaml.dump(config, outfile, default_flow_style=False, sort_keys=False)
+
     with open(datapath, 'w') as outfile:
         for key, value in config.items():
 
             # format
-            if key == 'bert_model' or key == 'test_data' or key == 'ev_eval_script_path' or key == 'result_dir' or key == 'gpu':
+            if key == 'result_dir':
+                outfile.write('\n')
+            if key == 'epoch':
+                outfile.write('\n')
+            if key == 'bert_dim':
+                outfile.write('\n')
+            if key == 'ner_reduce':
+                outfile.write('\n')
+            if key == 'seed':
+                outfile.write('\n')
+            if key == 'ner_label_limit':
+                outfile.write('\n')
+            if key == 'ev_threshold':
+                outfile.write('\n')
+            if key == 'use_gold_ner':
+                outfile.write('\n')
+            if key == 'freeze_bert':
+                outfile.write('\n')
+            if key == 'ner_epoch_limit':
+                outfile.write('\n')
+            if key == 'direction':
+                outfile.write('\n')
+            if key == 'ner_eval_corpus':
+                outfile.write('\n')
+            if key == 'predict':
                 outfile.write('\n')
 
             outfile.write('{}: {}'.format(key, value))
             outfile.write('\n')
 
 
-def gen_predict_config(predict_config, specific_config, eval_set, config_dir, model_name, taskdir):
-    """For joint prediction"""
+def gen_ner_config(ner_config, task_config, config_dir, taskdir):
+    """For entity"""
 
-    # dev and test sets
-    if eval_set == 'dev' or eval_set == 'test':
-        predict_config['test_data'] = ''.join(["data/corpora/", model_name, "/", eval_set, "/"])
-        predict_config['result_dir'] = ''.join([taskdir, '/predict-gold-', eval_set, '/'])
-
-        # overwrite task config
-        overwrite_task_config(predict_config, specific_config)
-
-        write_config(os.path.join(config_dir, ''.join(['predict-gold-', eval_set, '.yaml'])), predict_config)
-
-    # for raw texts
-    elif eval_set == 'raw-text':
-        predict_config['test_data'] = ''.join(["data/processed-raw-text/", model_name, "/"])
-        predict_config['result_dir'] = ''.join([taskdir, '/predict-', eval_set, '/'])
-        predict_config['raw_text'] = True
-        predict_config['ner_predict_all'] = True
-
-        # overwrite task config
-        overwrite_task_config(predict_config, specific_config)
-
-        write_config(os.path.join(config_dir, ''.join(['predict-', eval_set, '.yaml'])), predict_config)
-
-
-def gen_predict_config_pubmed(predict_config, specific_config, config_dir, expdir, dataname):
-    predict_config['test_data'] = ''.join(["data/", dataname, "/processed-text/", "text/"])
-    predict_config['result_dir'] = ''.join([expdir, dataname, '/results/'])
-    predict_config['raw_text'] = True
-    predict_config['ner_predict_all'] = True
+    ner_config['result_dir'] = ''.join([taskdir, 'ner/'])
+    ner_config['ner_model_dir'] = ''.join([taskdir, 'ner/model/'])
+    ner_config['save_ner'] = True
 
     # overwrite task config
-    overwrite_task_config(predict_config, specific_config)
-    write_config(os.path.join(config_dir, ''.join(['predict-', dataname, '.yaml'])), predict_config)
+    overwrite_task_config(ner_config, task_config)
+
+    write_config(os.path.join(config_dir, 'train-ner.yaml'), ner_config)
 
 
-def overwrite_task_config(config, specific_config):
-    """Overwrite config for specific task."""
+def gen_rel_config(rel_config, task_config, config_dir, taskdir):
+    """For relation"""
 
-    # add specific task config
-    for key, value in specific_config.items():
-        if key in config:
-            config[key] = value
+    rel_config['result_dir'] = ''.join([taskdir, 'rel/'])
+    rel_config['rel_model_dir'] = ''.join([taskdir, 'rel/model/'])
+    rel_config['save_rel'] = True
+    rel_config['use_gold_ner'] = True
+    rel_config['use_gold_rel'] = False
+    rel_config['ner_predict_all'] = False
+    rel_config['skip_ner'] = True
+    rel_config['ner_epoch'] = -1
 
-    return config
+    # overwrite task config
+    overwrite_task_config(rel_config, task_config)
+
+    write_config(os.path.join(config_dir, 'train-rel.yaml'), rel_config)
+
+
+def gen_ev_config(ev_config, task_config, config_dir, taskdir):
+    """For event"""
+
+    ev_config['result_dir'] = ''.join([taskdir, 'ev/'])
+    ev_config['ev_model_dir'] = ''.join([taskdir, 'ev/model/'])
+    ev_config['save_ev'] = True
+    ev_config['ev_nested_epoch'] = 20
+    ev_config['modality_epoch'] = 20
+    ev_config['use_general_rule'] = True
+    ev_config['use_gold_ner'] = True
+    ev_config['use_gold_rel'] = True
+    ev_config['ner_predict_all'] = False
+    ev_config['skip_ner'] = True
+    ev_config['skip_rel'] = True
+    ev_config['ner_epoch'] = -1
+    ev_config['rel_epoch'] = -1
+    ev_config['freeze_bert'] = True
+    ev_config['freeze_ner'] = True
+    ev_config['freeze_rel'] = True
+
+    # overwrite task config
+    overwrite_task_config(ev_config, task_config)
+
+    write_config(os.path.join(config_dir, 'train-ev.yaml'), ev_config)
+
+
+def gen_joint_config(joint_config, task_config, config_dir, taskdir):
+    """For joint"""
+
+    joint_config['result_dir'] = ''.join([taskdir, 'joint-gold/'])
+    joint_config['joint_model_dir'] = ''.join([taskdir, 'joint-gold/model/'])
+    joint_config['save_params'] = True
+    joint_config['save_all_models'] = True
+    joint_config['use_general_rule'] = True
+    joint_config['ner_model_dir'] = ''.join([taskdir, 'ner/model/'])
+    joint_config['rel_model_dir'] = ''.join([taskdir, 'rel/model/'])
+    joint_config['ev_model_dir'] = ''.join([taskdir, 'ev/model/'])
+    joint_config['ner_predict_all'] = False
+    joint_config['ner_epoch'] = -1
+    joint_config['rel_epoch'] = -1
+    joint_config['ner_epoch_limit'] = 70
+    joint_config['rel_epoch_limit'] = 90
+    joint_config['rel_loss_weight_minor'] = 0.001
+    joint_config['ev_loss_weight_minor'] = 0.001
+    joint_config['ner_loss_weight_minor'] = 0.5
+    joint_config['rel_loss_weight_main'] = 0.5
+    joint_config['ev_loss_weight_main'] = 0.1
+
+    # overwrite task config
+    overwrite_task_config(joint_config, task_config)
+
+    write_config(os.path.join(config_dir, 'train-joint-gold.yaml'), joint_config)
+
+
+def gen_joint_e2e_config(joint_e2e_config, task_config, config_dir, taskdir):
+    """For joint end-to-end"""
+
+    joint_e2e_config['result_dir'] = ''.join([taskdir, 'joint-e2e/'])
+    joint_e2e_config['joint_model_dir'] = ''.join([taskdir, 'joint-e2e/model/'])
+    joint_e2e_config['ner_predict_all'] = True
+
+    # overwrite task config
+    overwrite_task_config(joint_e2e_config, task_config)
+
+    write_config(os.path.join(config_dir, 'train-joint-e2e.yaml'), joint_e2e_config)
+
+
+def gen_predict_config(predict_config, eval_set, config_dir, taskdir):
+    """For joint prediction"""
+
+    predict_config['test_data'] = predict_config['test_data'].replace('dev', eval_set)
+    predict_config['result_dir'] = ''.join([taskdir, 'predict-gold-', eval_set, '/'])
+    predict_config['save_params'] = False
+    predict_config['joint_model_dir'] = ''.join([taskdir, 'joint-gold/model/'])
+    predict_config['params'] = ''.join([taskdir, 'joint-gold/', predict_config['task_name'], '.param'])
+    predict_config['predict'] = True
+    predict_config['ner_predict_all'] = False
+
+    write_config(os.path.join(config_dir, ''.join(['predict-gold-', eval_set, '.yaml'])), predict_config)
+
+
+def gen_predict_e2e_config(predict_e2e_config, eval_set, config_dir, taskdir):
+    """For joint end-to-end prediction"""
+
+    predict_e2e_config['result_dir'] = ''.join([taskdir, 'predict-e2e-', eval_set, '/'])
+    predict_e2e_config['joint_model_dir'] = ''.join([taskdir, 'joint-e2e/model/'])
+    predict_e2e_config['params'] = ''.join([taskdir, 'joint-e2e/', predict_e2e_config['task_name'], '.param'])
+    predict_e2e_config['ner_predict_all'] = True
+
+    write_config(os.path.join(config_dir, ''.join(['predict-e2e-', eval_set, '.yaml'])), predict_e2e_config)
 
 
 def read_specific_config(task):
@@ -85,11 +187,23 @@ def read_specific_config(task):
     return specific_config
 
 
-def generate_configs(taskdir, task, gpu):
+def overwrite_task_config(config, specific_config):
+    """Overwrite config for specific task."""
+
+    # add specific task config
+    for key, value in specific_config.items():
+        if key in config:
+            config[key] = value
+
+    return config
+
+
+def generate_configs(expdir, task, setting):
     """Generate configs for all."""
 
     # create experiment dir
-    config_dir = os.path.join(taskdir, 'configs')
+    taskdir = os.path.join(expdir, '/'.join([task, setting, '']))
+    config_dir = os.path.join(expdir, '/'.join([task, setting, 'configs', '']))
     utils.makedir(config_dir)
 
     # default setting
@@ -102,54 +216,54 @@ def generate_configs(taskdir, task, gpu):
 
     # generate config for each task
     task_config = default_config.copy()
-    task_config['gpu'] = gpu
-    task_config['task_name'] = task_config['task_name'].replace('cg', task)
-    task_config['model_path'] = task_config['model_path'].replace('cg', task)
-    task_config['saved_params'] = task_config['saved_params'].replace('cg', task)
+
+    # generate data path
+    task_config['train_data'] = ''.join(["data/corpora/", task, "/train/"])
+    task_config['dev_data'] = ''.join(["data/corpora/", task, "/dev/"])
+    task_config['test_data'] = ''.join(["data/corpora/", task, "/dev/"])
+    # bert
+    task_config['bert_model'] = "data/bert/scibert_scivocab_cased"
+
+    # task specific
+    task_config['task_name'] = task
+    task_config['ner_eval_corpus'] = task
     task_config['ev_eval_script_path'] = task_config['ev_eval_script_path'].replace('cg', task)
+    task_config['rule_dir'] = task_config['rule_dir'].replace('cg', task)
+
+    # ner config
+    ner_config = task_config.copy()
+    gen_ner_config(ner_config, specific_config, config_dir, taskdir)
+
+    # rel config
+    rel_config = task_config.copy()
+    gen_rel_config(rel_config, specific_config, config_dir, taskdir)
+
+    # ev config
+    ev_config = task_config.copy()
+    gen_ev_config(ev_config, specific_config, config_dir, taskdir)
+
+    # joint gold config
+    joint_config = task_config.copy()
+    gen_joint_config(joint_config, specific_config, config_dir, taskdir)
+
+    # joint end-to-end config (predict entity)
+    joint_e2e_config = joint_config.copy()
+    gen_joint_e2e_config(joint_e2e_config, specific_config, config_dir, taskdir)
 
     # predict config
     predict_dev_config = task_config.copy()
-    gen_predict_config(predict_dev_config, specific_config, 'dev', config_dir, task, taskdir)
+    gen_predict_config(predict_dev_config, 'dev', config_dir, taskdir)
 
     predict_test_config = task_config.copy()
-    gen_predict_config(predict_test_config, specific_config, 'test', config_dir, task, taskdir)
+    gen_predict_config(predict_test_config, 'test', config_dir, taskdir)
 
-    # for raw text
-    predict_test_config = task_config.copy()
-    gen_predict_config(predict_test_config, specific_config, 'raw-text', config_dir, task, taskdir)
+    # predict end-to-end config
 
-    print('Generate configs: Done!')
+    predict_e2e_dev_config = predict_dev_config.copy()
+    gen_predict_e2e_config(predict_e2e_dev_config, 'dev', config_dir, taskdir)
 
-    return
-
-
-def generate_configs_pubmed(expdir, dataname, model_name, gpu):
-    """Generate configs for all."""
-
-    # create experiment dir
-    config_dir = os.path.join(expdir, ''.join([dataname, '/configs']))
-    utils.makedir(config_dir)
-
-    # default setting
-    default_config_path = 'configs/default.yaml'
-    with open(default_config_path, 'r') as stream:
-        default_config = utils._ordered_load(stream)
-
-    # read config for specific task
-    specific_config = read_specific_config(model_name)
-
-    # generate config for each task
-    task_config = default_config.copy()
-    task_config['gpu'] = gpu
-    task_config['task_name'] = task_config['task_name'].replace('cg', model_name)
-    task_config['model_path'] = task_config['model_path'].replace('cg', model_name)
-    task_config['saved_params'] = task_config['saved_params'].replace('cg', model_name)
-    task_config['ev_eval_script_path'] = task_config['ev_eval_script_path'].replace('cg', model_name)
-
-    # for raw text
-    predict_test_config = task_config.copy()
-    gen_predict_config_pubmed(predict_test_config, specific_config, config_dir, expdir, dataname)
+    predict_e2e_test_config = predict_test_config.copy()
+    gen_predict_e2e_config(predict_e2e_test_config, 'test', config_dir, taskdir)
 
     print('Generate configs: Done!')
 
@@ -157,12 +271,5 @@ def generate_configs_pubmed(expdir, dataname, model_name, gpu):
 
 
 if __name__ == '__main__':
-    # generate_configs_pubmed("experiments/", "cg", "my-pubmed", 0)
-
-    # bionlp
-    if len(sys.argv) == 4:
-        generate_configs(sys.argv[1], sys.argv[2], sys.argv[3])
-
-    # pubmed
-    elif len(sys.argv) == 5:
-        generate_configs_pubmed(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    # generate_configs("experiments/", "cg", "basic")
+    generate_configs(sys.argv[1], sys.argv[2], sys.argv[3])

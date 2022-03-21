@@ -82,6 +82,11 @@ sh run/train/prepare-cg.sh
 sh run/train/download-bert.sh
 ```
 
+3. Generate configs
+```bash
+sh run/train/generate_configs.sh cg basic
+```
+- Experiment name: basic, exp1, exp2, etc
 
 # 3. Predict (BioNLP tasks)
 
