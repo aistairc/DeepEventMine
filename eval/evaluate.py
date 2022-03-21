@@ -533,8 +533,8 @@ def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, pa
         eval_data_ids = batch
         tensors = utils.get_tensors(eval_data_ids, eval_data, params)
 
-        nn_tokens, nn_ids, nn_token_mask, nn_attention_mask, nn_span_indices, nn_span_labels, nn_span_labels_match_rel, nn_entity_masks, nn_trigger_masks, _, \
-        etypes, _ = tensors
+        nn_tokens, nn_ids, nn_token_mask, nn_attention_mask, nn_span_indices, nn_span_labels, nn_span_labels_match_rel, nn_entity_masks, nn_trigger_masks, nn_gtruth, nn_l2r, _, \
+        nn_truth_ev, nn_ev_idxs, ev_lbls, etypes, _ = tensors
 
         fids = [
             eval_data["fids"][data_id] for data_id in eval_data_ids[0].tolist()
