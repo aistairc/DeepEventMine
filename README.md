@@ -60,7 +60,7 @@ sh setup/conda-install.sh
 - Python dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r setup/requirements.txt
 ```
 
 5. [Brat](https://github.com/nlplab/brat) for visualization
