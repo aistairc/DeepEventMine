@@ -212,7 +212,7 @@ def set_debug_mode(configs, args):
             configs['test_data'] = configs['test_data'].replace('dev', "debug")
             configs['test_data'] = configs['test_data'].replace('test', "debug")
         if "epoch" in configs:
-            configs["epoch"] = 2
+            configs["epoch"] = 10
 
 def generate_configs(args, expdir, task, exp_name):
     """Generate configs for all."""
