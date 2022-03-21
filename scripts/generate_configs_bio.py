@@ -49,7 +49,7 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, mo
 
 def gen_predict_config_pubmed(predict_config, specific_config, config_dir, expdir, dataname):
     predict_config['test_data'] = ''.join(["data/", dataname, "/processed-text/", "text/"])
-    predict_config['result_dir'] = ''.join([expdir, dataname, '/deepem-bionlp', '/results/'])
+    predict_config['result_dir'] = ''.join([expdir, dataname, '/results/'])
     predict_config['raw_text'] = True
     predict_config['ner_predict_all'] = True
 
@@ -128,8 +128,7 @@ def generate_configs_pubmed(expdir, dataname, model_name, gpu):
     """Generate configs for all."""
 
     # create experiment dir
-    config_dir = os.path.join(os.path.join(expdir, dataname), 'deepem-bionlp')
-    config_dir = os.path.join(config_dir, 'configs')
+    config_dir = os.path.join(os.path.join(expdir, dataname), 'configs')
     utils.makedir(config_dir)
 
     # default setting
