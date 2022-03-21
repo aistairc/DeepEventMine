@@ -1,4 +1,5 @@
 """Load data from brat format and process for entity, trigger, relation, events."""
+from collections import OrderedDict
 
 from loader.prepData.brat import brat_loader
 from loader.prepData.sentence import prep_sentence_offsets, process_input
