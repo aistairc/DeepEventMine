@@ -51,5 +51,18 @@ def prep_input_data(files_fold, params):
         if diff:
             print(doc_name, sorted(diff, key=lambda _id: int(_id.replace("T", ""))))
 
+    # entity indices
+    g_entity_ids_ = OrderedDict()
+    for fid, fdata in entities0.items():
+        # get max entity id
+        eid_ = [eid for eid in fdata['ids'] if not eid.startswith('TR')]
+        ids_ = [int(eid.replace('T', '')) for eid in eid_]
+        if len(ids_) > 0:
+            max_id = max(ids_)
+        else:
+            max_id = 0
+        eid_.append(max_id)
+        g_entity_ids_[fid] = eid_
+
     return {'entities': entities1, 'triggers': triggers1, 'terms': terms0, 'relations': relations0, 'events': events0,
-            'sentences': sentences1, 'input': input1, 'structsTR': structsTR}
+            'sentences': sentences1, 'input': input1, 'structsTR': structsTR, 'g_entity_ids_': g_entity_ids_}
