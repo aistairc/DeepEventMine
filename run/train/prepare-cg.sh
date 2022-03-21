@@ -48,7 +48,7 @@ echo "3. Download processed event structures"
 # our processed event structures data
 FILEID=1qzjY38RdnCvomVAD3XMk_J4pi1gIraA5
 
-CG_EVENT_STRUCTURES="data/general_rules"
+CG_EVENT_STRUCTURES="data/event-structures"
 mkdir -p $CG_EVENT_STRUCTURES
 cd $CG_EVENT_STRUCTURES
 
