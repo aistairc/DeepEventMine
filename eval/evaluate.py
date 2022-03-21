@@ -630,7 +630,7 @@ def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, pa
             ent_preds.append(ner_out["nner_preds"])
 
             # add predicted events
-            ev_preds.append(ev_out)
+            ev_preds.append(ev_out['output'])
 
             span_indicess.append(
                 [
