@@ -113,6 +113,19 @@ sh run/train.sh experiments/cg/basic/configs/train-joint-gold.yaml
 sh run/train.sh experiments/cg/basic/configs/train-joint-e2e.yaml
 ```
 
+5. Predict
+- Given gold entity
+```bash
+sh run/predict.sh experiments/cg/basic/configs/predict-gold-dev.yaml
+sh run/predict.sh experiments/cg/basic/configs/predict-gold-test.yaml
+```
+
+- End-to-end
+```bash
+sh run/predict.sh experiments/cg/basic/configs/predict-e2e-dev.yaml
+sh run/predict.sh experiments/cg/basic/configs/predict-e2e-test.yaml
+```
+
 # 3. Predict (BioNLP tasks)
 
 ## 3.1. Prepare data

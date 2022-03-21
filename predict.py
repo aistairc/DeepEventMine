@@ -7,7 +7,7 @@ from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 
 from eval.evaluate import predict
 
-from nets import deepEM
+from model import deepEM
 from loader.prepData import prepdata
 from loader.prepNN import prep4nn
 from utils import utils
