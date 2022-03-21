@@ -268,17 +268,21 @@ def generate_configs(args, expdir, task, exp_name):
 
     # predict config
     predict_dev_config = task_config.copy()
+    set_debug_mode(predict_dev_config, args)
     gen_predict_config(predict_dev_config, 'dev', config_dir, taskdir)
 
     predict_test_config = task_config.copy()
+    set_debug_mode(predict_test_config, args)
     gen_predict_config(predict_test_config, 'test', config_dir, taskdir)
 
     # predict end-to-end config
 
     predict_e2e_dev_config = predict_dev_config.copy()
+    set_debug_mode(predict_e2e_dev_config, args)
     gen_predict_e2e_config(predict_e2e_dev_config, 'dev', config_dir, taskdir)
 
     predict_e2e_test_config = predict_test_config.copy()
+    set_debug_mode(predict_e2e_test_config, args)
     gen_predict_e2e_config(predict_e2e_test_config, 'test', config_dir, taskdir)
 
     print('Generate configs: Done!')

@@ -90,7 +90,7 @@ sh run/train/generate_configs.sh cg basic
 - Experiment name: basic, exp1, exp2, etc
 - Or running this debug mode (on a small data with several epochs)
 ```bash
-sh run/train/generate_configs.sh cg debug
+sh run/train/generate_configs-debug.sh cg debug
 ```
 
 # 3. Predict (BioNLP tasks)
