@@ -27,7 +27,7 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, mo
     # dev and test sets
     if eval_set == 'dev' or eval_set == 'test':
         predict_config['test_data'] = ''.join(["data/corpora/", model_name, "/", eval_set, "/"])
-        predict_config['result_dir'] = ''.join([taskdir, '/predict-gold-', eval_set, '/'])
+        predict_config['result_dir'] = ''.join([taskdir, 'deepem-bionlp', '/predict-gold-', eval_set, '/'])
 
         # overwrite task config
         overwrite_task_config(predict_config, specific_config)
@@ -37,7 +37,7 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, mo
     # for raw texts
     elif eval_set == 'raw-text':
         predict_config['test_data'] = ''.join(["data/processed-raw-text/", model_name, "/"])
-        predict_config['result_dir'] = ''.join([taskdir, '/predict-', eval_set, '/'])
+        predict_config['result_dir'] = ''.join([taskdir, 'deepem-bionlp', '/predict-', eval_set, '/'])
         predict_config['raw_text'] = True
         predict_config['ner_predict_all'] = True
 
@@ -49,7 +49,7 @@ def gen_predict_config(predict_config, specific_config, eval_set, config_dir, mo
 
 def gen_predict_config_pubmed(predict_config, specific_config, config_dir, expdir, dataname):
     predict_config['test_data'] = ''.join(["data/", dataname, "/processed-text/", "text/"])
-    predict_config['result_dir'] = ''.join([expdir, dataname, '/results/'])
+    predict_config['result_dir'] = ''.join([expdir, dataname, 'deepem-bionlp', '/results/'])
     predict_config['raw_text'] = True
     predict_config['ner_predict_all'] = True
 
@@ -128,7 +128,7 @@ def generate_configs_pubmed(expdir, dataname, model_name, gpu):
     """Generate configs for all."""
 
     # create experiment dir
-    config_dir = os.path.join(expdir, ''.join([dataname, '/configs']))
+    config_dir = os.path.join(expdir, ''.join([dataname, 'deepem-bionlp', '/configs']))
     utils.makedir(config_dir)
 
     # default setting
