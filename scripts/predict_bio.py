@@ -96,12 +96,12 @@ def main():
 
 
 def read_test_data(test_data, params):
-    test, _ = prep4nn.data2network(test_data, 'predict', params)
+    test, test_events_map = prep4nn.data2network(test_data, 'predict', params)
 
     if len(test) == 0:
         raise ValueError("Test set empty.")
 
-    test_data = prep4nn.torch_data_2_network(cdata2network=test, params=params, do_get_nn_data=True)
+    test_data = prep4nn.torch_data_2_network(cdata2network=test, events_map=test_events_map, params=params, do_get_nn_data=True)
     te_data_size = len(test_data['nn_data']['ids'])
 
     test_data_ids = TensorDataset(torch.arange(te_data_size))
