@@ -5,7 +5,7 @@ task_name: cg
 # model
 bert_model: data/bert/scibert_scivocab_cased
 model_path: data/models/cg/model/
-saved_params: data/models/cg/cg.param
+params: data/models/cg/cg.param
 
 # data
 test_data: ..
