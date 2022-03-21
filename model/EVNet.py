@@ -638,10 +638,10 @@ class EVModel(nn.Module):
         all_preds_output = []
 
         # flag to train nested event or not
-        if n_epoch >= self.params['ev_nested_epoch'] or self.params['predict']:
-            enable_nested_ev = True
-        else:
-            enable_nested_ev = False
+        enable_nested_ev = True
+        if not self.params['predict']:
+            if n_epoch < self.params['ev_nested_epoch']:
+                enable_nested_ev = False
 
         # flag to train modality or not
         if n_epoch >= self.params['modality_epoch'] or self.params['predict']:
