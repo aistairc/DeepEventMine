@@ -680,5 +680,5 @@ def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, pa
                         all_sub_to_words=sub_to_wordss,
                         all_ev_preds=ev_preds,
                         params=params,
-                        gold_dir=eval_dir,
+                        gold_dir=eval_data,
                         result_dir=result_dir)
