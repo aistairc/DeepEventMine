@@ -105,7 +105,7 @@ def generate_configs(taskdir, task, gpu):
     task_config['gpu'] = gpu
     task_config['task_name'] = task_config['task_name'].replace('cg', task)
     task_config['model_path'] = task_config['model_path'].replace('cg', task)
-    task_config['saved_params'] = task_config['saved_params'].replace('cg', task)
+    task_config['params'] = task_config['params'].replace('cg', task)
     task_config['ev_eval_script_path'] = task_config['ev_eval_script_path'].replace('cg', task)
 
     # predict config
@@ -145,7 +145,7 @@ def generate_configs_pubmed(expdir, dataname, model_name, gpu):
     task_config['gpu'] = gpu
     task_config['task_name'] = task_config['task_name'].replace('cg', model_name)
     task_config['model_path'] = task_config['model_path'].replace('cg', model_name)
-    task_config['saved_params'] = task_config['saved_params'].replace('cg', model_name)
+    task_config['params'] = task_config['params'].replace('cg', model_name)
     task_config['ev_eval_script_path'] = task_config['ev_eval_script_path'].replace('cg', model_name)
 
     # for raw text
