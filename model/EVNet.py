@@ -698,6 +698,7 @@ class EVModel(nn.Module):
 
         # nested loss
         nest_ev_loss = 0
+        empty_pred = True
 
         # loop until stop nested event prediction or no more events predicted, or in limited nested levels
         while enable_nested_ev and len(current_positive_ids) > 0 and current_nested_level < self.params['max_ev_level']:
@@ -725,6 +726,8 @@ class EVModel(nn.Module):
             ev_nest_cand_triggers = ev_nest_ids4nn['ev_nest_cand_triggers']
             current_tr_ids = ev_nest_cand_ids4nn['trids_']
             current_truth_ids = ev_nest_cand_ids4nn['truth_ids_']
+
+            empty_pred = False
 
             # check non-empty
             if len(ev_nest_cand_ids4nn['trids_']) > 0:
@@ -778,7 +781,7 @@ class EVModel(nn.Module):
         if enable_modality:
             ev_loss = ev_loss + mod_losses * self.params['modality_weight']
 
-        return pred_ev_output, ev_loss
+        return pred_ev_output, ev_loss, empty_pred
 
     def forward(self, ner_preds, rel_preds, n_epoch):
         """Forward.
@@ -826,7 +829,9 @@ class EVModel(nn.Module):
             # 3-embeds, prediction, and loss
             # check empty
             if len(ev_ids4nn['ev_cand_ids4nn']['trids_']) > 0:
-                ev_out, ev_loss = self.calculate(ent_embeds, rel_embeds, rpred_types, ev_ids4nn, n_epoch)
+                ev_out, ev_loss, empty_pred = self.calculate(ent_embeds, rel_embeds, rpred_types, ev_ids4nn, n_epoch)
+                if empty_pred:
+                    ev_out = None
                 return {'output': ev_out, 'loss': ev_loss}
 
             else:
