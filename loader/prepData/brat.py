@@ -207,7 +207,7 @@ def brat_loader(files_fold, params):
             fevents['ids'] = idsE
 
         # check empty
-        if len(idsT) == len(idsTR) == 0:
+        if len(idsT) == 0 and not params['raw_text']:
             continue
 
         else:
