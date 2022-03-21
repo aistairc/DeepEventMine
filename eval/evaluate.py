@@ -3,8 +3,8 @@ import time
 import torch
 from tqdm import tqdm
 
-from eval.evalEV import evaluate_ev
-from eval.evalRE import estimate_perf, estimate_rel, gen_annotation
+from eval.evalEV import evaluate_ev, write_ev_2file_bio
+from eval.evalRE import estimate_perf, estimate_rel, write_entity_relations
 from eval.evalNER import eval_nner
 from scripts.pipeline_process import gen_ner_ann_files, gen_rel_ann_files
 from utils import utils
@@ -649,36 +649,23 @@ def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, pa
         if params['gpu'] >= 0:
             torch.cuda.empty_cache()
     # write entity and relation prediction
-    gen_annotation(fidss, ent_anns, rel_anns, params, result_dir)
-    # _ = write_entity_relations(
-    #     result_dir=result_dir,
-    #     fidss=fidss,
-    #     ent_anns=ent_anns,
-    #     rel_anns=rel_anns,
-    #     params=params
-    # )
+    _ = write_entity_relations(
+        result_dir=result_dir,
+        fidss=fidss,
+        ent_anns=ent_anns,
+        rel_anns=rel_anns,
+        params=params
+    )
 
     if is_eval_ev > 0:
-        # write_events(fids=fidss,
-        #              all_ent_preds=ent_preds,
-        #              all_words=wordss,
-        #              all_offsets=offsetss,
-        #              all_span_terms=all_ner_terms,
-        #              all_span_indices=span_indicess,
-        #              all_sub_to_words=sub_to_wordss,
-        #              all_ev_preds=ev_preds,
-        #              g_entity_ids_=g_entity_ids_,
-        #              params=params,
-        #              result_dir=result_dir)
-
-        _ = evaluate_ev(fids=fidss,
-                        all_ent_preds=ent_preds,
-                        all_words=wordss,
-                        all_offsets=offsetss,
-                        all_span_terms=all_ner_terms,
-                        all_span_indices=span_indicess,
-                        all_sub_to_words=sub_to_wordss,
-                        all_ev_preds=ev_preds,
-                        params=params,
-                        gold_dir=eval_data,
-                        result_dir=result_dir)
+        write_ev_2file_bio(fids=fidss,
+                           all_ent_preds=ent_preds,
+                           all_words=wordss,
+                           all_offsets=offsetss,
+                           all_span_terms=all_ner_terms,
+                           all_span_indices=span_indicess,
+                           all_sub_to_words=sub_to_wordss,
+                           all_ev_preds=ev_preds,
+                           g_entity_ids_=g_entity_ids_,
+                           params=params,
+                           result_dir=result_dir)
