@@ -13,3 +13,7 @@ tqdm
 requests
 torch==1.1.0
 torchvision==0.3.0
+git+https://github.com/titipata/pubmed_parser.git
+ebooklib
+beautifulsoup4
+lxml
