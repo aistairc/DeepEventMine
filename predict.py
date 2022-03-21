@@ -44,6 +44,7 @@ def main():
 
     # Load configurations for prediction only
     test_data_dir = parameters['test_data']
+    params_dir = parameters['params']
     pipelines = parameters['pipelines']
     t_gpu = parameters['t_gpu']
     t_fp16 = parameters['t_fp16']
@@ -58,7 +59,6 @@ def main():
     bert_model = parameters['bert_model']
 
     # Load pre-trained parameters
-    params_dir = parameters['params']
     with open(params_dir, "rb") as f:
         parameters = pickle.load(f)
 

@@ -12,7 +12,7 @@ if [ "$TASK" = "config" ]; then
 
     GPU=$3
     
-    python scripts/generate_bio_configs.py $TASK_DIR $CORPUS_NAME $GPU
+    python scripts/generate_configs_bio.py $TASK_DIR $CORPUS_NAME $GPU
 
 # predict
 elif [ "$TASK" = "predict" ]; then
@@ -22,7 +22,7 @@ elif [ "$TASK" = "predict" ]; then
     DEV_TEST=$4 # predict for dev, test sets
 
     # predict
-    python predict.py --yaml $TASK_DIR/deepem-bionlp/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml
+    python scripts/predict_bio.py --yaml $TASK_DIR/deepem-bionlp/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml
 
 # retrieve offset
 elif [ "$TASK" = "offset" ]; then

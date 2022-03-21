@@ -52,7 +52,7 @@ elif [ "$TASK" = "config" ]; then
     GPU=$4
     EXP_DIR="experiments/"
 
-    python scripts/generate_bio_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
+    python scripts/generate_configs_bio.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
 
 # predict
 elif [ "$TASK" = "predict" ]; then
@@ -62,7 +62,7 @@ elif [ "$TASK" = "predict" ]; then
     EXP_DIR="experiments/$MY_DATA"
 
     # predict
-    python predict.py --yaml $EXP_DIR/configs/$TASK-$MY_DATA.yaml
+    python scripts/predict_bio.py --yaml $EXP_DIR/configs/$TASK-$MY_DATA.yaml
 
 # retrieve offset
 elif [ "$TASK" = "offset" ]; then
@@ -147,7 +147,7 @@ elif [ "$TASK" = "e2e" ]; then
     GPU=$5
     EXP_DIR="experiments/"
 
-    python scripts/generate_bio_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
+    python scripts/generate_configs_bio.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
 
     echo "--------------------------------"
     echo "4. Predict: "
@@ -155,7 +155,7 @@ elif [ "$TASK" = "e2e" ]; then
     EXP_DIR="experiments/$MY_DATA"
 
     # predict
-    python predict.py --yaml $EXP_DIR/configs/predict-$MY_DATA.yaml
+    python scripts/predict_bio.py --yaml $EXP_DIR/configs/predict-$MY_DATA.yaml
 
     echo "--------------------------------"
     echo "5. Retrieve original offsets: "
