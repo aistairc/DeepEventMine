@@ -95,6 +95,7 @@ sh run/train/generate_configs-debug.sh cg debug
 
 4. Training
 - Pretrain layers (these need to be done before training the joint model)
+- Replace "basic" by "debug" to quickly try experiments on the small data (debug mode)
 ```bash
 sh run.sh cg basic train ner
 sh run.sh cg basic train rel
