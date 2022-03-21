@@ -637,17 +637,14 @@ class EVModel(nn.Module):
         # store output
         all_preds_output = []
 
-        # flag to train nested event or not
+        # flag to train nested event, train modality or not
         enable_nested_ev = True
+        enable_modality = True
         if not self.params['predict']:
             if n_epoch < self.params['ev_nested_epoch']:
                 enable_nested_ev = False
-
-        # flag to train modality or not
-        if n_epoch >= self.params['modality_epoch'] or self.params['predict']:
-            enable_modality = True
-        else:
-            enable_modality = False
+            if n_epoch < self.params['modality_epoch']:
+                enable_modality = False
 
         # store all predictions for flat and nested, maximum as 3 nested levels
         # TODO: revise the maximum nested level later. Now fix 3 levels
