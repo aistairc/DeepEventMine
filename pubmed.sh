@@ -175,7 +175,7 @@ elif [ "$TASK" = "e2e" ]; then
     echo "6. Prepare data for brat"
 
     PRED_DIR="experiments/$MY_DATA/results/ev-last/$MY_DATA-brat/"
-    BRAT_DIR="brat/brat-v1.3_Crunchy_Frog/data/"
+    BRAT_DIR="brat/data/"
 
     # annotation file
     CONFIG="configs/brat/$MODEL_NAME"
