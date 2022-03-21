@@ -89,8 +89,7 @@ def generate_configs(taskdir, task, gpu):
     """Generate configs for all."""
 
     # create experiment dir
-    config_dir = os.path.join(taskdir, '/deepem-bionlp/configs')
-
+    config_dir = os.path.join(taskdir, ''.join['/', 'deepem-bionlp', '/', 'configs'])
     utils.makedir(config_dir)
 
     # default setting
