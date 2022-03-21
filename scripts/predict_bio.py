@@ -96,7 +96,7 @@ def main():
 
 
 def read_test_data(test_data, params):
-    test = prep4nn.data2network(test_data, 'predict', params)
+    test, _ = prep4nn.data2network(test_data, 'predict', params)
 
     if len(test) == 0:
         raise ValueError("Test set empty.")
