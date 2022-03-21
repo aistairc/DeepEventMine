@@ -93,6 +93,25 @@ sh run/train/generate_configs.sh cg basic
 sh run/train/generate_configs-debug.sh cg debug
 ```
 
+4. Training
+- Pretrain layers (these need to be done before training the joint model)
+```bash
+sh run.sh cg basic train ner
+sh run.sh cg basic train rel
+sh run.sh cg basic train ev
+```
+
+- Train joint model: given gold entity
+```bash
+sh run.sh cg basic train joint gold
+```
+
+- Train joint end-to-end model
+
+```bash
+sh run.sh cg basic train joint e2e
+```
+
 # 3. Predict (BioNLP tasks)
 
 ## 3.1. Prepare data
