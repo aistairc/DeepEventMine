@@ -4,7 +4,7 @@ import torch
 from tqdm import tqdm
 
 from eval.evalEV import evaluate_ev
-from eval.evalRE import estimate_perf, estimate_rel
+from eval.evalRE import estimate_perf, estimate_rel, gen_annotation
 from eval.evalNER import eval_nner
 from scripts.pipeline_process import gen_ner_ann_files, gen_rel_ann_files
 from utils import utils
@@ -648,13 +648,14 @@ def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, pa
         if params['gpu'] >= 0:
             torch.cuda.empty_cache()
     # write entity and relation prediction
-    _ = write_entity_relations(
-        result_dir=result_dir,
-        fidss=fidss,
-        ent_anns=ent_anns,
-        rel_anns=rel_anns,
-        params=params
-    )
+    gen_annotation(fidss, ent_anns, rel_anns, params, result_dir)
+    # _ = write_entity_relations(
+    #     result_dir=result_dir,
+    #     fidss=fidss,
+    #     ent_anns=ent_anns,
+    #     rel_anns=rel_anns,
+    #     params=params
+    # )
 
     if is_eval_ev > 0:
         write_events(fids=fidss,
