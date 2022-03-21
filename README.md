@@ -1,15 +1,19 @@
 # DeepEventMine
+
 A deep leanring model to predict named entities, triggers, and nested events from biomedical texts.
 
 - The model and results are reported in our paper:
 
-[DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts](https://doi.org/10.1093/bioinformatics/btaa540), Bioinformatics, 2020.
+[DeepEventMine: End-to-end Neural Nested Event Extraction from Biomedical Texts](https://doi.org/10.1093/bioinformatics/btaa540)
+, Bioinformatics, 2020.
 
 ## Overview
+
 1. Features
-- Based on [pre-trained BERT](https://github.com/allenai/scibert)
-- Predict nested entities and nested events
-- Provide our trained models on the seven biomedical tasks
+
+- End-to-end event extraction, fine-tuned on [pre-trained BERT](https://github.com/allenai/scibert)
+- Train and predict nested entities and nested events
+- Provide our pre-trained models on seven biomedical tasks
 - Reproduce the results reported in our [Bioinformatics](https://doi.org/10.1093/bioinformatics/btaa540) paper
 - Predict for new data given raw text input or PubMed ID
 - Visualize the predicted entities and events on the [brat](http://brat.nlplab.org)
@@ -22,11 +26,13 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 2. ge11: [GENIA Event Extraction (GENIA), 2011](http://2011.bionlp-st.org/home/genia-event-extraction-genia)
 3. ge13: [GENIA Event Extraction (GENIA), 2013](http://bionlp.dbcls.jp/projects/bionlp-st-ge-2013/wiki/Overview)
 4. id: [Infectious Diseases (ID), 2011](http://2011.bionlp-st.org/home/infectious-diseases)
-5. epi: [Epigenetics and Post-translational Modifications (EPI), 2011](http://2011.bionlp-st.org/home/epigenetics-and-post-translational-modifications)
+5.
+epi: [Epigenetics and Post-translational Modifications (EPI), 2011](http://2011.bionlp-st.org/home/epigenetics-and-post-translational-modifications)
 6. pc: [Pathway Curation (PC), 2013](http://2013.bionlp-st.org/tasks/pathway-curation)
 7. mlee: [Multi-Level Event Extraction (MLEE)](http://nactem.ac.uk/MLEE/)
 
 # 1. Preparation
+
 1. Install conda environment
 
 ```bash
@@ -48,6 +54,7 @@ sh setup/conda-install.sh
 ```
 
 4. Install requirements
+
 - Python 3.6.5
 - PyTorch (torch==1.1.0 torchvision==0.3.0, cuda92)
 - Python dependencies
@@ -57,6 +64,7 @@ pip install -r requirements.txt
 ```
 
 5. [Brat](https://github.com/nlplab/brat) for visualization
+
 - brat instructions](http://brat.nlplab.org/installation.html)
 
 ```bash
@@ -65,37 +73,50 @@ python2 standalone.py
 ```
 
 # 2. Training CG
+
 1. Download data and process
+
 - Download data
 - Process data to appropriate format
 - Tokenize texts and retrieve offsets
 - Data statistics
 - Download the processed event structures
+- The original BioNLP 2013 (for downloading CG data) seems unavailable recently. We found an alternative link
+  for [CG13 task](https://sites.google.com/site/bionlpst2013/tasks/cancer-genetics-cg-task). You may download the data
+  by yourself (we are not sure the data is the same as the original link, so please check by yourself).
 
 ```bash
 sh run/prepare-cg.sh
 ```
 
 2. Download models
+
 - Download SciBERT model from PyTorch AllenNLP
+
 ```bash
 sh run/download-bert.sh
 ```
 
 3. Generate configs
+
 - Configs for training CG task
+
 ```bash
 sh run/generate_configs.sh cg basic
 ```
+
 - Experiment name: basic, exp1, exp2, etc
 - Or running this debug mode (on a small data with several epochs)
+
 ```bash
 sh run/generate_configs-debug.sh cg debug
 ```
 
 4. Training
+
 - Pretrain layers (these need to be done before training the joint model)
 - Replace "basic" by "debug" to quickly try experiments on the small data (debug mode)
+
 ```bash
 sh run/train.sh experiments/cg/basic/configs/train-ner.yaml
 sh run/train.sh experiments/cg/basic/configs/train-rel.yaml
@@ -103,6 +124,7 @@ sh run/train.sh experiments/cg/basic/configs/train-ev.yaml
 ```
 
 - Train joint model: given gold entity
+
 ```bash
 sh run/train.sh experiments/cg/basic/configs/train-joint-gold.yaml
 ```
@@ -114,13 +136,16 @@ sh run/train.sh experiments/cg/basic/configs/train-joint-e2e.yaml
 ```
 
 5. Predict
+
 - Given gold entity
+
 ```bash
 sh run/predict.sh experiments/cg/basic/configs/predict-gold-dev.yaml
 sh run/predict.sh experiments/cg/basic/configs/predict-gold-test.yaml
 ```
 
 - End-to-end
+
 ```bash
 sh run/predict.sh experiments/cg/basic/configs/predict-e2e-dev.yaml
 sh run/predict.sh experiments/cg/basic/configs/predict-e2e-test.yaml
@@ -129,7 +154,9 @@ sh run/predict.sh experiments/cg/basic/configs/predict-e2e-test.yaml
 # 3. Predict (BioNLP tasks)
 
 ## 3.1. Prepare data
+
 1. Download corpora
+
 - To download the original data sets from BioNLP shared tasks.
 - [task] = cg, pc, ge11, etc
 
@@ -138,6 +165,7 @@ sh download.sh bionlp [task]
 ```
 
 2. Download our pre-trained DeepEventMine model on a given task
+
 - [Our trained models](https://b2share.eudat.eu/records/80d2de0c57d64419b722dc1afa375f28)
 - [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
 - [task] = cg (or pc, ge11, epi, etc)
@@ -147,14 +175,18 @@ sh download.sh deepeventmine [task]
 ```
 
 3. Preprocess data
+
 - Tokenize texts and prepare data for prediction
+
 ```bash
 sh preprocess.sh bionlp
 ```
 
 4. Generate configs
+
 - If using GPU: [gpu] = 0, otherwise: [gpu] = -1
 - [task] = cg, pc, etc
+
 ```bash
 sh run.sh config [task] [gpu]
 ```
@@ -162,6 +194,7 @@ sh run.sh config [task] [gpu]
 ## 3.2. Predict
 
 1. For development and test sets (given gold entities)
+
 - CG task: [task] = cg
 - PC task: [task] = pc
 - Similarly for: ge11, ge13, epi, id, mlee
@@ -170,7 +203,9 @@ sh run.sh config [task] [gpu]
 sh run.sh predict [task] gold dev
 sh run.sh predict [task] gold test
 ```
+
 - Check the output in the path
+
 ```bash
 experiments/[task]/predict-gold-dev/
 experiments/[task]/predict-gold-test/
@@ -179,6 +214,7 @@ experiments/[task]/predict-gold-test/
 ## 3.3. Evaluate
 
 1. Retrieve the original offsets and create zip format
+
 ```bash
 sh run.sh offset [task] gold dev
 sh run.sh offset [task] gold test
@@ -187,10 +223,14 @@ sh run.sh offset [task] gold test
 2. Submit the zipped file to the shared task evaluation sites:
 
 - [CG Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/CG/submission/)
-- [GE11 Test](http://bionlp-st.dbcls.jp/GE/2011/eval-test/), [GE11 Devel](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
-- [GE13 Test](http://bionlp-st.dbcls.jp/GE/2013/eval-test/), [GE13 Devel](http://bionlp-st.dbcls.jp/GE/2013/eval-development/)
-- [ID Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/test-eval.html), [ID Devel](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/devel-eval.htm)
-- [EPI Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/test-eval.html), [EPI Devel](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/devel-eval.htm)
+- [GE11 Test](http://bionlp-st.dbcls.jp/GE/2011/eval-test/)
+  , [GE11 Devel](http://bionlp-st.dbcls.jp/GE/2011/eval-development/)
+- [GE13 Test](http://bionlp-st.dbcls.jp/GE/2013/eval-test/)
+  , [GE13 Devel](http://bionlp-st.dbcls.jp/GE/2013/eval-development/)
+- [ID Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/test-eval.html)
+  , [ID Devel](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/ID/devel-eval.htm)
+- [EPI Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/test-eval.html)
+  , [EPI Devel](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST/EPI/devel-eval.htm)
 - [PC Test](http://weaver.nlplab.org/~bionlp-st/BioNLP-ST-2013/PC/submission/)
 
 3. Evaluate events
@@ -205,18 +245,23 @@ sh run.sh eval [task] gold dev sp
 # 4. End-to-end
 
 ## 4.1. Input: a single PMID or PMCID
+
 - Abstract
+
 ```bash
 sh pubmed.sh e2e pmid 1370299 cg 0
 ```
 
 - Full text
+
 ```bash
 sh pubmed.sh e2e pmcid PMC4353630 cg 0
 ```
 
-- Input: [PMID: 1370299](https://pubmed.ncbi.nlm.nih.gov/1370299/),  [PMCID: PMC4353630](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4353630/) (a single PubMed ID to get raw text)
-- Model to predict: DeepEventMine trained on [cg (Cancer Genetics 2013)](http://2013.bionlp-st.org/tasks/cancer-genetics), (other options: pc, ge11, etc)
+- Input: [PMID: 1370299](https://pubmed.ncbi.nlm.nih.gov/1370299/)
+  ,  [PMCID: PMC4353630](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4353630/) (a single PubMed ID to get raw text)
+- Model to predict: DeepEventMine trained
+  on [cg (Cancer Genetics 2013)](http://2013.bionlp-st.org/tasks/cancer-genetics), (other options: pc, ge11, etc)
 - GPU: 0 (if CPU: -1)
 - Output: in brat format and [brat visualization](http://brat.nlplab.org)
 
@@ -250,6 +295,7 @@ E24	Positive_regulation:T61 Theme:E10
 
 - Given an arbitrary name for your raw text data, for example "my-pubmed"
 - Prepare a list of PMID and PMCID in the path
+
 ```bash
 data/my-pubmed/pmid.txt
 ```
@@ -262,6 +308,7 @@ sh pubmed.sh e2e pmids my-pubmed cg 0
 
 - Given an arbitrary name for your raw text data, for example "my-pubmed"
 - Prepare your raw text files in the path
+
 ```bash
 data/my-pubmed/text/PMID-*.txt
 data/my-pubmed/text/PMC-*.txt
@@ -293,6 +340,7 @@ data/my-pubmed/text/PMC-*.txt
 ### Get raw text
 
 1. PubMed ID list
+
 - In order to get full text given PMC ID, the text should be available in ePub (for our current version).
 - Prepare your list of PubMed ID and PMC ID in the path
 
@@ -301,12 +349,15 @@ data/my-pubmed/pmid.txt
 ```
 
 - Get text from the PubMed ID
+
 ```bash
 sh pubmed.sh pmids my-pubmed
 ```
 
 2. PubMed ID
+
 - You can also get text by directly input a PubMed or PMC ID
+
 ```bash
 sh pubmed.sh pmid 1370299
 sh pubmed.sh pmcid PMC4353630
@@ -321,6 +372,7 @@ sh pubmed.sh preprocess my-pubmed
 ## 5.3. Predict
 
 1. Generate config
+
 - Generate config for prediction
 - The data name to predict: my-pubmed
 - The trained model used for predict: cg (or pc, ge11, etc)
@@ -343,6 +395,7 @@ sh pubmed.sh offset my-pubmed
 ```
 
 - Check the output in
+
 ```bash
 experiments/my-pubmed/results/ev-last/my-pubmed-brat
 ```
@@ -353,11 +406,13 @@ experiments/my-pubmed/results/ev-last/my-pubmed-brat
 
 - Copy the predicted data into the brat folder to visualize
 - For the raw text prediction:
+
 ```bash
 sh pubmed.sh brat my-pubmed cg
 ```
 
 - Or for the shared task
+
 ```bash
 sh run.sh brat [task] gold dev
 sh run.sh brat [task] gold test
@@ -373,10 +428,13 @@ brat/brat-v1.3_Crunchy_Frog/data/[task]-brat
 ```
 
 # 7. Acknowledgements
-This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology Development Organization (NEDO).
-This work is also supported by PRISM (Public/Private R&D Investment Strategic Expansion PrograM).
+
+This work is based on results obtained from a project commissioned by the New Energy and Industrial Technology
+Development Organization (NEDO). This work is also supported by PRISM (Public/Private R&D Investment Strategic Expansion
+PrograM).
 
 # 8. Citation
+
 ```bash
 @article{10.1093/bioinformatics/btaa540,
     author = {Trieu, Hai-Long and Tran, Thy Thy and Duong, Khoa N A and Nguyen, Anh and Miwa, Makoto and Ananiadou, Sophia},
