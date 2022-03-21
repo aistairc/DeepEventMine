@@ -52,7 +52,7 @@ elif [ "$TASK" = "config" ]; then
     GPU=$4
     EXP_DIR="experiments/"
 
-    python scripts/generate_pred_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
+    python scripts/generate_bio_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
 
 # predict
 elif [ "$TASK" = "predict" ]; then
@@ -147,7 +147,7 @@ elif [ "$TASK" = "e2e" ]; then
     GPU=$5
     EXP_DIR="experiments/"
 
-    python scripts/generate_pred_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
+    python scripts/generate_bio_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
 
     echo "--------------------------------"
     echo "4. Predict: "

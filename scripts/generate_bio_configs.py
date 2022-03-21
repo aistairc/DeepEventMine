@@ -93,7 +93,7 @@ def generate_configs(taskdir, task, gpu):
     utils.makedir(config_dir)
 
     # default setting
-    default_config_path = 'configs/default.yaml'
+    default_config_path = 'configs/bio-default.yaml'
     with open(default_config_path, 'r') as stream:
         default_config = utils._ordered_load(stream)
 
@@ -132,7 +132,7 @@ def generate_configs_pubmed(expdir, dataname, model_name, gpu):
     utils.makedir(config_dir)
 
     # default setting
-    default_config_path = 'configs/default.yaml'
+    default_config_path = 'configs/bio-default.yaml'
     with open(default_config_path, 'r') as stream:
         default_config = utils._ordered_load(stream)
 
