@@ -1,4 +1,5 @@
 import os
+import collections
 from collections import defaultdict
 
 import numpy as np
