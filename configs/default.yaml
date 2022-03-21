@@ -121,3 +121,4 @@ gold_eval: False
 # display options
 stats: True # print relations
 show_macro: False # print result for relations
+raw_text: False
