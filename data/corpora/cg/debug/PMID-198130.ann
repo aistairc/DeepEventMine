@@ -1,0 +1,98 @@
+*	Equiv T13 T14
+T1	Simple_chemical 13 73	malate - aspartate reduced nicotinamide adenine dinucleotide
+T2	Cell 111 122	tumor cells
+T3	Simple_chemical 155 158	CO2
+T4	Simple_chemical 163 170	lactate
+T5	Simple_chemical 268 286	tricarboxylic acid
+T6	Organism 320 326	rodent
+T7	Cell 327 346	ascites tumor cells
+T8	Cell 364 391	Ehrlich ascites tumor cells
+T9	Cell 394 412	Krebs II carcinoma
+T10	Cell 415 433	AS - 30D carcinoma
+T11	Cell 440 451	L1210 cells
+T12	Simple_chemical 513 532	D - [ 14C ] glucose
+T13	Simple_chemical 612 645	nicotinamide adenine dinucleotide
+T14	Simple_chemical 648 652	NADH
+T15	Cell 672 677	cells
+T16	Simple_chemical 737 743	malate
+T17	Simple_chemical 746 755	aspartate
+T18	Cell 910 920	cell lines
+T19	Simple_chemical 982 1000	tricarboxylic acid
+T20	Simple_chemical 1009 1017	electron
+T21	Simple_chemical 1038 1044	malate
+T22	Simple_chemical 1047 1056	aspartate
+T23	Cancer 1074 1080	tumors
+T24	Simple_chemical 1110 1114	NADH
+T25	Cellular_component 1136 1149	mitochondrial
+T26	Simple_chemical 1176 1180	NADH
+T27	Simple_chemical 1278 1284	oxygen
+T28	Cancer 1294 1300	tumors
+T29	Simple_chemical 1345 1367	adenosine triphosphate
+T30	Simple_chemical 1445 1467	adenosine triphosphate
+T31	Simple_chemical 1484 1492	electron
+T32	Cellular_component 1515 1524	cytosolic
+T33	Simple_chemical 1525 1529	NADH
+T34	Simple_chemical 1538 1544	malate
+T35	Simple_chemical 1547 1556	aspartate
+TR36	Pathway 74 81	shuttle
+TR37	Synthesis 171 181	production
+TR38	Glycolysis 244 263	glycolytic sequence
+TR39	Pathway 287 292	cycle
+TR40	Planned_process 454 463	incubated
+TR41	Negative_regulation 604 611	reduced
+TR42	Pathway 655 662	shuttle
+TR43	Positive_regulation 678 686	requires
+TR44	Pathway 756 763	shuttle
+TR45	Glycolysis 965 975	glycolysis
+TR46	Pathway 1001 1006	cycle
+TR47	Localization 1018 1027	transport
+TR48	Pathway 1057 1064	shuttle
+TR49	Pathway 1181 1188	shuttle
+TR50	Synthesis 1368 1377	synthesis
+TR51	Synthesis 1471 1480	generated
+TR52	Pathway 1557 1564	shuttle
+R1	Participant Arg1:TR48 Arg2:T21
+R2	Theme Arg1:TR37 Arg2:T3
+R3	Theme Arg1:TR50 Arg2:T29
+R4	Participant Arg1:TR44 Arg2:T17
+R5	Theme Arg1:TR51 Arg2:T30
+R6	Theme Arg1:TR40 Arg2:T8
+R7	Participant Arg1:TR42 Arg2:T13
+R8	Participant Arg1:TR48 Arg2:T22
+R9	Participant Arg1:TR52 Arg2:T35
+R10	Theme Arg1:TR40 Arg2:T10
+R11	Cause Arg1:TR43 Arg2:TR44
+R12	Participant Arg1:TR44 Arg2:T16
+R13	Theme Arg1:TR43 Arg2:TR42
+R14	Instrument Arg1:TR40 Arg2:T12
+R15	Theme Arg1:TR40 Arg2:T11
+R16	Theme Arg1:TR47 Arg2:T20
+R17	Theme Arg1:TR39 Arg2:T5
+R18	Theme Arg1:TR40 Arg2:T9
+R19	Participant Arg1:TR36 Arg2:T1
+R20	Theme Arg1:TR37 Arg2:T4
+R21	Participant Arg1:TR52 Arg2:T34
+R22	Participant Arg1:TR49 Arg2:T26
+R23	Participant Arg1:TR46 Arg2:T19
+R24	Theme Arg1:TR41 Arg2:TR42
+E1	Pathway:TR36 Participant:T1
+E2	Synthesis:TR37 Theme:T3
+E3	Synthesis:TR37 Theme:T4
+E4	Glycolysis:TR38
+E5	Pathway:TR39 Theme:T5
+E6	Planned_process:TR40 Instrument:T12 Theme:T8
+E7	Planned_process:TR40 Instrument:T12 Theme:T9
+E8	Planned_process:TR40 Instrument:T12 Theme:T10
+E9	Planned_process:TR40 Instrument:T12 Theme:T11
+E10	Negative_regulation:TR41 Theme:E11
+E11	Pathway:TR42 Participant:T13
+E12	Positive_regulation:TR43 Theme:E11 Cause:E13
+E13	Pathway:TR44 Participant:T16 Participant2:T17
+E14	Glycolysis:TR45
+E15	Pathway:TR46 Participant:T19
+E16	Localization:TR47 Theme:T20
+E17	Pathway:TR48 Participant:T21 Participant2:T22
+E18	Pathway:TR49 Participant:T26
+E19	Synthesis:TR50 Theme:T29
+E20	Synthesis:TR51 Theme:T30
+E21	Pathway:TR52 Participant:T34 Participant2:T35

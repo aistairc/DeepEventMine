@@ -1,0 +1,64 @@
+*	Equiv T12 T13
+*	Equiv T4 T5
+T1	Gene_or_gene_product 0 35	Interleukin - 1 receptor antagonist
+T2	Cell 71 79	neuronal
+T3	Organism 94 97	rat
+T4	Gene_or_gene_product 100 115	Interleukin - 1
+T5	Gene_or_gene_product 118 124	IL - 1
+T6	Organ 144 149	brain
+T7	Gene_or_gene_product 189 195	IL - 1
+T8	Cell 284 292	neuronal
+T9	Organ 320 328	cerebral
+T10	Multi-tissue_structure 348 363	cerebral artery
+T11	Organism 425 429	rats
+T12	Gene_or_gene_product 458 484	IL - 1 receptor antagonist
+T13	Gene_or_gene_product 487 495	IL - 1ra
+T14	Multi-tissue_structure 589 597	striatal
+T15	Simple_chemical 613 617	NMDA
+T16	Simple_chemical 639 669	cis - 2 , 4 - methanoglutamate
+T17	Gene_or_gene_product 729 737	IL - 1ra
+T18	Gene_or_gene_product 776 782	IL - 1
+T19	Organ 826 831	brain
+T20	Gene_or_gene_product 864 870	IL - 1
+T21	Cell 943 951	neuronal
+TR22	Negative_regulation 36 44	inhibits
+TR23	Breakdown 80 86	damage
+TR24	Gene_expression 127 136	synthesis
+TR25	Positive_regulation 153 163	stimulated
+TR26	Blood_vessel_development 248 266	neovascularization
+TR27	Death 293 298	death
+TR28	Negative_regulation 400 409	inhibited
+TR29	Planned_process 430 438	injected
+TR30	Planned_process 598 606	infusion
+TR31	Planned_process 712 721	injection
+TR32	Regulation 788 796	mediator
+TR33	Breakdown 832 838	damage
+TR34	Death 952 957	death
+R1	Theme Arg1:TR22 Arg2:TR23
+R2	Theme Arg1:TR25 Arg2:TR24
+R3	Theme Arg1:TR33 Arg2:T19
+R4	Cause Arg1:TR32 Arg2:T18
+R5	Instrument Arg1:TR31 Arg2:T17
+R6	Cause Arg1:TR22 Arg2:T1
+R7	Instrument Arg1:TR30 Arg2:T16
+R8	Instrument Arg1:TR29 Arg2:T12
+R9	Theme Arg1:TR24 Arg2:T4
+R10	Theme Arg1:TR27 Arg2:T8
+R11	Theme Arg1:TR29 Arg2:T11
+R12	Theme Arg1:TR28 Arg2:TR27
+R13	Theme Arg1:TR23 Arg2:T2
+R14	Theme Arg1:TR32 Arg2:TR33
+R15	Theme Arg1:TR34 Arg2:T21
+E1	Negative_regulation:TR22 Theme:E2 Cause:T1
+E2	Breakdown:TR23 Theme:T2
+E3	Gene_expression:TR24 Theme:T4
+E4	Positive_regulation:TR25 Theme:E3
+E5	Blood_vessel_development:TR26
+E6	Death:TR27 Theme:T8
+E7	Negative_regulation:TR28 Theme:E6
+E8	Planned_process:TR29 Instrument:T12 Theme:T11
+E9	Planned_process:TR30 Instrument:T16
+E10	Planned_process:TR31 Instrument:T17
+E11	Regulation:TR32 Cause:T18 Theme:E12
+E12	Breakdown:TR33 Theme:T19
+E13	Death:TR34 Theme:T21
