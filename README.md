@@ -73,44 +73,44 @@ python2 standalone.py
 - Download the processed event structures
 
 ```bash
-sh run/train/prepare-cg.sh
+sh run/prepare-cg.sh
 ```
 
 2. Download models
 - Download SciBERT model from PyTorch AllenNLP
 ```bash
-sh run/train/download-bert.sh
+sh run/download-bert.sh
 ```
 
 3. Generate configs
 - Configs for training CG task
 ```bash
-sh run/train/generate_configs.sh cg basic
+sh run/generate_configs.sh cg basic
 ```
 - Experiment name: basic, exp1, exp2, etc
 - Or running this debug mode (on a small data with several epochs)
 ```bash
-sh run/train/generate_configs-debug.sh cg debug
+sh run/generate_configs-debug.sh cg debug
 ```
 
 4. Training
 - Pretrain layers (these need to be done before training the joint model)
 - Replace "basic" by "debug" to quickly try experiments on the small data (debug mode)
 ```bash
-sh run/train/train.sh experiments/cg/basic/configs/train-ner.yaml
-sh run/train/train.sh experiments/cg/basic/configs/train-rel.yaml
-sh run/train/train.sh experiments/cg/basic/configs/train-ev.yaml
+sh run/train.sh experiments/cg/basic/configs/train-ner.yaml
+sh run/train.sh experiments/cg/basic/configs/train-rel.yaml
+sh run/train.sh experiments/cg/basic/configs/train-ev.yaml
 ```
 
 - Train joint model: given gold entity
 ```bash
-sh run/train/train.sh experiments/cg/basic/configs/train-joint-gold.yaml
+sh run/train.sh experiments/cg/basic/configs/train-joint-gold.yaml
 ```
 
 - Train joint end-to-end model
 
 ```bash
-sh run/train/train.sh experiments/cg/basic/configs/train-joint-e2e.yaml
+sh run/train.sh experiments/cg/basic/configs/train-joint-e2e.yaml
 ```
 
 # 3. Predict (BioNLP tasks)
