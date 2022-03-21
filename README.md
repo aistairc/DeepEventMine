@@ -83,10 +83,15 @@ sh run/train/download-bert.sh
 ```
 
 3. Generate configs
+- Configs for training CG task
 ```bash
 sh run/train/generate_configs.sh cg basic
 ```
 - Experiment name: basic, exp1, exp2, etc
+- Or running this debug mode (on a small data with several epochs)
+```bash
+sh run/train/generate_configs.sh cg debug
+```
 
 # 3. Predict (BioNLP tasks)
 

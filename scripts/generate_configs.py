@@ -2,6 +2,7 @@
 
 import os
 import sys
+import argparse
 
 sys.path.insert(0, '.')
 from utils import utils
@@ -198,15 +199,26 @@ def overwrite_task_config(config, specific_config):
     return config
 
 
-def generate_configs(expdir, task, setting):
+def set_debug_mode(configs, args):
+    if args.debug_mode:
+        if "train_data" in configs:
+            configs['train_data'] = configs['train_data'].replace('train', "debug")
+        if "dev_data" in configs:
+            configs['dev_data'] = configs['dev_data'].replace('dev', "debug")
+        if "test_data" in configs:
+            configs['test_data'] = configs['test_data'].replace('test', "debug")
+        if "epoch" in configs:
+            configs["epoch"] = 2
+
+def generate_configs(args, expdir, task, exp_name):
     """Generate configs for all."""
 
     # create experiment dir
-    taskdir = os.path.join(expdir, '/'.join([task, setting, '']))
-    config_dir = os.path.join(expdir, '/'.join([task, setting, 'configs', '']))
+    taskdir = os.path.join(expdir, '/'.join([task, exp_name, '']))
+    config_dir = os.path.join(expdir, '/'.join([task, exp_name, 'configs', '']))
     utils.makedir(config_dir)
 
-    # default setting
+    # default exp_name
     default_config_path = 'configs/default.yaml'
     with open(default_config_path, 'r') as stream:
         default_config = utils._ordered_load(stream)
@@ -221,6 +233,10 @@ def generate_configs(expdir, task, setting):
     task_config['train_data'] = ''.join(["data/corpora/", task, "/train/"])
     task_config['dev_data'] = ''.join(["data/corpora/", task, "/dev/"])
     task_config['test_data'] = ''.join(["data/corpora/", task, "/dev/"])
+
+    # debug mode
+    set_debug_mode(task_config, args)
+
     # bert
     task_config['bert_model'] = "data/bert/scibert_scivocab_cased"
 
@@ -270,6 +286,18 @@ def generate_configs(expdir, task, setting):
     return
 
 
+def main(arguments):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--experiment_dir', help='Directory for experiments', type=str, default='experiments')
+    parser.add_argument('--task_name', help='Name of task', type=str, default='cg')
+    parser.add_argument('--experiment_name', help='Name of this experiment', type=str,
+                        default='basic')
+    parser.add_argument("--debug_mode", action='store_true',
+                        help="Run experiments on a small data for debugging quickly")
+    args = parser.parse_args(arguments)
+
+    generate_configs(args, args.experiment_dir, args.task_name, args.experiment_name)
+
 if __name__ == '__main__':
-    # generate_configs("experiments/", "cg", "basic")
-    generate_configs(sys.argv[1], sys.argv[2], sys.argv[3])
+    # generate_configs("experiments/", "cg", "debug_mode")
+    main(sys.argv[1:])
