@@ -207,7 +207,9 @@ def set_debug_mode(configs, args):
             configs['train_data'] = configs['train_data'].replace('train', "debug")
         if "dev_data" in configs:
             configs['dev_data'] = configs['dev_data'].replace('dev', "debug")
+            configs['dev_data'] = configs['dev_data'].replace('test', "debug")
         if "test_data" in configs:
+            configs['test_data'] = configs['test_data'].replace('dev', "debug")
             configs['test_data'] = configs['test_data'].replace('test', "debug")
         if "epoch" in configs:
             configs["epoch"] = 2
