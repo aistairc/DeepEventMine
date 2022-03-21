@@ -4,7 +4,7 @@ from tqdm import tqdm, trange
 import os
 import pickle
 
-from eval.evaluation import eval
+from eval.evaluate import eval
 from utils import utils
 from utils.utils import debug, path
 from utils.utils import (
