@@ -12,7 +12,7 @@ if [ "$TASK" = "config" ]; then
 
     GPU=$3
     
-    python scripts/generate_configs.py $TASK_DIR $CORPUS_NAME $GPU
+    python scripts/generate_pred_configs.py $TASK_DIR $CORPUS_NAME $GPU
 
 # predict
 elif [ "$TASK" = "predict" ]; then
