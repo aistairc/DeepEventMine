@@ -151,6 +151,7 @@ def gen_predict_config(predict_config, eval_set, config_dir, taskdir):
     """For joint prediction"""
 
     predict_config['test_data'] = predict_config['test_data'].replace('dev', eval_set)
+    set_debug_mode(predict_config, args)
     predict_config['result_dir'] = ''.join([taskdir, 'predict-gold-', eval_set, '/'])
     predict_config['save_params'] = False
     predict_config['joint_model_dir'] = ''.join([taskdir, 'joint-gold/model/'])
@@ -165,6 +166,7 @@ def gen_predict_e2e_config(predict_e2e_config, eval_set, config_dir, taskdir):
     """For joint end-to-end prediction"""
 
     predict_e2e_config['result_dir'] = ''.join([taskdir, 'predict-e2e-', eval_set, '/'])
+    set_debug_mode(predict_e2e_config, args)
     predict_e2e_config['joint_model_dir'] = ''.join([taskdir, 'joint-e2e/model/'])
     predict_e2e_config['params'] = ''.join([taskdir, 'joint-e2e/', predict_e2e_config['task_name'], '.param'])
     predict_e2e_config['ner_predict_all'] = True
@@ -268,21 +270,17 @@ def generate_configs(args, expdir, task, exp_name):
 
     # predict config
     predict_dev_config = task_config.copy()
-    set_debug_mode(predict_dev_config, args)
     gen_predict_config(predict_dev_config, 'dev', config_dir, taskdir)
 
     predict_test_config = task_config.copy()
-    set_debug_mode(predict_test_config, args)
     gen_predict_config(predict_test_config, 'test', config_dir, taskdir)
 
     # predict end-to-end config
 
     predict_e2e_dev_config = predict_dev_config.copy()
-    set_debug_mode(predict_e2e_dev_config, args)
     gen_predict_e2e_config(predict_e2e_dev_config, 'dev', config_dir, taskdir)
 
     predict_e2e_test_config = predict_test_config.copy()
-    set_debug_mode(predict_e2e_test_config, args)
     gen_predict_e2e_config(predict_e2e_test_config, 'test', config_dir, taskdir)
 
     print('Generate configs: Done!')
