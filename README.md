@@ -31,21 +31,42 @@ A deep leanring model to predict named entities, triggers, and nested events fro
 - [Our scores](https://b2share.eudat.eu/api/files/3cf6c1f4-5eed-4ee3-99c5-d99f5f011be3/scores.tar.gz)
 
 # 2. Preparation
-## 2.1. Requirements
+## 2.1. Environment
+
+1. Install conda environment
+
+```bash
+sh setup/conda-install.sh
+```
+
+2. Create a conda environment (for the first time)
+
+```bash
+. setup/conda-create.sh
+```
+
+3. Activate the conda environment
+
+- Every time you run: before installing packages, before running evaluation scripts, etc
+
+```bash
+. setup/conda-activate.sh
+```
+
+4. Install requirements
 - Python 3.6.5
 - PyTorch (torch==1.1.0 torchvision==0.3.0, cuda92)
+- Python dependencies
+
+```bash
+pip install -r requirements.txt
+```
 
 ```bash
 virtualenv -p python3 pytorch-env
 source pytorch-env/bin/activate
 export CUDA_VISIBLE_DEVICES=0
 CUDA_PATH=/usr/local/cuda pip install torch==1.1.0 torchvision==0.3.0
-```
-
-- Install Python packages
-
-```bash
-sh install.sh
 ```
 
 ## 2.2. BERT
