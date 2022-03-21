@@ -28,14 +28,17 @@ def process_etypes(entities0):
     return entities1
 
 
-def process_tags(entities1):
+def process_tags(entities1, triggers1):
     typesT = entities1['types']
+    typesTR = triggers1['types']
+    types2 = typesT + typesTR
 
     tags = []
+    tagsTR = []
 
     tags2types = OrderedDict()
     tags2types['O'] = 'O'
-    for type in typesT:
+    for type in types2:
         btag = 'B-' + type
         itag = 'I-' + type
         tags.append(btag)
@@ -43,11 +46,17 @@ def process_tags(entities1):
         tags2types[btag] = type
         tags2types[itag] = type
 
+        if type in typesTR:
+            tagsTR.append(btag)
+            tagsTR.append(itag)
+
     tags0 = OrderedDict()
-    tags0['types'] = typesT
+    tags0['types'] = types2
+    tags0['typesTR'] = typesTR
     tags0['typesT'] = typesT
     tags0['tags'] = tags
     tags0['tags2types'] = tags2types
+    tags0['tagsTR'] = tagsTR
 
     return tags0
 
@@ -147,8 +156,9 @@ def spliter(line, _len=len):
     return offsets
 
 
-def process_entities(entities1, sentences1, params, dirpath):
+def process_entities(entities1, triggers1, sentences1, params, dirpath):
     entities0 = entities1['pmids']
+    triggers0 = triggers1['pmids']
 
     input0 = OrderedDict()
 
@@ -157,11 +167,15 @@ def process_entities(entities1, sentences1, params, dirpath):
 
     for pmid in entities0:
         entities = entities0[pmid]
+        triggers = triggers0[pmid]
         sentences = sentences0[pmid]
 
         terms = entities['terms']
+        terms.extend(triggers['terms'])
 
         nest_level, terms = count_nest_level(terms, params)
+        # nest_level, terms = utils.count_nest_level(terms)
+        # terms, file_discard_count = utils.dicard_invalid_nes(terms, sentences)
         levels.append(nest_level)
 
         abst_text = '\n'.join([sent['sentence'] for sent in sentences])
@@ -177,14 +191,31 @@ def process_entities(entities1, sentences1, params, dirpath):
                 init_char = next_char
         spans.append((init_char, next_char))
 
+        # doc_data = []
+        # tags_ = []
+        # terms_ = []
         for xx, sentence in enumerate(sentences):
+            # offsets, words = calculate_offset(sentences, xx)
             offsets = sentence['offsets']
+            # words = sentence['words']
+            # chars = sentence['chars']
+            # sent = sentence['sentence']
 
+            # nner
+            # tags, terms_sentence = utils.assign_label(offsets, terms)
             tags, tags_terms, terms_sentence = assign_label(offsets, terms)
+            # tags_.append(tags)
+            # terms_.append(terms_sentence)
+
+            # check sentence has no entity
+            # if len(terms_sentence) == 0:
+            #     print('NO ENTITY: ', pmid, xx, sentence['sentence'])
+
+            # tags_.extend([tag for level in tags for tag in level]) # for nested
 
             sentence['tags'] = tags
             sentence['terms'] = terms_sentence
-
+            # nner
             sentence['tags_terms'] = tags_terms
 
             eids = []
@@ -196,17 +227,25 @@ def process_entities(entities1, sentences1, params, dirpath):
             for eid in eids:
                 if eid in entities['data']:
                     readable_ents[eid] = entities['data'][eid]
+                else:
+                    readable_ents[eid] = triggers['data'][eid]
+            # sentence['readable_ents'] = readable_ents
 
+            # offsets2
             span = spans[xx]
-
+            # offs2 = []
+            # etypes2 = []
             for x, id_ in enumerate(eids):  # for every entity if it belongs to sentence span
                 ent = readable_ents[id_]
                 b = int(ent['pos1'])
                 e = int(ent['pos2'])
+                # b, e = offs[x]
                 if (span[0] <= b <= span[1]) and (span[0] <= e <= span[1]):
                     b2 = b - span[0]
                     e2 = e - span[0]
+                    # offs2.append([b2, e2])  #
 
+                    # etypes2.append(ent['type'])
                     ent['offs2'] = [b2, e2]
                 else:
                     print("SKIP ENTITY: " + str(b) + " --- " + str(e))
@@ -215,6 +254,7 @@ def process_entities(entities1, sentences1, params, dirpath):
 
             tokens = spliter(
                 sentence['sentence'])  # we have the tokens of the sentence and their corresponding offsets
+            tokensN = [tok for tok, b, e in tokens]
 
             for eid in eids:
                 if "offs2" not in readable_ents[eid]:
@@ -250,6 +290,7 @@ def process_entities(entities1, sentences1, params, dirpath):
             pad_label = [['O'] * len(tags[0])]
             tags.extend(pad_label * pad_level)
 
+            # nner
             tags_terms = sentence['tags_terms']
             pad_label = [['O'] * len(tags_terms[0])]
             tags_terms.extend(pad_label * pad_level)
@@ -261,10 +302,31 @@ def process_entities(entities1, sentences1, params, dirpath):
     return input0
 
 
+def entity_tags(dico):
+    """
+    Create a dictionary and a mapping of tags
+    """
+    id_to_tag = {0: 'O'}
+    id_to_type = {0: 'O'}
+    # id_to_tag = {}
+    # id_to_type = {}
+    for i, (k, v) in enumerate(dico.items()):
+        # if v != 'O':
+        id_to_tag[2 * i + 1] = 'I-' + v
+        id_to_tag[2 * i + 2] = 'B-' + v
+        id_to_type[2 * i + 2] = v
+
+    tag_to_id = {v: k for k, v in id_to_tag.items()}
+    type_to_id = {v: k for k, v in id_to_type.items()}
+
+    return id_to_tag, tag_to_id, id_to_type, type_to_id
+
+
 def extract_entities(sw_sentence, tag2id_mapping, id2tag_mapping, nn_mapping):
     # For several edge cases
     max_depth = max(len(tags) for _, tags, _ in sw_sentence)
 
+    # for sentence in sentences: (not using loop)
     entities = defaultdict(list)
     terms = defaultdict(list)
 
@@ -279,24 +341,26 @@ def extract_entities(sw_sentence, tag2id_mapping, id2tag_mapping, nn_mapping):
 
     try:
         tags = np.asarray(
-            [
-                [tag2id_mapping[tag] for tag in tags + ["O"] * max_depth][
-                :max_depth
-                ]
-                for _, tags, tags_terms in sw_sentence
+        [
+            # bug: original
+                        # [tag2id_mapping[tag] if tag in tag2id_mapping else tag2id_mapping["O"] for tag in tags + ["O"] * max_depth][
+            [tag2id_mapping[tag] for tag in tags + ["O"] * max_depth][
+            :max_depth
             ]
+            for _, tags, tags_terms in sw_sentence
+        ]
         ).T
     except KeyError as err:
         tags = np.asarray(
-            [
-                [tag2id_mapping[tag] if tag in tag2id_mapping else tag2id_mapping["O"] for tag in
-                 tags + ["O"] * max_depth][
-                :max_depth
-                ]
-                for _, tags, tags_terms in sw_sentence
+        [
+            [tag2id_mapping[tag] if tag in tag2id_mapping else tag2id_mapping["O"] for tag in tags + ["O"] * max_depth][
+            :max_depth
             ]
+            for _, tags, tags_terms in sw_sentence
+        ]
         ).T
         print(err)
+
 
     tags_terms = np.asarray(
         [
@@ -378,6 +442,40 @@ def convert_to_sub_words(word_tokens, tags, tags_terms, tokenizer=None):
                 subword_offset_mapping[subword_pos] = token_idx
                 subword_pos += 1
                 subwords.append(subtokens[:1][0])
+
+                labels = [re.sub("^B-", "I-", label) for label in tags[token_idx]]
+                ids = [re.sub("^B-", "I-", _id) for _id in tags_terms[token_idx]]
+
+                for subtoken in subtokens[1:]:
+                    sw_sentence.append([subtoken] + [labels, ids])
+                    subword_offset_mapping[subword_pos] = token_idx
+                    subword_pos += 1
+                    subwords.append(subtoken)
+
+            valid_starts.add(len(subwords))
+        else:
+            sw_sentence.append([token] + [tags[token_idx], tags_terms[token_idx]])
+            subword_offset_mapping[token_idx] = token_idx
+    return sw_sentence, subword_offset_mapping, subwords, valid_starts
+
+def convert_to_sub_words_lstm(word_tokens, tags, tags_terms, tokenizer=None):
+    subword_pos = 0
+    subword_offset_mapping = {}
+    subwords = []
+    sw_sentence = []
+
+    valid_starts = {0}
+
+    for token_idx, token in enumerate(word_tokens):
+        if tokenizer:
+            # subtokens = tokenizer.tokenize(token)
+            subtokens = [token]
+            if subtokens:
+                sw_sentence.append(subtokens[:1] + [tags[token_idx], tags_terms[token_idx]])
+                subword_offset_mapping[subword_pos] = token_idx
+                subword_pos += 1
+                # subwords.append(subtokens[:1][0])
+                subwords.append(subtokens[0])
 
                 labels = [re.sub("^B-", "I-", label) for label in tags[token_idx]]
                 ids = [re.sub("^B-", "I-", _id) for _id in tags_terms[token_idx]]
