@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 
-from eval.evaluate import predict
+from eval.evaluate import predict_bio
 
 from nets import deepEM
 from loader.prepData import prepdata
@@ -85,7 +85,7 @@ def main():
 
     deepee_model.to(device)
 
-    predict(model=deepee_model,
+    predict_bio(model=deepee_model,
             result_dir=result_dir,
             eval_dataloader=test_dataloader,
             eval_data=nntest_data,
