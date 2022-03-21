@@ -505,6 +505,7 @@ def print_scores(k, v, stoso):
     )
     print()
 
+
 def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, params):
     mapping_id_tag = params['mappings']['nn_mapping']['id_tag_mapping']
 
@@ -658,14 +659,26 @@ def predict_bio(model, result_dir, eval_dataloader, eval_data, g_entity_ids_, pa
     # )
 
     if is_eval_ev > 0:
-        write_events(fids=fidss,
-                     all_ent_preds=ent_preds,
-                     all_words=wordss,
-                     all_offsets=offsetss,
-                     all_span_terms=all_ner_terms,
-                     all_span_indices=span_indicess,
-                     all_sub_to_words=sub_to_wordss,
-                     all_ev_preds=ev_preds,
-                     g_entity_ids_=g_entity_ids_,
-                     params=params,
-                     result_dir=result_dir)
+        # write_events(fids=fidss,
+        #              all_ent_preds=ent_preds,
+        #              all_words=wordss,
+        #              all_offsets=offsetss,
+        #              all_span_terms=all_ner_terms,
+        #              all_span_indices=span_indicess,
+        #              all_sub_to_words=sub_to_wordss,
+        #              all_ev_preds=ev_preds,
+        #              g_entity_ids_=g_entity_ids_,
+        #              params=params,
+        #              result_dir=result_dir)
+
+        _ = evaluate_ev(fids=fidss,
+                        all_ent_preds=ent_preds,
+                        all_words=wordss,
+                        all_offsets=offsetss,
+                        all_span_terms=all_ner_terms,
+                        all_span_indices=span_indicess,
+                        all_sub_to_words=sub_to_wordss,
+                        all_ev_preds=ev_preds,
+                        params=params,
+                        gold_dir=eval_dir,
+                        result_dir=result_dir)
