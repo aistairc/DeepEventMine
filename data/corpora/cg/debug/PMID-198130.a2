@@ -1,0 +1,39 @@
+*	Equiv T13 T14
+T36	Pathway 74 81	shuttle
+T37	Synthesis 171 181	production
+T38	Glycolysis 244 263	glycolytic sequence
+T39	Pathway 287 292	cycle
+T40	Planned_process 454 463	incubated
+T41	Negative_regulation 604 611	reduced
+T42	Pathway 655 662	shuttle
+T43	Positive_regulation 678 686	requires
+T44	Pathway 756 763	shuttle
+T45	Glycolysis 965 975	glycolysis
+T46	Pathway 1001 1006	cycle
+T47	Localization 1018 1027	transport
+T48	Pathway 1057 1064	shuttle
+T49	Pathway 1181 1188	shuttle
+T50	Synthesis 1368 1377	synthesis
+T51	Synthesis 1471 1480	generated
+T52	Pathway 1557 1564	shuttle
+E1	Pathway:T36 Participant:T1
+E2	Synthesis:T37 Theme:T3
+E3	Synthesis:T37 Theme:T4
+E4	Glycolysis:T38
+E5	Pathway:T39 Theme:T5
+E6	Planned_process:T40 Instrument:T12 Theme:T8
+E7	Planned_process:T40 Instrument:T12 Theme:T9
+E8	Planned_process:T40 Instrument:T12 Theme:T10
+E9	Planned_process:T40 Instrument:T12 Theme:T11
+E10	Negative_regulation:T41 Theme:E11
+E11	Pathway:T42 Participant:T13
+E12	Positive_regulation:T43 Theme:E11 Cause:E13
+E13	Pathway:T44 Participant:T16 Participant2:T17
+E14	Glycolysis:T45
+E15	Pathway:T46 Participant:T19
+E16	Localization:T47 Theme:T20
+E17	Pathway:T48 Participant:T21 Participant2:T22
+E18	Pathway:T49 Participant:T26
+E19	Synthesis:T50 Theme:T29
+E20	Synthesis:T51 Theme:T30
+E21	Pathway:T52 Participant:T34 Participant2:T35

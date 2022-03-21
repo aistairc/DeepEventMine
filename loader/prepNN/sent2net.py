@@ -15,6 +15,7 @@ def prep_sentences(data_struct, data_type, params):
     # MAPPINGS
     singlesW = params['singletons']
     words_train = params['words_train']
+    # pre_words = params['pre_words']
     uw_prob = params['unk_w_prob']
     if data_type == 'train':
         singlesW = set(singlesW)
@@ -40,6 +41,7 @@ def prep_sentences(data_struct, data_type, params):
         in_train = 0
         in_pretrain = 0
         nowhere = 0
+        # pre_words = set(pre_words)
         words_train = set(words_train)
         for sid, s in enumerate(data_struct['sentences']):
             ff = []
@@ -47,7 +49,9 @@ def prep_sentences(data_struct, data_type, params):
                 if w in words_train:
                     in_train += 1
                     ff.append(w)
-
+                # elif w in pre_words:
+                #     in_pretrain += 1
+                #     ff.append(w)
                 else:
                     nowhere += 1
                     ff.append('<UNK>')

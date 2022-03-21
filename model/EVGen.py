@@ -15,6 +15,96 @@ class EV_Generator(nn.Module):
         # parameters
         self.params = params
 
+    def show_input(self, etypes, l2r, rpred_types, rpred_ids, ev_idx, ev_truth, ev_lbls):
+        """For debug, convert indices to real events."""
+
+        # print relation data
+        print('No., batch id, a1id, a2id, r-type')
+        for xx, rid in enumerate(rpred_ids):
+            # indices
+            bid = l2r[0][rid]
+            a1id = l2r[1][rid]
+            a2id = l2r[2][rid]
+
+            # rtype
+            rtypeid = rpred_types[rid]
+            rtype = self.params['mappings']['rev_rtype_map'][rtypeid]
+
+            # entities
+            a1 = self.params['debugs']['terms_map'][bid, a1id]
+            a2 = self.params['debugs']['terms_map'][bid, a2id]
+
+            # show
+            print(xx, bid, a1id, a2id, rtype, a1, a2)
+
+        return
+
+    def show_rels_group(self, rels_group):
+        """For debug."""
+        xx = 0
+        for trid, rel_group in rels_group.items():
+
+            # store a list of (rtype-etype)
+            rels = []
+            for rel_data in rel_group:
+                a1typeid = rel_data[0]
+                a2ids = rel_data[3]
+                rtypeid = rel_data[2][0]
+                a2typeid = rel_data[2][1]
+                rels.append(rel_data[2])
+
+                bid = trid[0]
+                a1id = trid[1]
+                a2id = a2ids[1]
+                a1type = self.params['mappings']['rev_type_map'][a1typeid]
+                a2type = self.params['mappings']['rev_type_map'][a2typeid]
+                a1 = self.params['debugs']['terms_map'][bid, a1id]
+                a2 = self.params['debugs']['terms_map'][bid, a2id]
+                rtype = self.params['mappings']['rev_rtype_map'][rtypeid]
+                xx += 1
+
+                print(xx, trid, a1, a1type, a2, a2type, rtype)
+            print(trid, rels)
+            print()
+
+    def deb_generated_candidates(self, ev_st_candidates, etypes, ev_cand_triggers):
+        """For debug only, check the output of generated event structure candidates."""
+
+        # translate each candidate
+        # format: [0=trig_id, 1-ev-structure-counter, 2-ev-structure-order, 3-ev_label, 4=modality label, 5=[list IN/OUT ids] ]
+        for xx, ev_cand in enumerate(ev_st_candidates):
+            trid = ev_cand[0]
+            rel_group = ev_cand[1]
+            rel_group_list = ev_cand[2]
+            ev_label = ev_cand[3]
+            # mod_label = ev_cand[4]
+            # io_ids = ev_cand[5]
+
+            bid = trid[0]
+            a1id = trid[1]
+            a1 = self.params['debugs']['terms_map'][bid, a1id]
+            a1typeid = etypes[(bid, a1id)].item()
+            a1type = self.params['mappings']['rev_type_map'][a1typeid]
+
+            # trigger and trigger type
+            print(xx, a1, a1type, 'ev label=', ev_label)
+
+            # arguments structure
+            rel_group_vals = list(rel_group.elements())
+            for arg_ in rel_group_vals:
+                rtypeid = arg_[0]
+                a2typeid = arg_[1]
+                a2type = self.params['mappings']['rev_type_map'][a2typeid]
+                if rtypeid == self.params['voc_sizes']['rel_size']:
+                    rtype = 'None'
+                else:
+                    rtype = self.params['mappings']['rev_rtype_map'][rtypeid]
+                print('(', rtype, a2type, ')')
+
+            print()
+
+        return
+
     def group_rels(self, l2r, rpred_types, rpred_ids, etypes):
         """For generating event candidates."""
 
@@ -48,13 +138,21 @@ class EV_Generator(nn.Module):
                     [a2typeid, rid.item(), (rtypeid, a1typeid), (bid.item(), a1id.item())])
 
             # if both a1 and a2 are trigger: this can be for nested events
+            # the direction can be reverse later to make sure having enough candidates: TODO
             if a1typeid in self.params['trTypes_Ids'] and a2typeid in self.params['trTypes_Ids']:
                 nest_rels_group[(bid.item(), a1id.item())].append(
                     [a1typeid, rid.item(), (rtypeid, a2typeid), (bid.item(), a2id.item())])
 
+        # show output for debug only
+        # TODO: comment when training
+        # print('print flat rels_group')
+        # self.show_rels_group(flat_rels_group)
+        # print('print nested rels_group')
+        # self.show_rels_group(nest_rels_group)
+
         return flat_rels_group, nest_rels_group
 
-    def add_no_arg_trigger(self, tr_ids, etypes, flat_structs_map):
+    def add_no_arg_trigger(self, tr_ids, etypes, ev_idx, ev_truth, ev_lbls, flat_structs_map):
         """Add no-argument triggers."""
 
         # store in a map: key is trigger id, value is a pair of (rtype, trigger type); rtype is a special type
@@ -64,8 +162,22 @@ class EV_Generator(nn.Module):
         for trid_ in tr_ids:
             trid = (trid_[0].item(), trid_[1].item())
 
-            truth = [-1]
-            mod_label = [-1]
+            # process truth and labels
+            bid = trid[0]
+            a1id = trid[1]
+            truth_idx = ev_idx[bid].get(a1id, -1)
+            if truth_idx != -1:
+                truth = ev_truth[bid][truth_idx]
+                mod_label = ev_lbls[bid][truth_idx]  # modality: 1-non-modality, 2-speculation, 3-negation
+
+                # truth for flat and nested
+                # flat_truth = truth[0]
+                # nest_truth = truth[1]
+                truth = truth[0]  # for flat. No-argument is always flat.
+
+            else:
+                truth = [-1]
+                mod_label = [-1]
 
             # rtype and trigger type
             rtype = self.params['voc_sizes']['rel_size']
@@ -80,16 +192,33 @@ class EV_Generator(nn.Module):
 
         return no_arg_group
 
-    def add_truth_to_trigger(self, rels_group, structs_map, levelid=0):
+    def add_truth_to_trigger(self, rels_group, ev_idx, ev_truth, ev_lbls, structs_map, levelid=0):
         """For generating event candidates.
         # add event truth and labels to each trigger
         # levelid = 0: flat, levelid=1: nested events
         """
+        # TODO: nested
 
         for trid, rel_group in rels_group.items():
+            # get index
+            bid = trid[0]
+            a1id = trid[1]
 
-            truth = -1 * np.ones((self.params['max_ev_level'] + 1, self.params['max_ev_args'] + 1), dtype=np.object)
-            mod_label = [-1]
+            # process truth and labels
+            truth_idx = ev_idx[bid].get(a1id, -1)
+            if truth_idx != -1:
+                truth = ev_truth[bid][truth_idx]
+                mod_label = ev_lbls[bid][truth_idx]  # modality: 1-non-modality, 2-speculation, 3-negation
+
+                # truth for flat and nested
+                # flat_truth = truth[0]
+                # nest_truth = truth[1] # TODO
+                # truth = truth[levelid:]  # for flat
+
+            else:
+                # level_truth = [-1]
+                truth = -1 * np.ones((self.params['max_ev_level'] + 1, self.params['max_ev_args'] + 1), dtype=np.object)
+                mod_label = [-1]
 
             if levelid == 0:
                 level_truth = truth[levelid]
@@ -175,6 +304,7 @@ class EV_Generator(nn.Module):
 
         # generate all possible combinations among arguments with limited by the maximum number of args
         max_n_args = self.params['max_ev_args']
+        # TODO: now fix as 4 arguments, can revise to set in parameter later.
 
         for xx1, arg1_ in enumerate(args_list):
 
@@ -331,6 +461,7 @@ class EV_Generator(nn.Module):
 
         # generate all possible combinations among arguments with limited by the maximum number of args
         max_n_args = self.params['max_ev_args']
+        # TODO: now fix as 4 arguments, can revise to set in parameter later.
 
         for xx1, arg1_ in enumerate(args_list):
 
@@ -779,6 +910,9 @@ class EV_Generator(nn.Module):
             Add reverse trigger pair if necessary.
         """
 
+        # store the list of trigger and entity arguments
+        # nest_args = collections.OrderedDict()
+
         # store new reversed arguments in a new dictionary
         rev_nest_rels_group = collections.defaultdict(list)
 
@@ -804,7 +938,9 @@ class EV_Generator(nn.Module):
                     args_list.append(rel_group)
 
                 # if this argument not in flat candidates, this is not a candidate, we can reverse
+                # TODO: or we always reverse?
                 else:
+                    # if argid not in ev_flat_arg_ids4nn:
 
                     # create the reverse data
                     rev_arg = []
@@ -818,12 +954,31 @@ class EV_Generator(nn.Module):
 
                         rev_args_list.append((argid, rev_arg))
 
+                        # add as a new candidate
+                        # if argid in nest_rels_group:
+                        #     arg_list = [a2id[3] for a2id in nest_rels_group[argid]]
 
+                        # check if this argument already exists
+                        # if trid not in arg_list:
+                        #     nest_rels_group[argid].append(rev_arg)
+                        # print('REVERSE TRIGGER PAIRS FOR NESTED EVENT.')
+
+                        # else:
+                        # add the reverse pair
+                        # if argid in rev_nest_rels_group:
+                        #     rev_nest_rels_group[argid].append(rev_arg)
+                        # else:
+                        #     rev_nest_rels_group[argid] = [rev_arg]
+                        # print('REVERSE TRIGGER PAIRS FOR NESTED EVENT.')
 
                     # the reverse also not in flat events
                     else:
                         no_ev_list.append([trid, rel_group])
                         no_ev_list.append([argid, rev_arg])
+
+                    # both directions have no flat event
+                    # else:
+                    #     print('INVALID NESTED EVENT CANDIDATE: NO FLAT EVENT TO THE TRIGGER ARGUMENT.')
 
             # add to the map
             if len(args_list) > 0:
@@ -880,10 +1035,13 @@ class EV_Generator(nn.Module):
                     ent_arg_data.append([[[a2id, (-1, -1)]]])
                 rel_groups.extend(ent_args_list)
 
+            # store argument list for trigger
+            # nest_args[trid] = [trig_args, ent_args_list]
+
         return rev_nest_rels_group
 
-    def generate_event_candidate_structures(self, etypes, tr_ids, l2r, rpred_types, rpred_ids
-                                            ):
+    def generate_event_candidate_structures(self, etypes, tr_ids, l2r, rpred_types, rpred_ids, ev_idx, ev_truth,
+                                            ev_lbls):
         """ Generate event candidates structures.
             - Given a list of predicted/gold entities, triggers, relations
             - Given a set of EVENT STRUCTURES (rules by annotation), separated by event type (also trigger type)
@@ -909,16 +1067,19 @@ class EV_Generator(nn.Module):
         flat_structs_map = self.params['mappings']['flat_types_id_map']
         nest_structs_map = self.params['mappings']['nested_types_id_map']
 
+        # show input: for debug only; to convert data indices to real entities, events .., it is difficult to check by indices
+        # self.show_input(etypes, l2r, rpred_types, rpred_ids, ev_idx, ev_truth, ev_lbls)
+
         # group rels for each trigger: one for flat and one for nested events
         flat_rels_group, nest_rels_group = self.group_rels(l2r, rpred_types, rpred_ids, etypes)
 
         # add truth, labels, and event structure to each trigger
         # the mapping: key=trigger id, values = a list of[ [list of relations], [truth, label, ev-structures] ]
-        ev_flat_cand_triggers = self.add_truth_to_trigger(flat_rels_group, flat_structs_map,
+        ev_flat_cand_triggers = self.add_truth_to_trigger(flat_rels_group, ev_idx, ev_truth, ev_lbls, flat_structs_map,
                                                           levelid=0)
 
         # prepare for no argument candidates
-        ev_no_arg_cand_triggers = self.add_no_arg_trigger(tr_ids, etypes, flat_structs_map)
+        ev_no_arg_cand_triggers = self.add_no_arg_trigger(tr_ids, etypes, ev_idx, ev_truth, ev_lbls, flat_structs_map)
 
         # create flat event candidates using event structures
         ev_flat_st_candidates, ev_flat_arg_ids4nn = self.create_ev_candidates(ev_flat_cand_triggers,
@@ -929,8 +1090,11 @@ class EV_Generator(nn.Module):
         rev_nest_rels_group = self.add_nest_arguments(nest_rels_group, ev_flat_arg_ids4nn, flat_rels_group)
 
         # add truth: do it later after flat prediction
-        ev_nest_cand_triggers = self.add_truth_to_trigger(rev_nest_rels_group,
+        ev_nest_cand_triggers = self.add_truth_to_trigger(rev_nest_rels_group, ev_idx, ev_truth, ev_lbls,
                                                           nest_structs_map, levelid=1)
+
+        # for debug only, show generated candidates, TODO: comment when training
+        # _ = self.deb_generated_candidates(ev_st_candidates, etypes, ev_cand_triggers)
 
         # prepare for creating embeddings from event structure candidates
         ev_flat_cands_ids4nn = self.prepare4nn(ev_flat_st_candidates)
@@ -938,14 +1102,14 @@ class EV_Generator(nn.Module):
         return {'ev_cand_ids4nn': ev_flat_cands_ids4nn, 'ev_arg_ids4nn': ev_flat_arg_ids4nn,
                 'ev_nest_cand_triggers': ev_nest_cand_triggers}
 
-    def _generate(self, etypes, tr_ids, l2r, rpred_types, rpred_ids):
+    def _generate(self, etypes, tr_ids, l2r, rpred_types, rpred_ids, ev_idx, ev_truth, ev_lbls):
         """Generate event candidates indices for creating embeddings."""
 
         # a map with two output:
         # 1-event candidate indices: a list of event candidate, [trigger id, event label, modality label, in/out ids]
         # 2-event argument indices for each trigger: a map (key: trigger id, values: ids of relations and entity arguments)
-        ev_ids4nn = self.generate_event_candidate_structures(etypes, tr_ids, l2r, rpred_types, rpred_ids
-                                                             )
+        ev_ids4nn = self.generate_event_candidate_structures(etypes, tr_ids, l2r, rpred_types, rpred_ids, ev_idx,
+                                                             ev_truth, ev_lbls)
 
         return ev_ids4nn
 
@@ -965,6 +1129,9 @@ class EV_Generator(nn.Module):
             # get arguments
             args_list = args_data[:-1]
 
+            # truth for this trigger
+            # rels_group = nest_group_rels[trid]
+
             # check whether the trigger argument ids included in the predicted positive tr_ids
             for trig_arg_data in args_list:
 
@@ -974,8 +1141,13 @@ class EV_Generator(nn.Module):
 
                     # store which event id will replace trigger argument, and its truth
                     posid_list = []
+                    # truth_list = []
+
+                    # store positive ids by level
+                    # pos_level_list = []
 
                     # check all possible appearance of this trigger in the predicted events
+                    # TODO: Replace for loop by a better function to find all matched indices in a list
                     for posid, pos_trid in enumerate(flat_pos_tr_ids):
                         if argid == pos_trid:
                             pos_truth = flat_pos_truth_ids[posid]
@@ -983,16 +1155,31 @@ class EV_Generator(nn.Module):
                             # only add positive truth for training
                             if pos_truth != -1 or not self.training:
                                 # positive id: index of (level, event id)
+                                # posid_ = (current_nested_level, posid)
                                 posid_list.append([pos_truth, (current_nested_level, posid)])
+
+                                # truth_list.append(flat_pos_truth_ids[posid])
 
                     # add to the list of arguments by level: 4th element
                     trig_arg_data[4].append(posid_list)
                     # if there is predicted events
                     if len(posid_list) > 0:
 
+                        # add by level
+                        # pos_level_list.append([truth_list, posid_list])
+
+                        # add to the list of arguments: for only one nested level
+                        # trig_arg_data.append(truth_list)
+                        # trig_arg_data.append(posid_list)
+
+                        # add to the list of arguments by level: 4th element
+                        # trig_arg_data[4].append(posid_list)
+
                         # mark this is used to make the next level nested candidate
                         trig_arg_data[5] = 1
+                        # is_new_ev = True
 
+                        # pos_trig_args_list.append(trig_arg_data)
 
                     # otherwise: mark this event argument is not used to search for next level nested candidates
                     else:
@@ -1036,6 +1223,10 @@ class EV_Generator(nn.Module):
                                 matched_truth = (0, truth_[0][0], truth_[0][1], truth_[0][2])
                                 break
 
+        # truth for negative label
+        # if matched_truth == -1:
+        #     matched_truth = (0, rel_group_counter, cand_eids_count, [])
+
         # store the output
         cand_output.append(trid)
         cand_output.append(rel_group_counter)
@@ -1054,6 +1245,10 @@ class EV_Generator(nn.Module):
         # store the output in a list
         # format: [0=trig_id, 1-ev-structure-counter, 2-ev-structure-order, 3-ev_label, 4=modality label, 5=[list IN/OUT ids] ]
         cand_output = []
+
+        # TODO: comment this
+        # convert ids to Counter to compare
+        # cand_eids_count = collections.Counter(a2_ids)
 
         ev_label = 0
         mod_label = 1

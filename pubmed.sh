@@ -1,5 +1,9 @@
 #!/bin/bash
 
+ROOT=$PWD
+export PYTHONPATH="${PYTHONPATH}:$ROOT"
+export PYTHONPATH="${PYTHONPATH}:$ROOT/eval"
+
 TASK=$1
 
 # Get Text from PubMed ID & PMC ID
@@ -52,7 +56,7 @@ elif [ "$TASK" = "config" ]; then
     GPU=$4
     EXP_DIR="experiments/"
 
-    python scripts/generate_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
+    python scripts/generate_configs_bio.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
 
 # predict
 elif [ "$TASK" = "predict" ]; then
@@ -62,7 +66,7 @@ elif [ "$TASK" = "predict" ]; then
     EXP_DIR="experiments/$MY_DATA"
 
     # predict
-    python predict.py --yaml $EXP_DIR/configs/$TASK-$MY_DATA.yaml
+    python scripts/predict_bio.py --yaml $EXP_DIR/configs/$TASK-$MY_DATA.yaml
 
 # retrieve offset
 elif [ "$TASK" = "offset" ]; then
@@ -147,7 +151,7 @@ elif [ "$TASK" = "e2e" ]; then
     GPU=$5
     EXP_DIR="experiments/"
 
-    python scripts/generate_configs.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
+    python scripts/generate_configs_bio.py $EXP_DIR $MY_DATA $MODEL_NAME $GPU
 
     echo "--------------------------------"
     echo "4. Predict: "
@@ -155,7 +159,7 @@ elif [ "$TASK" = "e2e" ]; then
     EXP_DIR="experiments/$MY_DATA"
 
     # predict
-    python predict.py --yaml $EXP_DIR/configs/predict-$MY_DATA.yaml
+    python scripts/predict_bio.py --yaml $EXP_DIR/configs/predict-$MY_DATA.yaml
 
     echo "--------------------------------"
     echo "5. Retrieve original offsets: "
@@ -171,7 +175,7 @@ elif [ "$TASK" = "e2e" ]; then
     echo "6. Prepare data for brat"
 
     PRED_DIR="experiments/$MY_DATA/results/ev-last/$MY_DATA-brat/"
-    BRAT_DIR="brat/brat-v1.3_Crunchy_Frog/data/"
+    BRAT_DIR="brat/data/"
 
     # annotation file
     CONFIG="configs/brat/$MODEL_NAME"

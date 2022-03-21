@@ -5,24 +5,19 @@ import numpy as np
 import collections
 
 import torch
+from torch.autograd import Variable
 from torch import nn
 import torch.nn.functional as F
 
+from utils.utils import gelu
+
 cpu_device = torch.device("cpu")
 
-# use gelu instead of relu activation function
-import math
-
-
-def gelu(x):
-    return 0.5 * x * (1 + torch.tanh(math.sqrt(math.pi / 2) * (x + 0.044715 * x ** 3)))
-
-
-from nets.EVGen import EV_Generator
+from model.EVGen import EV_Generator
 
 
 class EVModel(nn.Module):
-    """CLASS FOR EVENT LAYERS."""
+    """Event layer."""
 
     def __init__(self, params, sizes):
         super(EVModel, self).__init__()
@@ -32,7 +27,7 @@ class EVModel(nn.Module):
 
         # dimensions
         if params['ner_reduce'] == False:
-            ent_dim = params['bert_dim'] * 3 + params['etype_dim']  # no reduce
+            ent_dim = params['bert_dim'] * 3 + params['etype_dim']
         else:
             ent_dim = params['ner_reduced_size'] + params['etype_dim']
         rel_dim = params['rel_reduced_size'] + params['rtype_dim'] + ent_dim
@@ -61,23 +56,74 @@ class EVModel(nn.Module):
         # predict modality
         self.modality_layer = nn.Linear(in_features=params['ev_reduced_size'], out_features=sizes['ev_size'])
 
+        # for ev loss
+        self.bce_with_logits_loss = nn.BCEWithLogitsLoss()
+
         # others
         self.device = params['device']
 
     def get_rel_input(self, rel_preds):
         """Read relation input."""
 
-        l2r = rel_preds['pairs_idx']
-        rpreds_ = rel_preds['preds'].data
+        # span indices for events
+        # training mode
+        if not self.params['predict']:
+            if self.training and self.params['use_gold_ner']:
+                gold_span = True
+            # train event only
+            elif not self.training and self.params['skip_ner'] and self.params['skip_rel'] and self.params[
+                'use_gold_ner']:
+                gold_span = True
+            else:
+                gold_span = False
 
-        # mapping relation type for 'OTHER' type to -1
-        rpred_types = self.params['mappings']['rel2rtype_map'][rpreds_]
+        # predict mode
+        else:
+            if self.params['predict'] and (self.params['gold_eval'] or self.params['pipelines']):
+                gold_span = True
+            else:
+                gold_span = False
 
-        # extract only relation type != 'OTHER' (valid relations)
-        rpred_ids = (rpreds_ != self.params['voc_sizes']['rel_size'] - 1).nonzero().transpose(0, 1)[0]
-        rpred_ids = rpred_ids.to(cpu_device)  # list: contain indices of the valid relations
+        # span indices
+        if gold_span:
+            span_indices = rel_preds['l2r']
+        else:
+            span_indices = rel_preds['pairs_idx']
 
-        return l2r, rpred_types, rpred_ids
+        # relation indices for events
+        # training mode
+        if not self.params['predict']:
+            if self.training and self.params['use_gold_rel']:
+                gold_rel = True
+
+            # train event only
+            elif not self.training and self.params['skip_ner'] and self.params['skip_rel'] and self.params[
+                'use_gold_rel']:
+                gold_rel = True
+            else:
+                gold_rel = False
+
+        # predict mode
+        else:
+            if self.params['predict'] and (self.params['gold_eval'] or self.params['pipelines']):
+                gold_rel = True
+            else:
+                gold_rel = False
+
+        # relation indices
+        if gold_rel:
+            r_indices = rel_preds['truth'].data
+        else:
+            r_indices = rel_preds['preds'].data
+
+        # relation type; non-relation to -1
+        r_types = self.params['mappings']['rel2rtype_map'][r_indices]
+
+        # extract positive relations, ignore non-relation
+        rpos_indices = (r_indices != self.params['voc_sizes']['rel_size'] - 1).nonzero().transpose(0, 1)[0]
+        rpos_indices = rpos_indices.to(cpu_device)
+
+        return span_indices, r_types, rpos_indices
 
     def rtype_embedding_layer(self, rtype_):
         """Relation type embeddings."""
@@ -130,6 +176,7 @@ class EVModel(nn.Module):
                 a2_embeds = ent_embeds[(a2ids_[0], a2ids_[1])]
                 rt_embeds = rtype_embeds[rids]
 
+
                 args_embeds = torch.cat([r_embeds, rt_embeds, a2_embeds],
                                         dim=-1)  # [number of arguments, rdim+rtypedim+edim]
 
@@ -164,6 +211,7 @@ class EVModel(nn.Module):
             # no-argument
             if len(ev_struct[1]) == 0:
 
+                # arg_embed = concat[rel_embed, rel_type_embed, argument_embed]
                 # since there is no argument, rel_embed is set as zeros
                 no_rel_emb = torch.zeros((self.params['rel_reduced_size']), dtype=no_rel_type_embed.dtype,
                                          device=self.device)
@@ -214,7 +262,11 @@ class EVModel(nn.Module):
                     args_embeds_list.append(reduced_arg_embed)
 
             # calculate argument embed: by sum up all arguments or average, etc
+            # TODO: currently, use SUM
             args_embed = torch.sum(torch.stack(args_embeds_list, dim=0), dim=0)
+
+            # TODO: average
+            # args_embed = torch.mean(torch.stack(args_embeds_list, dim=0),dim=0)
 
             # event embed: concatenate trigger embed and argument embed
             ev_embeds_.append(torch.cat([tr_embed, args_embed], dim=-1))
@@ -313,6 +365,7 @@ class EVModel(nn.Module):
             # no-argument
             if len(ev_struct[1]) == 0:
 
+                # arg_embed = concat[rel_embed, rel_type_embed, argument_embed]
                 # since there is no argument, rel_embed is set as zeros
                 no_rel_emb = torch.zeros((self.params['rel_reduced_size']), dtype=no_rel_type_embed.dtype,
                                          device=self.device)
@@ -363,6 +416,7 @@ class EVModel(nn.Module):
                         for xx2, inid in enumerate(io_ids):
                             if inid == ioid:
                                 pid = pos_ids[xx2]
+                                # pid = pos_ids[io_ids.index(ioid)]
 
                                 # entity argument
                                 if pid == (-1, -1):
@@ -394,7 +448,11 @@ class EVModel(nn.Module):
                     # args_embeds_list.append(reduced_arg_embed)
 
             # calculate argument embed: by sum up all arguments or average, etc
+            # TODO: currently, use SUM
             args_embed = torch.sum(torch.stack(args_embeds_list, dim=0), dim=0)
+
+            # TODO: average
+            # args_embed = torch.mean(torch.stack(args_embeds_list, dim=0),dim=0)
 
             # event embed: concatenate trigger embed and argument embed
             ev_embeds_.append(torch.cat([tr_embed, args_embed], dim=-1))
@@ -414,6 +472,7 @@ class EVModel(nn.Module):
 
         threshold = self.params['ev_threshold']
 
+
         event4class = gelu(self.hidden_layer1(event_embeds))
         event4class = gelu(self.hidden_layer2(event4class))
         prediction = self.l_class(event4class)
@@ -431,11 +490,22 @@ class EVModel(nn.Module):
 
         prediction = prediction.flatten()
 
-        # return prediction, modality_pred, positive_idx, positive_ev # revise
         return event4class, prediction, positive_idx, positive_ev_embs
 
+    def calculate_ev_loss(self, prediction, ev_labels_):
+        """Loss."""
+
+        ev_labels = np.vstack(ev_labels_).ravel()
+
+        positive_labels = ev_labels.copy()
+        positive_labels[positive_labels > 0] = 1
+        ev_loss = self.bce_with_logits_loss(prediction,
+                                            torch.tensor(positive_labels, dtype=prediction.dtype, device=self.device))
+
+        return ev_loss
+
     def predict_modality(self, positive_ev_embs, positive_ev_idx, mod_labels_):
-        """Predict modality, return modality predictions."""
+        """Predict modality, return modality predictions and loss."""
 
         # get labels
         mod_labels = np.vstack(mod_labels_).ravel()
@@ -444,7 +514,7 @@ class EVModel(nn.Module):
         possitive_lbl = torch.tensor((mod_labels[positive_ev_idx] - 1), dtype=torch.long,
                                      device=self.device)
 
-        # prediction
+        # prediction and loss
         if possitive_lbl[possitive_lbl >= 0].shape[0] > 0:
 
             # prediction
@@ -455,11 +525,18 @@ class EVModel(nn.Module):
             modality_pred = F.softmax(torch.tensor(modality_pred), dim=-1).data
             mod_preds = modality_pred.argmax(dim=-1)
 
+            # loss
+            modality_lbls = possitive_lbl[possitive_lbl >= 0]
+            mod_loss = F.cross_entropy(modality_preds, modality_lbls)
+
+            # TODO: for debug only, remember to commend; modality pred=gold
+            # mod_preds = modality_lbls
 
         else:
             mod_preds = []
+            mod_loss = 0
 
-        return mod_preds
+        return mod_preds, mod_loss
 
     def create_output(self, all_ev_preds):
         """Create output for writing events."""
@@ -537,9 +614,9 @@ class EVModel(nn.Module):
 
         return all_ev_output
 
-    def calculate(self, ent_embeds, rel_embeds, rpred_types, ev_ids4nn):
+    def calculate(self, ent_embeds, rel_embeds, rpred_types, ev_ids4nn, n_epoch):
         """
-        Create embeddings, prediction.
+        Create embeddings, prediction, loss.
 
         :param ent_embeds: [batch x a1id x embeds]
         :param rel_embeds: [rids x embeds]
@@ -554,16 +631,23 @@ class EVModel(nn.Module):
                 + list of rids
                 + list of argument ids
 
-        :return: prediction
+        :return: prediction, loss
         """
 
         # store output
         all_preds_output = []
 
+        # flag to train nested event, train modality or not
         enable_nested_ev = True
         enable_modality = True
+        if not self.params['predict']:
+            if n_epoch < self.params['ev_nested_epoch']:
+                enable_nested_ev = False
+            if n_epoch < self.params['modality_epoch']:
+                enable_modality = False
 
         # store all predictions for flat and nested, maximum as 3 nested levels
+        # TODO: revise the maximum nested level later. Now fix 3 levels
         # positive ids: the current predicted indices; tr_ids: trigger indices of the candidate list
         all_positive_ids = -1 * np.ones((self.params['max_ev_level'] + 1), dtype=np.object)
         all_positive_tr_ids = -1 * np.ones((self.params['max_ev_level'] + 1), dtype=np.object)
@@ -589,12 +673,13 @@ class EVModel(nn.Module):
         # positive_ev_embs: embedding of predicted events: using for the next nested level
         event4class, prediction, positive_idx, positive_ev_embs = self.predict(ev_embeds)
 
-        empty_pred = True
+        # 6-ev loss
+        flat_ev_loss = self.calculate_ev_loss(prediction, ev_flat_cand_ids4nn['ev_labels_'])
 
         # for modality
         if enable_modality:
-            mod_preds = self.predict_modality(positive_ev_embs, positive_idx,
-                                              ev_flat_cand_ids4nn['mod_labels_'])
+            mod_preds, mod_losses = self.predict_modality(positive_ev_embs, positive_idx,
+                                                          ev_flat_cand_ids4nn['mod_labels_'])
         else:
             mod_preds = []
 
@@ -611,6 +696,10 @@ class EVModel(nn.Module):
         # for output
         all_preds_output.append([ev_flat_cand_ids4nn, ev_flat_arg_ids4nn, current_positive_ids, mod_preds])
 
+        # nested loss
+        nest_ev_loss = 0
+        empty_pred = True
+
         # loop until stop nested event prediction or no more events predicted, or in limited nested levels
         while enable_nested_ev and len(current_positive_ids) > 0 and current_nested_level < self.params['max_ev_level']:
 
@@ -625,6 +714,7 @@ class EVModel(nn.Module):
             all_positive_ev_embs.append(reduced_ev_emb)
 
             # generate nested candidate indices
+            # 'ev_nest_cand_ids': ev_nest_cands_ids4nn, 'ev_nest_arg_ids4nn': ev_nest_arg_ids4nn
             ev_nest_ids4nn = self.ev_struct_generator._generate_nested_candidates(current_nested_level,
                                                                                   ev_nest_cand_triggers,
                                                                                   current_positive_tr_ids,
@@ -654,10 +744,14 @@ class EVModel(nn.Module):
                 # prediction
                 event4class, prediction, positive_idx, positive_ev_embs = self.predict(ev_embeds)
 
+                # ev loss
+                nest_ev_loss += self.calculate_ev_loss(prediction, ev_nest_cand_ids4nn['ev_labels_'])
+
                 # for modality
                 if enable_modality:
-                    mod_preds = self.predict_modality(positive_ev_embs, positive_idx,
-                                                      ev_nest_cand_ids4nn['mod_labels_'])
+                    mod_preds, mod_loss = self.predict_modality(positive_ev_embs, positive_idx,
+                                                                ev_nest_cand_ids4nn['mod_labels_'])
+                    mod_losses += mod_loss
                 else:
                     mod_preds = []
 
@@ -677,16 +771,27 @@ class EVModel(nn.Module):
         # 7-create output for writing events
         pred_ev_output = self.create_output(all_preds_output)
 
-        return pred_ev_output, empty_pred
+        # scale loss: if flat is stable, focus more on nested
+        if current_nested_level == 0:
+            ev_loss = flat_ev_loss
+        else:
+            ev_loss = flat_ev_loss * self.params['flat_ev_scale'] + nest_ev_loss * self.params['nest_ev_scale']
 
-    def forward(self, ner_preds, rel_preds):
+        # add modality loss
+        if enable_modality:
+            ev_loss = ev_loss + mod_losses * self.params['modality_weight']
+
+        return pred_ev_output, ev_loss, empty_pred
+
+    def forward(self, ner_preds, rel_preds, n_epoch):
         """Forward.
-            Given entities and relations, event structures, return event prediction.
+            Given entities and relations, event structures, return event prediction and loss.
         """
         # check empty relation prediction
         if len(rel_preds['preds'].data) == 0:
-            ev_preds = None
-            empty_pred = True
+            # ev_out = None
+            # ev_loss = Variable(torch.zeros(1, device=self.device))
+            return None
 
         else:
             # 1-get input
@@ -706,22 +811,30 @@ class EVModel(nn.Module):
             if np.ndim(rpred_types) > 0:
                 rel_embeds = rel_preds['rel_embeds']
             else:
-                rel_embeds = torch.zeros((1, self.params['rel_reduced_size']), dtype=torch.float32, device=self.device)
+                rel_embeds = torch.zeros((1,self.params['rel_reduced_size']), dtype=torch.float32, device=self.device)
 
                 # avoid scalar error
                 rpred_types = np.array([rpred_types])
 
-            # 2-generate event candidates
-            ev_ids4nn = self.ev_struct_generator._generate(etypes, tr_ids, l2r, rpred_types, rpred_ids
-                                                           )
 
-            # 3-embeds, prediction
+            # event
+            ev_idx = ner_preds['ev_idxs']
+            ev_truth = ner_preds['truth_evs']
+            ev_lbls = np.array(ner_preds['ev_lbls'])
+
+            # 2-generate event candidates
+            ev_ids4nn = self.ev_struct_generator._generate(etypes, tr_ids, l2r, rpred_types, rpred_ids, ev_idx,
+                                                           ev_truth, ev_lbls)
+
+            # 3-embeds, prediction, and loss
             # check empty
             if len(ev_ids4nn['ev_cand_ids4nn']['trids_']) > 0:
-                ev_preds, empty_pred = self.calculate(ent_embeds, rel_embeds, rpred_types, ev_ids4nn)
+                ev_out, ev_loss, empty_pred = self.calculate(ent_embeds, rel_embeds, rpred_types, ev_ids4nn, n_epoch)
+                if empty_pred:
+                    ev_out = None
+                return {'output': ev_out, 'loss': ev_loss}
 
             else:
-                ev_preds = None
-                empty_pred = True
-
-        return ev_preds, empty_pred
+                # ev_out = None
+                # ev_loss = Variable(torch.zeros(1, device=self.device))
+                return None

@@ -1,0 +1,28 @@
+*	Equiv T12 T13
+*	Equiv T4 T5
+T22	Negative_regulation 36 44	inhibits
+T23	Breakdown 80 86	damage
+T24	Gene_expression 127 136	synthesis
+T25	Positive_regulation 153 163	stimulated
+T26	Blood_vessel_development 248 266	neovascularization
+T27	Death 293 298	death
+T28	Negative_regulation 400 409	inhibited
+T29	Planned_process 430 438	injected
+T30	Planned_process 598 606	infusion
+T31	Planned_process 712 721	injection
+T32	Regulation 788 796	mediator
+T33	Breakdown 832 838	damage
+T34	Death 952 957	death
+E1	Negative_regulation:T22 Theme:E2 Cause:T1
+E2	Breakdown:T23 Theme:T2
+E3	Gene_expression:T24 Theme:T4
+E4	Positive_regulation:T25 Theme:E3
+E5	Blood_vessel_development:T26
+E6	Death:T27 Theme:T8
+E7	Negative_regulation:T28 Theme:E6
+E8	Planned_process:T29 Instrument:T12 Theme:T11
+E9	Planned_process:T30 Instrument:T16
+E10	Planned_process:T31 Instrument:T17
+E11	Regulation:T32 Cause:T18 Theme:E12
+E12	Breakdown:T33 Theme:T19
+E13	Death:T34 Theme:T21

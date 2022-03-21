@@ -1,5 +1,9 @@
 #!/bin/bash
 
+ROOT=$PWD
+export PYTHONPATH="${PYTHONPATH}:$ROOT"
+export PYTHONPATH="${PYTHONPATH}:$ROOT/eval"
+
 TASK=$1 # generate configs, predict, retrieve offsets, evaluate
 CORPUS_NAME=$2 # cg, ge11, pc, etc
 
@@ -12,7 +16,7 @@ if [ "$TASK" = "config" ]; then
 
     GPU=$3
     
-    python scripts/generate_configs.py $TASK_DIR $CORPUS_NAME $GPU
+    python scripts/generate_configs_bio.py $TASK_DIR $CORPUS_NAME $GPU
 
 # predict
 elif [ "$TASK" = "predict" ]; then
@@ -22,7 +26,7 @@ elif [ "$TASK" = "predict" ]; then
     DEV_TEST=$4 # predict for dev, test sets
 
     # predict
-    python predict.py --yaml $TASK_DIR/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml
+    python scripts/predict_bio.py --yaml $TASK_DIR/deepem-bionlp/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml
 
 # retrieve offset
 elif [ "$TASK" = "offset" ]; then
@@ -34,8 +38,8 @@ elif [ "$TASK" = "offset" ]; then
 
     # paths
     REFDIR="data/corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
-    PREDDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-tok-a2/"
-    OUTDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/" # retrieve the original offsets
+    PREDDIR="$TASK_DIR/deepem-bionlp/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-tok-a2/"
+    OUTDIR="$TASK_DIR/deepem-bionlp/predict-$GOLD_E2E-$DEV_TEST/ev-last/" # retrieve the original offsets
 
     # retrieve the original offsets and create zip format for online evaluation
     python scripts/postprocess.py $REFDIR $PREDDIR $OUTDIR $CORPUS_NAME $DEV_TEST
@@ -51,7 +55,7 @@ elif [ "$TASK" = "eval" ]; then
 
     # paths
     REFDIR="data/original_corpora/$CORPUS_NAME/$DEV_TEST/" # reference gold data
-    PREDDIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-orig-a2/"
+    PREDDIR="$TASK_DIR/deepem-bionlp/predict-$GOLD_E2E-$DEV_TEST/ev-last/ev-orig-a2/"
 
 
 
@@ -66,7 +70,7 @@ elif [ "$TASK" = "brat" ]; then
     DEV_TEST=$4 # predict for dev, test sets
 
     PRED_DIR="$TASK_DIR/predict-$GOLD_E2E-$DEV_TEST/ev-last/$CORPUS_NAME-brat/"
-    BRAT_DIR="brat/brat-v1.3_Crunchy_Frog/data/"
+    BRAT_DIR="brat/data/"
 
     # annotation file
     CONFIG="configs/brat/$CORPUS_NAME"
