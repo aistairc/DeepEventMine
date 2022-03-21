@@ -22,7 +22,7 @@ elif [ "$TASK" = "predict" ]; then
     DEV_TEST=$4 # predict for dev, test sets
 
     # predict
-    python predict.py --yaml $TASK_DIR/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml
+    python predict.py --yaml $TASK_DIR/deepem-bionlp/configs/$TASK-$GOLD_E2E-$DEV_TEST.yaml
 
 # retrieve offset
 elif [ "$TASK" = "offset" ]; then
