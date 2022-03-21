@@ -1,5 +1,9 @@
 #!/bin/bash
 
+ROOT=$PWD
+export PYTHONPATH="${PYTHONPATH}:$ROOT"
+export PYTHONPATH="${PYTHONPATH}:$ROOT/eval"
+
 TASK=$1
 
 # Get Text from PubMed ID & PMC ID
