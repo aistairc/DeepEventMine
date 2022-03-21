@@ -11,3 +11,5 @@ sklearn
 pytorch-nlp
 tqdm
 requests
+torch
+torchvision
